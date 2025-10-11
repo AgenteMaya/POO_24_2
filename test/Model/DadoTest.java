@@ -4,14 +4,24 @@ import static org.junit.Assert.*;
 
 public class DadoTest {
 	
+	Dado d = new Dado();
+	int [] resultado_dados = d.lanca_dados();
+	
 	@Test (timeout = 5000)
-	public void testaLancamentoDados() {
-		Dado d = new Dado();
-		int resultado_dados = d.lanca_dados();
-		boolean expressao = resultado_dados >= 2 && resultado_dados <= 12;
+	public void testaSomaDados() {
+		int soma = resultado_dados[0] + resultado_dados[1];
+		boolean expressao = soma >= 2 && soma <= 12;
 		assertTrue("Resultado Inválido! A soma dos dados não estava entre 2 e 12!", expressao);
 		
-		
 	}
+	
+	@Test (timeout = 5000)
+	public void testaValorDados() {
+		boolean expressaoDado1 = resultado_dados[0] >=1 && resultado_dados[0] <=6;
+		boolean expressaoDado2 = resultado_dados[1] >=1 && resultado_dados[1] <=6;
+		assertTrue("Valor do Dado1 inválido!", expressaoDado1);
+		assertTrue("Valor do Dado2 inválido!", expressaoDado2);
+	}
+	
 	
 }
