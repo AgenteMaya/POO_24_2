@@ -9,10 +9,18 @@ class Peao {
 	boolean possuiSaidaLivrePrisao = false;
 	Carta cartaSaidaPrisao = null;
 	
+    /**
+     * Construtor do Peão do jogador que recebe o id do mesmo
+     * @param id_peao indice que identifica qual é o peão do jogador
+     */
 	public Peao(int id_peao) {
-		id = id_peao;
+		this.id = id_peao;
 	} 
-		
+	
+    /**
+     * Função que seta a posição do peão após o lançamento dos dados
+     * @param pos posição do peão após seu deslocamento
+     */
 	public void setaPosicaoPeao(int pos) {
 		if (naPrisao)
 		{
@@ -23,23 +31,39 @@ class Peao {
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);
 	}
 	
+    /**
+     * Função que pega a posição da intância de um peão
+     * @return
+     */
 	public int pegaPosicaoPeao() {
 		return posicao;
 	}		
 	
-	void setDinheiro(int n)
+    /**
+     * Função que seta o montante de dinheiro do jogador
+     * @param d
+     */
+	void setDinheiro(int d)
 	{
-		dinheiro = n;
+		dinheiro = d;
 	}
 
+    /**
+     * Função que retorna o montante da instância de um peão
+     * @return
+     */
 	int getDinheiro()
 	{
 		return dinheiro;
 	}
 	
-	void adicionaDinheiro(int n)
+    /**
+     * Função que adiciona um valor ao montante existente do peao
+     * @param d
+     */
+	void adicionaDinheiro(int d)
 	{
-		dinheiro += n;
+		dinheiro += d;
 	}
 	
 	int getId()
