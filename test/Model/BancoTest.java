@@ -1,22 +1,21 @@
 package Model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-class BancoTest {
+
+public class BancoTest {
 	
 	Tabuleiro tabuleiro = new Tabuleiro();
 	
 
-
 	
-	@BeforeEach
-    void setup() {
+	
+	public void setup() {
 		Terreno terreno = new Empresa(50, 100);
 		tabuleiro.addTerreno(terreno);
 		ArrayList<Integer> lVAluguel = new ArrayList<>(Arrays.asList(10,20,30,40));
@@ -32,7 +31,7 @@ class BancoTest {
 	}
 
 	@Test
-	void testaCompraPropriedade() {		
+	public void testaCompraPropriedade() {		
 		assertEquals(tabuleiro.getTerreno(0).getDono(), -1);
 		
 		

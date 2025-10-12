@@ -1,18 +1,17 @@
 package Model;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
-class TabuleiroTest {
+public class TabuleiroTest {
 	
 	Tabuleiro tabuleiro = new Tabuleiro();
 
 	@Test
-	void testaAdicionarTerrenos() {
+	public void testaAdicionarTerrenos() {
 		assertEquals(tabuleiro.getTamListTerreno(), 0);
 		Terreno terreno = new Empresa(50, 100);
 		tabuleiro.addTerreno(terreno);
@@ -27,7 +26,7 @@ class TabuleiroTest {
 	}
 	
 	@Test
-	void testaAdicionarPeoes()
+	public void testaAdicionarPeoes()
 	{
 		assertEquals(tabuleiro.getTamListPeoes(), 0);
 		tabuleiro.addPeao(new Peao(tabuleiro.getTamListPeoes()));
