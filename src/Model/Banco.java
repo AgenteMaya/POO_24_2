@@ -5,7 +5,6 @@ class Banco {
 	int qtdDinheiro = 200000;
 	
 	void compraPropriedade(int idTerreno, int idPeao, Tabuleiro tabuleiro)
-	
 	{		
 		Terreno terreno = tabuleiro.getTerreno(idTerreno);
 		Peao peao = tabuleiro.getPeao(idPeao);
@@ -69,6 +68,8 @@ class Banco {
 			
 			if(!vendePropriedade(peao, tabuleiro))
 			{
+				System.out.printf("\nO jogador %d faliu e, portanto, sairá do jogo. Saldo final = R$ %d,00.\n\n", idPeao, peao.getDinheiro());
+				tabuleiro.removePeao(peao); // remove o peão, pois ele foi à falência
 				return false;
 			}
 		}

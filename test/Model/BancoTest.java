@@ -50,7 +50,8 @@ public class BancoTest {
 	  
 	  }
 	  
-	  @Test public void testaVendePropriedade() { banco.compraPropriedade(0, 0,
+	  @Test public void testaVendePropriedade() { 
+	  banco.compraPropriedade(0, 0,
 	  tabuleiro); assertEquals(tabuleiro.getTerreno(0).getDono(), 0);
 	  assertEquals(tabuleiro.getPeao(0).getDinheiro(), 100);
 	  
@@ -168,14 +169,16 @@ public class BancoTest {
 		  
 		  tabuleiro.getPeao(1).setDinheiro(0);
 		  
+		  int qtdPeoesInicial = tabuleiro.getTamListPeoes();
+		  
 		  //pagar aluguel nao tendo propriedade e sem ter dinheiro
 		  b = banco.pagarAluguel(tabuleiro, 1, 1);
 		  
 		  assertEquals(tabuleiro.getPeao(0).getDinheiro(), 130);		  
-		  assertEquals(tabuleiro.getPeao(1).getDinheiro(), 0);
 		  assertFalse(b);
 		  
-		  
+		  // verificar se o peão foi removido
+		  assertEquals(qtdPeoesInicial - 1, tabuleiro.getTamListPeoes());
 	 }
 	
 	

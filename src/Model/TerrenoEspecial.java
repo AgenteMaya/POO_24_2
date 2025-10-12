@@ -14,11 +14,11 @@ public class TerrenoEspecial extends Terreno{
 		Carta cartaSaidaPrisao = peao.vaiPraPrisao(posPrisao);
 		if (cartaSaidaPrisao == null)
 		{
-			System.out.printf("O jogador atual entrou no campo de ida à prisão e não tinha a carta de saída.");
+			System.out.println("O jogador atual entrou no campo de ida à prisão e não tinha a carta de saída.");
 		}
 		else
 		{
-			System.out.printf("O jogador atual entrou no campo de ida à prisão e tinha a carta de saída.");
+			System.out.println("O jogador atual entrou no campo de ida à prisão e tinha a carta de saída.");
 			baralho.descartarCarta(cartaSaidaPrisao);
 			peao.removeCartaSaidaLivrePrisao();
 		}

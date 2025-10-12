@@ -36,7 +36,6 @@ public class TerrenoEspecialTest {
 		int posPrisao = 10;
 		TerrenoEspecial terreno = new TerrenoEspecial(posPrisao);
 		Peao peao = new Peao(1);
-		int posInicial = peao.pegaPosicaoPeao();
 		
 		assertEquals(false, peao.temCartaSaidaLivre());
 		terreno.irPraPrisao(baralhoTeste, peao);
