@@ -16,18 +16,21 @@ class Peao {
 	public Peao(int id_peao) {
 		this.id = id_peao;
 	} 
-	
-    /**
-     * Função que seta a posição do peão após o lançamento dos dados
-     * @param pos posição do peão após seu deslocamento
-     */
-	public void setaPosicaoPeao(int pos) {
+		
+	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro, Banco banco) {
 		if (naPrisao)
 		{
 			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar", id);
 			return;
 		}
 		posicao = pos;
+		
+		//no instante so estao sendo verificados as posicoes dos de aluguel para pagamento automatico
+		if (posicao < tabuleiro.getTamListTerreno() && posicao != tabuleiro.getTerreno(pos).getDono())
+		{
+			banco.pagarAluguel(tabuleiro, id, pos);
+		}
+		
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);
 	}
 	

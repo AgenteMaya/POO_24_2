@@ -5,12 +5,11 @@ class Banco {
 	int qtdDinheiro = 200000;
 	
 	void compraPropriedade(int idTerreno, int idPeao, Tabuleiro tabuleiro)
-	
 	{		
 		Terreno terreno = tabuleiro.getTerreno(idTerreno);
 		Peao peao = tabuleiro.getPeao(idPeao);
 		
-		if (terreno.getDono() >= 0 && peao.getDinheiro() > terreno.getValorCompra())
+		if (terreno.getDono() < 0 && peao.getDinheiro() > terreno.getValorCompra())
 		{
 			terreno.setDono(peao.getId());
 			peao.adicionaDinheiro(-terreno.getValorCompra());
@@ -42,6 +41,7 @@ class Banco {
 			Propriedade terreno = (Propriedade) tabuleiro.getTerreno(idTerreno);
 			if(terreno.getQtdCasas() > 0)
 			{
+				System.out.printf("Entrei no if do qtdCasas");
 				if(terreno.temHotel())
 				{
 					valorASerPago += terreno.getVAluguel(0);
@@ -52,7 +52,7 @@ class Banco {
 				}
 			}
 		}
-		else 
+		else if (tabuleiro.getTerreno(idTerreno) instanceof Empresa)
 		{
 			Empresa terreno = (Empresa) tabuleiro.getTerreno(idTerreno);
 			valorASerPago += terreno.getValorAluguel();
@@ -61,12 +61,15 @@ class Banco {
 		Peao peao = tabuleiro.getPeao(idPeao);
 		
 		while (valorASerPago > peao.getDinheiro())
-		{
+		{	
 			if(!vendePropriedade(peao, tabuleiro))
 			{
+				System.out.printf("\nO jogador %d faliu e, portanto, sairá do jogo. Saldo final = R$ %d,00.\n\n", idPeao, peao.getDinheiro());
+				tabuleiro.removePeao(peao); // remove o peão, pois ele foi à falência
 				return false;
 			}
 		}
+		
 		
 		peao.adicionaDinheiro(-valorASerPago);
 		
@@ -84,7 +87,7 @@ class Banco {
 		{
 			if (peao.getDinheiro() > propriedade.getVCompra(propriedade.getQtdCasas() + 1))
 			{
-				peao.setDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
+				peao.adicionaDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
 				propriedade.setMudaQtdCasa(1);
 			}
 		}
@@ -93,12 +96,12 @@ class Banco {
 				&& 	!propriedade.temHotel()
 				&& peao.getDinheiro() > propriedade.getVCompra(0))
 		{
-			peao.setDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas()));
+			peao.adicionaDinheiro(-propriedade.getVCompra(0));
 			propriedade.setTemHotel(true);;
 		}
 		else
 		{
-			System.out.printf("Nao foi possivel comprar uma nova casa ou hotel");
+			System.out.printf("Nao foi possivel comprar uma nova casa ou hotel\n");
 		}
 	}
 	
