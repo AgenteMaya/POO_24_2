@@ -25,7 +25,6 @@ class Banco {
 			Terreno terreno = tabuleiro.getTerreno(i);
 			if (terreno.getDono() == id)
 			{
-				System.out.printf("valor da venda: %d\n", (int) (terreno.getValorCompra() * 0.90));
 				peao.adicionaDinheiro((int) (terreno.getValorCompra() * 0.90));
 				terreno.setDono(-1);				
 				return true;
@@ -50,11 +49,10 @@ class Banco {
 				for(int i = 0; i < terreno.getQtdCasas(); i++)
 				{
 					valorASerPago += terreno.getVAluguel(i + 1);
-					System.out.printf("valor a ser pago: %d\n", valorASerPago);
 				}
 			}
 		}
-		else 
+		else if (tabuleiro.getTerreno(idTerreno) instanceof Empresa)
 		{
 			Empresa terreno = (Empresa) tabuleiro.getTerreno(idTerreno);
 			valorASerPago += terreno.getValorAluguel();
@@ -63,9 +61,7 @@ class Banco {
 		Peao peao = tabuleiro.getPeao(idPeao);
 		
 		while (valorASerPago > peao.getDinheiro())
-		{
-			System.out.printf("Entrei no while \n");
-			
+		{	
 			if(!vendePropriedade(peao, tabuleiro))
 			{
 				System.out.printf("\nO jogador %d faliu e, portanto, sairá do jogo. Saldo final = R$ %d,00.\n\n", idPeao, peao.getDinheiro());
@@ -73,8 +69,6 @@ class Banco {
 				return false;
 			}
 		}
-		
-		System.out.printf("valor a ser pago: %d\n", valorASerPago);
 		
 		
 		peao.adicionaDinheiro(-valorASerPago);
@@ -93,7 +87,6 @@ class Banco {
 		{
 			if (peao.getDinheiro() > propriedade.getVCompra(propriedade.getQtdCasas() + 1))
 			{
-				System.out.printf("qtd casas: %d, valor da compra: %d\n", propriedade.getQtdCasas() + 1, propriedade.getVCompra(propriedade.getQtdCasas() + 1));
 				peao.adicionaDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
 				propriedade.setMudaQtdCasa(1);
 			}
@@ -103,7 +96,6 @@ class Banco {
 				&& 	!propriedade.temHotel()
 				&& peao.getDinheiro() > propriedade.getVCompra(0))
 		{
-			System.out.printf("qtd casas: %d, valor da compra: %d\n", propriedade.getQtdCasas() + 1, propriedade.getVCompra(0));
 			peao.adicionaDinheiro(-propriedade.getVCompra(0));
 			propriedade.setTemHotel(true);;
 		}
