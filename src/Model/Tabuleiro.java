@@ -1,5 +1,29 @@
 package Model;
+import java.util.ArrayList;
 
 class Tabuleiro {
+	ArrayList<Terreno> lTerrenos=new ArrayList<>();
+	ArrayList<Peao> lPeoes=new ArrayList<>();
+	
+	Terreno getTerreno(int pos)
+	{
+		return lTerrenos.get(pos);
+	}
+	
+	Peao getPeao(int id)
+	{
+		return lPeoes.get(id);
+	}
+	
+	int getTamListTerreno()
+	{
+		return lTerrenos.size();
+	}
+	
+	int getTamListPeoes()
+	{
+		return lPeoes.size();
+	}
+	
 
 }
