@@ -6,6 +6,8 @@ class Terreno {
 	 * 0 -> Sorte 
 	 * 1 -> Propriedade 
 	 * 2 -> Empresa 
+	 * 3 -> Prisão
+	 * 4 -> Outros (Parada Livre, Vá para a Prisão e Ponto de Partida)
 	 */
 	int tipoTerreno;
 	

@@ -82,7 +82,7 @@ class Banco {
 		
 		if(casaOuHotel) //se true, entao e casa
 		{
-			if (peao.getDinheiro() > propriedade.getVCompra(propriedade.getQtdCasas() + 1)
+			if (peao.getDinheiro() > propriedade.getVCompra(propriedade.getQtdCasas() + 1))
 			{
 				peao.setDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
 				propriedade.setMudaQtdCasa(-1);
@@ -102,13 +102,28 @@ class Banco {
 		}
 	}
 	
+	void realizaTransferenciaBanco(int idPeao, int valor, Tabuleiro tabuleiro)
+	{
+		Peao peao = tabuleiro.getPeao(idPeao);
+		peao.adicionaDinheiro(valor);
+		qtdDinheiro += valor;
+	}
 	
-	
-	
-	
-	
-	
-	
+	void realizaTransferenciaPeoes(int idPeao, int valor, Tabuleiro tabuleiro)
+	{
+		Peao peao = tabuleiro.getPeao(idPeao);
+		int qtdPeoes = tabuleiro.getTamListPeoes();
+		
+		for (int i = 0; i < qtdPeoes; i++)
+		{
+			if (i != idPeao)
+			{
+				Peao peaoTemp = tabuleiro.getPeao(i);
+				peaoTemp.adicionaDinheiro(valor);
+			}
+		}
+		peao.adicionaDinheiro(valor * (qtdPeoes - 1));
+	}
 	
 
 }
