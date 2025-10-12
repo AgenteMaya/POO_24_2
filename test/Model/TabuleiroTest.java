@@ -37,4 +37,22 @@ public class TabuleiroTest {
 		assertEquals(tabuleiro.getPeao(0).getId(), 0);
 	}
 	
+	@Test
+	public void testaRemoverPeoes()
+	{
+		assertEquals(tabuleiro.getTamListPeoes(), 0);
+		tabuleiro.addPeao(new Peao(tabuleiro.getTamListPeoes()));
+		tabuleiro.addPeao(new Peao(tabuleiro.getTamListPeoes()));
+		
+		assertEquals(tabuleiro.getTamListPeoes(), 2);
+		
+		assertEquals(tabuleiro.getPeao(0).getId(), 0);
+		
+		tabuleiro.removePeao(tabuleiro.getPeao(0));
+		
+		assertEquals(tabuleiro.getTamListPeoes(), 1);
+		
+		assertEquals(tabuleiro.getPeao(0).getId(), 1);
+	}
+	
 }

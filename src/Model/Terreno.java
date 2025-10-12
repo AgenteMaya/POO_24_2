@@ -7,7 +7,7 @@ class Terreno {
 	 * 1 -> Propriedade 
 	 * 2 -> Empresa 
 	 * 3 -> Prisão
-	 * 4 -> Outros (Parada Livre, Vá para a Prisão e Ponto de Partida)
+	 * 4 -> Vá para a Prisão
 	 */
 	int tipoTerreno;
 	

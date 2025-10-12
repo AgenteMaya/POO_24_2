@@ -30,6 +30,11 @@ class Tabuleiro {
 		lPeoes.add(peao);
 	}
 	
+	void removePeao(Peao peao)
+	{
+		lPeoes.remove(peao);
+	}
+	
 	void addTerreno(Terreno terreno)
 	{
 		lTerrenos.add(terreno);

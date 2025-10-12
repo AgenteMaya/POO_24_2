@@ -7,16 +7,9 @@ class Baralho {
 	ArrayList<Carta> lCartasDescarte=new ArrayList<>();
 	
 	// Construtor que cria um baralho.
-    public Baralho(){
-        inicializarCartas();
+    public Baralho(ArrayList<Carta> listaCartas){
+    	lCartasCompra.addAll(listaCartas);
         embaralharCartas();
-    }
-    
-    // Função para inicializar as cartas específicas do jogo
-    void inicializarCartas() {
-    	// para a primeira iteração, só iremos trabalhar com as cartas envolvendo a prisão
-    	lCartasCompra.add(new Carta("Vá para a prisão.", false, true, 0, true));
-    	lCartasCompra.add(new Carta("Saída livre da prisão.", true, true, 0, true));
     }
     
     // Função para embaralhar as cartas de compra.
@@ -36,7 +29,7 @@ class Baralho {
             System.out.println("O monte de compras acabou. Reabastecendo...");
 
             lCartasCompra.addAll(lCartasDescarte);
-            lCartasCompra.clear();
+            lCartasDescarte.clear();
             embaralharCartas();
             System.out.println("Monte de descarte foi embaralhado e agora é o novo monte de compras!");
         }

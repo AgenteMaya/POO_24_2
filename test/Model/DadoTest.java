@@ -23,5 +23,25 @@ public class DadoTest {
 		assertTrue("Valor do Dado2 inválido!", expressaoDado2);
 	}
 	
+	@Test (timeout = 5000)
+	public void testaIrParaPrisao() {
+		int deslocamento = d.totalDeslocamento();
+		while(deslocamento != -1) 
+		{ 
+			deslocamento = d.totalDeslocamento();
+		}
+		
+		assertEquals(-1, deslocamento);
+	}
 	
+	@Test (timeout = 5000)
+	public void testaSairDaPrisao() {
+		int deslocamento = d.deslocamentoSaidaPrisao();
+		while(deslocamento == -1) 
+		{ 
+			deslocamento = d.deslocamentoSaidaPrisao();
+		}
+		
+		assertNotEquals(-1, deslocamento);
+	}
 }
