@@ -10,7 +10,7 @@ class Banco {
 		Terreno terreno = tabuleiro.getTerreno(idTerreno);
 		Peao peao = tabuleiro.getPeao(idPeao);
 		
-		if (terreno.getDono() >= 0 && peao.getDinheiro() > terreno.getValorCompra())
+		if (terreno.getDono() < 0 && peao.getDinheiro() > terreno.getValorCompra())
 		{
 			terreno.setDono(peao.getId());
 			peao.adicionaDinheiro(-terreno.getValorCompra());
@@ -26,6 +26,7 @@ class Banco {
 			Terreno terreno = tabuleiro.getTerreno(i);
 			if (terreno.getDono() == id)
 			{
+				System.out.printf("valor da venda: %d\n", (int) (terreno.getValorCompra() * 0.90));
 				peao.adicionaDinheiro((int) (terreno.getValorCompra() * 0.90));
 				terreno.setDono(-1);				
 				return true;
@@ -42,6 +43,7 @@ class Banco {
 			Propriedade terreno = (Propriedade) tabuleiro.getTerreno(idTerreno);
 			if(terreno.getQtdCasas() > 0)
 			{
+				System.out.printf("Entrei no if do qtdCasas");
 				if(terreno.temHotel())
 				{
 					valorASerPago += terreno.getVAluguel(0);
@@ -49,6 +51,7 @@ class Banco {
 				for(int i = 0; i < terreno.getQtdCasas(); i++)
 				{
 					valorASerPago += terreno.getVAluguel(i + 1);
+					System.out.printf("valor a ser pago: %d\n", valorASerPago);
 				}
 			}
 		}
@@ -62,11 +65,16 @@ class Banco {
 		
 		while (valorASerPago > peao.getDinheiro())
 		{
+			System.out.printf("Entrei no while \n");
+			
 			if(!vendePropriedade(peao, tabuleiro))
 			{
 				return false;
 			}
 		}
+		
+		System.out.printf("valor a ser pago: %d\n", valorASerPago);
+		
 		
 		peao.adicionaDinheiro(-valorASerPago);
 		
@@ -84,7 +92,8 @@ class Banco {
 		{
 			if (peao.getDinheiro() > propriedade.getVCompra(propriedade.getQtdCasas() + 1))
 			{
-				peao.setDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
+				System.out.printf("qtd casas: %d, valor da compra: %d\n", propriedade.getQtdCasas() + 1, propriedade.getVCompra(propriedade.getQtdCasas() + 1));
+				peao.adicionaDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
 				propriedade.setMudaQtdCasa(1);
 			}
 		}
@@ -93,12 +102,13 @@ class Banco {
 				&& 	!propriedade.temHotel()
 				&& peao.getDinheiro() > propriedade.getVCompra(0))
 		{
-			peao.setDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas()));
+			System.out.printf("qtd casas: %d, valor da compra: %d\n", propriedade.getQtdCasas() + 1, propriedade.getVCompra(0));
+			peao.adicionaDinheiro(-propriedade.getVCompra(0));
 			propriedade.setTemHotel(true);;
 		}
 		else
 		{
-			System.out.printf("Nao foi possivel comprar uma nova casa ou hotel");
+			System.out.printf("Nao foi possivel comprar uma nova casa ou hotel\n");
 		}
 	}
 	
