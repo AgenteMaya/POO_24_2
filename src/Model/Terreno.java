@@ -25,7 +25,7 @@ class Terreno {
 		return indDono;
 	}
 	
-	int valorCompra()
+	int getValorCompra()
 	{
 		return valorCompra;
 	}

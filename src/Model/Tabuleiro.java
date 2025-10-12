@@ -25,5 +25,19 @@ class Tabuleiro {
 		return lPeoes.size();
 	}
 	
+	void addPeao(Peao peao)
+	{
+		lPeoes.add(peao);
+	}
+	
+	void addTerreno(Terreno terreno)
+	{
+		lTerrenos.add(terreno);
+	}
+	
+	
+	
+	
+	
 
 }

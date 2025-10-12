@@ -9,14 +9,9 @@ class Peao {
 		id = id_peao;
 	} 
 		
-	public void setaPosicaoPeao(int pos, Banco banco, Tabuleiro tabuleiro) {
+	public void setaPosicaoPeao(int pos) {
 		posicao = pos;
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);
-		
-		if (id != tabuleiro.getTerreno(pos).getDono())
-		{
-			banco.pagarAluguel(tabuleiro, id, pos);
-		}
 		return;
 	}
 	

@@ -4,11 +4,18 @@ import java.util.ArrayList;
 class Propriedade extends Terreno{
 	
 	//hotel - 0; 1 = 1 casa; 2 = 2 casas...
-	ArrayList<Integer> lVAluguel = new ArrayList<>();
-	ArrayList<Integer> lVCompra = new ArrayList<>();
+	ArrayList<Integer> lVAluguel;
+	ArrayList<Integer> lVCompra;
 	
 	int qtdCasas = 0;
 	boolean temHotel = false;
+	
+	Propriedade(ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
+	{
+		lVAluguel = new ArrayList<>(lAlug);
+		lVCompra = new ArrayList<>(lComp);
+		valorCompra = valorC;
+	}
 	
 	boolean temHotel()
 	{
@@ -34,6 +41,13 @@ class Propriedade extends Terreno{
 	{
 		qtdCasas += x;
 	}
+	
+	void setTemHotel(boolean b)
+	{
+		temHotel = b;
+	}
+	
+	
 	
 	
 }
