@@ -1,12 +1,15 @@
-package Model;
+package View;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+// a View pode importar classes do Controller, se necessário
+
 public class Texto extends JPanel{
 	
 	String m_texto;
-	Texto()
+	public Texto()
 	{
 		
 	}

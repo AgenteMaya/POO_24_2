@@ -1,8 +1,11 @@
-package Model;
+package View;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
+
+//a View pode importar classes do Controller, se necessário
 
 @SuppressWarnings("serial")
 public class Botao extends JPanel implements MouseListener

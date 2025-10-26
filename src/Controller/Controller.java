@@ -1,8 +1,13 @@
-package Model;
+package Controller;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Scanner;
+
+// Controller só terá acesso a algumas classes da View e do Model
+import Model.*;
+import View.*;
 
 @SuppressWarnings("serial")
 class Controller extends JFrame{
@@ -18,7 +23,7 @@ class Controller extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
-	public static void main(String[] args) 
+	public static void main(String[] args) // main permanecerá aqui ou inserimos ela em outro "pacote" só para main?
 	{
 		Controller c = new Controller();
 		
