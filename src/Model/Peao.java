@@ -1,6 +1,6 @@
 package Model;
 
-class Peao {
+public class Peao {
 	int id;
 	int dinheiro;
 	int posicao;
@@ -19,16 +19,21 @@ class Peao {
 		this.id = id_peao;
 	} 
 	
-	void setCor(String cor) 
+	public void setCor(String cor) 
 	{
 		this.cor = cor;
 	}
 	
-	void setNome(String nome) 
+	public void setNome(String nome) 
 	{
 		this.nome = nome;
 	}
-	
+
+	public String getCor()
+	{
+		return this.cor;
+	}
+
 	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro, Banco banco) {
 		if (naPrisao)
 		{
@@ -58,7 +63,7 @@ class Peao {
      * Função que seta o montante de dinheiro do jogador
      * @param d
      */
-	void setDinheiro(int d)
+	public void setDinheiro(int d)
 	{
 		dinheiro = d;
 	}

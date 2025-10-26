@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import Controller.GameController;
 
@@ -178,8 +179,12 @@ public class JanelaPrincipal extends JFrame {
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
 
+		HashMap<String, Image> imagensPeoes;
+        imagensPeoes = new HashMap<>();
+        imagensPeoes = carregaImagemPeoes(imagensPeoes);
+        
 		Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
-		painelTabuleiro = new TabuleiroPanel(imagemTabuleiro);
+		painelTabuleiro = new TabuleiroPanel(imagemTabuleiro, imagensPeoes);
 		painelTabuleiro.setBackground(Color.WHITE);
 		painelTabuleiro.setBounds(0, 0, 400, 400);
 		getContentPane().add(painelTabuleiro);
@@ -205,5 +210,17 @@ public class JanelaPrincipal extends JFrame {
 		}
 
 		return image;
+	}
+
+	private HashMap<String, Image> carregaImagemPeoes(HashMap<String, Image> imagens) 
+	{
+		imagens.put("Vermelho", carregaImagem("/peao0.png"));
+		imagens.put("Azul", carregaImagem("/peao1.png"));
+		imagens.put("Laranja", carregaImagem("/peao2.png"));
+		imagens.put("Amarelo", carregaImagem("/peao3.png"));
+		imagens.put("Magenta", carregaImagem("/peao4.png"));
+		imagens.put("Cinza", carregaImagem("/peao5.png"));
+	
+		return imagens;
 	}
 }
