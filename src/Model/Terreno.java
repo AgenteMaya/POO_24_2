@@ -29,5 +29,12 @@ class Terreno {
 	{
 		return valorCompra;
 	}
+	
+	void realizaAcao(Baralho baralho, Banco banco, Peao peao) 
+	{
+		// --> todas as implementações deste método vão para o controller
+		// alterar os testes!
+		System.out.println("Realiza ação da casa correspondente.");
+	}
 
 }

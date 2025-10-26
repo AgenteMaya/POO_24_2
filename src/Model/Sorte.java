@@ -9,7 +9,7 @@ public class Sorte extends Terreno{
 		this.posPrisao = posPrisao;
 	}
 	
-	void pegarSorte(Baralho baralho, Peao peao)
+	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
 	{
 		Carta cartaRetirada = baralho.pegarCarta();
 		
@@ -32,6 +32,21 @@ public class Sorte extends Terreno{
 				peao.removeCartaSaidaLivrePrisao();
 			}
 			baralho.descartarCarta(cartaRetirada);
+		}
+		else
+		{
+			int valorTransferencia = cartaRetirada.getValorTransferencia();
+			
+			if (cartaRetirada.ehTranferenciaBanco())
+			{
+				// no lugar de null --> tabuleiro
+				banco.realizaTransferenciaBanco(peao.getId(), valorTransferencia, null); 
+			}
+			else
+			{
+				// no lugar de null --> tabuleiro
+				banco.realizaTransferenciaPeoes(peao.getId(), valorTransferencia, null); 
+			}
 		}
 	}
 }

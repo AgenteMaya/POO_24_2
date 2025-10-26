@@ -39,6 +39,18 @@ class Carta {
 		return !isSorte && envolvePrisao;
 	}
 	
+	// Função para verificar se a carta é de transferência entre usuário e peão ou entre peões.
+	boolean ehTranferenciaBanco()
+	{
+		return tranferenciaBanco;
+	}
+	
+	// Função para pegar o valor da tranferência.
+	int getValorTransferencia()
+	{
+		return valor;
+	}
+	
 	// Função para pegar a descrição da carta.
 	public String getDescricao() 
 	{

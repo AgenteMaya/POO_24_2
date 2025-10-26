@@ -12,7 +12,10 @@ class Banco {
 		if (terreno.getDono() < 0 && peao.getDinheiro() > terreno.getValorCompra())
 		{
 			terreno.setDono(peao.getId());
-			peao.adicionaDinheiro(-terreno.getValorCompra());
+			
+			int valor = terreno.getValorCompra();
+			peao.adicionaDinheiro(-valor);
+			qtdDinheiro += valor;
 		}
 	}
 	
@@ -25,7 +28,10 @@ class Banco {
 			Terreno terreno = tabuleiro.getTerreno(i);
 			if (terreno.getDono() == id)
 			{
-				peao.adicionaDinheiro((int) (terreno.getValorCompra() * 0.90));
+				int valor = (int) (terreno.getValorCompra() * 0.90);
+				peao.adicionaDinheiro(valor);
+				qtdDinheiro -= valor;
+				
 				terreno.setDono(-1);				
 				return true;
 			}
@@ -70,7 +76,6 @@ class Banco {
 			}
 		}
 		
-		
 		peao.adicionaDinheiro(-valorASerPago);
 		
 		Peao dono = tabuleiro.getPeao(tabuleiro.getTerreno(idTerreno).getDono());
@@ -87,7 +92,10 @@ class Banco {
 		{
 			if (peao.getDinheiro() > propriedade.getVCompra(propriedade.getQtdCasas() + 1))
 			{
-				peao.adicionaDinheiro(-propriedade.getVCompra(propriedade.getQtdCasas() + 1));
+				int valor = propriedade.getVCompra(propriedade.getQtdCasas() + 1);
+				peao.adicionaDinheiro(-valor);
+				qtdDinheiro += valor;
+				
 				propriedade.setMudaQtdCasa(1);
 			}
 		}
@@ -96,7 +104,10 @@ class Banco {
 				&& 	!propriedade.temHotel()
 				&& peao.getDinheiro() > propriedade.getVCompra(0))
 		{
-			peao.adicionaDinheiro(-propriedade.getVCompra(0));
+			int valor = propriedade.getVCompra(0);
+			peao.adicionaDinheiro(-valor);
+			qtdDinheiro += valor;
+			
 			propriedade.setTemHotel(true);;
 		}
 		else

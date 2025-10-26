@@ -9,7 +9,7 @@ public class TerrenoEspecial extends Terreno{
 		this.posPrisao = posPrisao;
 	}
 	
-	void irPraPrisao(Baralho baralho, Peao peao)
+	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
 	{
 		Carta cartaSaidaPrisao = peao.vaiPraPrisao(posPrisao);
 		if (cartaSaidaPrisao == null)

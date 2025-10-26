@@ -7,7 +7,7 @@ public class Prisao extends Terreno{
 		this.tipoTerreno = 3;
 	}
 	
-	void tentaSair(Peao peao)
+	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
 	{
 		Dado dado = new Dado();
 		int deslocamento = dado.deslocamentoSaidaPrisao();

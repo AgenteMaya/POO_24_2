@@ -12,6 +12,8 @@ class Propriedade extends Terreno{
 	
 	Propriedade(ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
 	{
+		this.tipoTerreno = 0;
+		
 		lVAluguel = new ArrayList<>(lAlug);
 		lVCompra = new ArrayList<>(lComp);
 		valorCompra = valorC;
@@ -47,7 +49,25 @@ class Propriedade extends Terreno{
 		temHotel = b;
 	}
 	
-	
-	
-	
+	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
+	{
+		if (getDono() == -1) 
+		{
+			// perguntar pela interface se usuário deseja comprar
+			// se sim:
+			// banco.compraPropriedade()
+        } 
+		else if (getDono() != peao.getId()) 
+		{
+            // banco.pagarAluguel(tabuleiro, peao.getId(), getId());
+
+        } 
+		else 
+		{
+            // perguntar se o usuário deseja contruir algo
+			// se sim:
+				// perguntar o que ele deseja construir
+			
+        }
+	}
 }
