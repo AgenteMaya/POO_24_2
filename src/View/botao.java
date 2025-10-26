@@ -1,26 +1,18 @@
-package View;
+package Model;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 
 @SuppressWarnings("serial")
-public class botao extends JPanel implements MouseListener
+public class Botao extends JPanel implements MouseListener
 {
-	double leftX;
-	double topY;
-	double larg;
-	double alt;
+
 	String nome;
-	
 	private ActionListener acaoCallback;
 	
-	public botao(double x, double y, double w, double h, String nome)
+	public Botao(String nome)
 	{
-		this.leftX = x;
-		this.topY = y;
-		this.larg = w;
-		this.alt = h;
 		this.nome = nome;
 		
 		this.acaoCallback = null;
@@ -34,24 +26,30 @@ public class botao extends JPanel implements MouseListener
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		
-		Rectangle2D rt=new Rectangle2D.Double(leftX,topY,larg,alt);
+		Rectangle2D rt = new Rectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1);
 		g2d.draw(rt);
+		
+		g2d.setColor(Color.BLUE); 
+		g2d.setFont(new Font("Arial", Font.BOLD, 12)); 
+		
+		FontMetrics metrics = g2d.getFontMetrics();
+		int textoLargura = metrics.stringWidth(this.nome);
+		
+		
+		int textoX = (getWidth() - textoLargura) / 2;
+		int textoY = (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
+		
+		g2d.drawString(this.nome, textoX, textoY);
 		
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
-		int mouseX = e.getX();
-		int mouseY = e.getY();
 		
-		
-		if((mouseX >= leftX && mouseX <= leftX + larg) 
-				&& (mouseY >= topY && mouseY >= topY + alt)) 
-		{
-			System.out.printf("Botão %s foi clicado!", nome);
-			acionaAcao();
-		}
+		System.out.printf("Botão %s foi clicado!", nome);
+		acionaAcao();
+	
 	}
 	
 	
@@ -79,4 +77,3 @@ public class botao extends JPanel implements MouseListener
 	public void mouseReleased(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 }
-
