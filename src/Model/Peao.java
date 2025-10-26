@@ -4,6 +4,8 @@ class Peao {
 	int id;
 	int dinheiro;
 	int posicao;
+	String cor;
+	String nome;
 	
 	boolean naPrisao = false;
 	boolean possuiSaidaLivrePrisao = false;
@@ -16,7 +18,17 @@ class Peao {
 	public Peao(int id_peao) {
 		this.id = id_peao;
 	} 
-		
+	
+	void setCor(String cor) 
+	{
+		this.cor = cor;
+	}
+	
+	void setNome(String nome) 
+	{
+		this.nome = nome;
+	}
+	
 	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro, Banco banco) {
 		if (naPrisao)
 		{

@@ -3,6 +3,7 @@ package Controller;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // Controller só terá acesso a algumas classes da View e do Model
@@ -15,10 +16,13 @@ class Controller extends JFrame{
 	public final int LARG_DEFAULT = 1280;
 	public final int ALT_DEFAULT = 800;
 	
+	ArrayList<String> cores = new ArrayList<>();
+
 	JPanel painelMenu;
 	
 	Controller()
 	{
+		inicializaCores();
 		janelaInicial();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -31,6 +35,15 @@ class Controller extends JFrame{
 		c.setVisible(true);
 	}
 	
+	void inicializaCores() 
+	{
+		cores.add("Vermelho");
+		cores.add("Azul");
+		cores.add("Laranja");
+		cores.add("Amarelo");
+		cores.add("Magenta");
+		cores.add("Cinza");
+	}
 	
 	void janelaInicial() 
 	{
@@ -110,5 +123,96 @@ class Controller extends JFrame{
         revalidate();
         repaint();
     }
+
+	void janelaConfigJogadores(int num_jogadores) 
+	{
+		JPanel painelConfiguracao = new JPanel();
+		painelConfiguracao.setLayout(null);
+		getContentPane().removeAll();
+		setSize(500, 500);
+		
+		if(num_jogadores == 0) {
+			Botao btnJogar = new Botao("Jogar!");
+			btnJogar.setBounds(150, 180, 100, 30);
+			
+			btnJogar.adicionaListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                System.out.println("Começar partida");
+	              //ir para a janela do tabuleiro
+	            }
+	        });
+			painelConfiguracao.add(btnJogar);
+			getContentPane().add(painelConfiguracao);
+			revalidate();
+		    repaint();
+		}
+			
+		
+		else {
+			Texto textoCampoNome = new Texto();
+			textoCampoNome.setTexto("Nome jogador (até 8 caracteres):");
+			textoCampoNome.setBounds(10, 10, 190, 30);
+			
+			JTextField campoNome = new JTextField();
+			campoNome.setBounds(10, 50, 100, 30);
+			
+			
+			Texto textoCor = new Texto();
+			textoCor.setTexto("Cor do peão:");
+			textoCor.setBounds(10, 90, 100, 30);
+			
+			JTextField campoCor= new JTextField();
+			campoCor.setBounds(10, 130, 100, 30);
+			
+			Texto textoAviso = new Texto();
+            textoAviso.setTexto("Cor inválida!!!");
+            textoAviso.setBounds(10, 150, 100, 30);
+            textoAviso.setVisible(false);
+			
+			Botao btnProximo = new Botao("Próximo");
+			btnProximo.setBounds(120, 180, 100, 30);
+			
+			btnProximo.adicionaListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                System.out.println("Proximo jogador!");
+	                //Peao jogador = new Peao(num_jogadores-1);
+	                
+	                String corEscolhida = campoCor.getText();
+	                Boolean podeCor = cores.contains(corEscolhida);
+	                if(podeCor) 
+	                {
+	                	//jogador.setCor(campoCor.getText());
+		                //jogador.setNome(campoNome.getText());
+		                //jogador.setDinheiro(4000);
+		                
+		                janelaConfigJogadores(num_jogadores-1);
+	                }
+	                else 
+	                {
+	                	System.out.println("CorvInválida!");
+	                	textoAviso.setVisible(true);
+	                	painelConfiguracao.revalidate();
+	                    painelConfiguracao.repaint();
+	                }
+	                
+	            }
+	        });
+			
+			painelConfiguracao.add(textoCampoNome);
+			painelConfiguracao.add(campoNome);
+			painelConfiguracao.add(textoCor);
+			painelConfiguracao.add(campoCor);
+			painelConfiguracao.add(btnProximo);
+			painelConfiguracao.add(textoAviso);
+
+	        getContentPane().add(painelConfiguracao);
+	        
+	        revalidate();
+	        repaint();		
+		}
+		
+	}
 	
 }
