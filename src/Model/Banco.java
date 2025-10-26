@@ -1,10 +1,22 @@
 package Model;
 
-public class Banco { //transformar em Singleton
+public class Banco { 
 	
-	int qtdDinheiro = 200000;
+    private static Banco banco = null; // Banco é Singleton
+    
+    private Banco() {
+        this.qtdDinheiro = 200000;
+    }
+
+    public static Banco getBanco() {
+    	if (banco == null)
+    		banco = new Banco();
+        return banco;
+    }
 	
-	void compraPropriedade(int idTerreno, int idPeao, Tabuleiro tabuleiro)
+	int qtdDinheiro;
+	
+	public void compraPropriedade(int idTerreno, int idPeao, Tabuleiro tabuleiro)
 	{		
 		Terreno terreno = tabuleiro.getTerreno(idTerreno);
 		Peao peao = tabuleiro.getPeao(idPeao);
@@ -19,7 +31,7 @@ public class Banco { //transformar em Singleton
 		}
 	}
 	
-	boolean vendePropriedade(Peao peao, Tabuleiro tabuleiro)
+	public boolean vendePropriedade(Peao peao, Tabuleiro tabuleiro)
 	{
 		int tamVetor = tabuleiro.getTamListTerreno();
 		int id = peao.getId();
@@ -39,7 +51,7 @@ public class Banco { //transformar em Singleton
 		return false;
 	}
 	
-	boolean pagarAluguel(Tabuleiro tabuleiro, int idPeao, int idTerreno)
+	public boolean pagarAluguel(Tabuleiro tabuleiro, int idPeao, int idTerreno)
 	{
 		int valorASerPago = 0;
 		if (tabuleiro.getTerreno(idTerreno) instanceof Propriedade)
@@ -83,7 +95,7 @@ public class Banco { //transformar em Singleton
 		return true;
 	}
 	
-	void constroiCasa(int idPeao, int idTerreno, Tabuleiro tabuleiro, boolean casaOuHotel)
+	public void constroiCasa(int idPeao, int idTerreno, Tabuleiro tabuleiro, boolean casaOuHotel)
 	{
 		Propriedade propriedade = (Propriedade) tabuleiro.getTerreno(idTerreno);
 		Peao peao = tabuleiro.getPeao(idPeao);
@@ -116,14 +128,14 @@ public class Banco { //transformar em Singleton
 		}
 	}
 	
-	void realizaTransferenciaBanco(int idPeao, int valor, Tabuleiro tabuleiro)
+	public void realizaTransferenciaBanco(int idPeao, int valor, Tabuleiro tabuleiro)
 	{
 		Peao peao = tabuleiro.getPeao(idPeao);
 		peao.adicionaDinheiro(valor);
 		qtdDinheiro += valor;
 	}
 	
-	void realizaTransferenciaPeoes(int idPeao, int valor, Tabuleiro tabuleiro)
+	public void realizaTransferenciaPeoes(int idPeao, int valor, Tabuleiro tabuleiro)
 	{
 		Peao peao = tabuleiro.getPeao(idPeao);
 		int qtdPeoes = tabuleiro.getTamListPeoes();
@@ -139,5 +151,4 @@ public class Banco { //transformar em Singleton
 		peao.adicionaDinheiro(valor * (qtdPeoes - 1));
 	}
 	
-
 }

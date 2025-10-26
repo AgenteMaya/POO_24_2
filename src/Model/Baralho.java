@@ -2,7 +2,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-class Baralho {
+public class Baralho {
 	ArrayList<Carta> lCartasCompra=new ArrayList<>();
 	ArrayList<Carta> lCartasDescarte=new ArrayList<>();
 	

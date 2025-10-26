@@ -1,7 +1,7 @@
 package Model;
 import java.util.ArrayList;
 
-class Propriedade extends Terreno{
+public class Propriedade extends Terreno{
 	
 	//hotel - 0; 1 = 1 casa; 2 = 2 casas...
 	ArrayList<Integer> lVAluguel;
@@ -10,9 +10,9 @@ class Propriedade extends Terreno{
 	int qtdCasas = 0;
 	boolean temHotel = false;
 	
-	Propriedade(ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
+	public Propriedade(ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
 	{
-		this.tipoTerreno = 0;
+		this.tipoTerreno = 1;
 		
 		lVAluguel = new ArrayList<>(lAlug);
 		lVCompra = new ArrayList<>(lComp);

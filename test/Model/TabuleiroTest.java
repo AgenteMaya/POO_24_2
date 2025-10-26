@@ -8,7 +8,8 @@ import static org.junit.Assert.*;
 
 public class TabuleiroTest {
 	
-	Tabuleiro tabuleiro = new Tabuleiro();
+	ArrayList<Terreno> lTerrenos = new ArrayList<>();
+	Tabuleiro tabuleiro = new Tabuleiro(lTerrenos);
 
 	@Test
 	public void testaAdicionarTerrenos() {

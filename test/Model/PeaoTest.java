@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 public class PeaoTest {
 	
-	Tabuleiro tabuleiro = new Tabuleiro();
-	Banco banco = new Banco();
+	ArrayList<Terreno> lTerrenos = new ArrayList<>();
+	Tabuleiro tabuleiro = new Tabuleiro(lTerrenos);
 	
 	public void setup() {
 		Terreno terreno = new Empresa(50, 100);
@@ -32,7 +32,7 @@ public class PeaoTest {
 		int deslocamento = 6; //mocking de um possível valor retornado pela lanca_dados
 		
 		Peao peao = new Peao(peaoDaVez);
-		peao.setaPosicaoPeao(deslocamento, tabuleiro, banco);
+		peao.setaPosicaoPeao(deslocamento, tabuleiro);
 		int pos = peao.pegaPosicaoPeao();
 			
 		assertEquals("A posição setada não é a mesma do lançamento dos dados",

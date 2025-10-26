@@ -45,7 +45,7 @@ public class Peao {
 		//no instante so estao sendo verificados as posicoes dos de aluguel para pagamento automatico
 		if (posicao < tabuleiro.getTamListTerreno() && posicao != tabuleiro.getTerreno(pos).getDono())
 		{
-			banco.pagarAluguel(tabuleiro, id, pos);
+			Banco.getBanco().pagarAluguel(tabuleiro, id, pos);
 		}
 		
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);

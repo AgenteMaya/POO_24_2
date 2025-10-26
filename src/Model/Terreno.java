@@ -1,6 +1,6 @@
 package Model;
 
-class Terreno {
+public class Terreno {
 	
 	/**
 	 * 0 -> Sorte 
@@ -8,6 +8,9 @@ class Terreno {
 	 * 2 -> Empresa 
 	 * 3 -> Prisão
 	 * 4 -> Vá para a Prisão
+	 * 5 -> Ponto de Partida
+	 * 6 -> Parada Livre
+	 * 7 -> imposto
 	 */
 	int tipoTerreno;
 	
