@@ -1,6 +1,6 @@
 package Model;
 
-class Banco {
+public class Banco { //transformar em Singleton
 	
 	int qtdDinheiro = 200000;
 	

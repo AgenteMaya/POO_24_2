@@ -1,7 +1,7 @@
 package Model;
 import java.util.ArrayList;
 
-class Tabuleiro {
+public class Tabuleiro { // tranformar em singleton
 	ArrayList<Terreno> lTerrenos=new ArrayList<>();
 	ArrayList<Peao> lPeoes=new ArrayList<>();
 	
