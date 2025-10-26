@@ -26,14 +26,13 @@ public class SorteTest {
 	@Test
 	public void testaPegaCartaSaída()
 	{
-		Banco banco = new Banco();
 		Baralho baralhoTeste = criaBaralhoSaidaPrisao();
 		int posPrisao = 10;
 		Sorte sorte = new Sorte(posPrisao);
 		Peao peao = new Peao(1);
 		int posInicial = peao.pegaPosicaoPeao();
 		
-		sorte.realizaAcao(baralhoTeste, banco, peao);
+		sorte.realizaAcao(baralhoTeste, peao);
 		
 		assertEquals(false, peao.estaNaPrisao());
 		assertEquals(true, peao.temCartaSaidaLivre());	
@@ -43,13 +42,13 @@ public class SorteTest {
 	@Test
 	public void testaPegaCartaIdaPrisao()
 	{
-		Banco banco = new Banco();
+
 		Baralho baralhoTeste = criaBaralhoIdaPrisao();
 		int posPrisao = 10;
 		Sorte sorte = new Sorte(posPrisao);
 		Peao peao = new Peao(1);
 		
-		sorte.realizaAcao(baralhoTeste, banco, peao);
+		sorte.realizaAcao(baralhoTeste, peao);
 		
 		assertEquals(true, peao.estaNaPrisao());
 		assertEquals(false, peao.temCartaSaidaLivre());	
@@ -59,21 +58,20 @@ public class SorteTest {
 	@Test
 	public void testaPegaCartaIdaPrisaoTendoCartaSaida()
 	{
-		Banco banco = new Banco();
 		Baralho baralhoTeste = criaBaralhoSaidaPrisao();
 		int posPrisao = 10;
 		Sorte sorte = new Sorte(posPrisao);
 		Peao peao = new Peao(1);
 		int posInicial = peao.pegaPosicaoPeao();
 		
-		sorte.realizaAcao(baralhoTeste, banco, peao);
+		sorte.realizaAcao(baralhoTeste, peao);
 		
 		assertEquals(false, peao.estaNaPrisao());
 		assertEquals(true, peao.temCartaSaidaLivre());	
 		assertEquals(posInicial, peao.pegaPosicaoPeao());
 		
 		baralhoTeste = criaBaralhoIdaPrisao();
-		sorte.realizaAcao(baralhoTeste, banco, peao);
+		sorte.realizaAcao(baralhoTeste, peao);
 		
 		assertEquals(false, peao.estaNaPrisao());
 		assertEquals(false, peao.temCartaSaidaLivre());	

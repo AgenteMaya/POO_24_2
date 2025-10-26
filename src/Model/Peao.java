@@ -1,6 +1,6 @@
 package Model;
 
-class Peao {
+public class Peao {
 	int id;
 	int dinheiro;
 	int posicao;
@@ -29,7 +29,7 @@ class Peao {
 		this.nome = nome;
 	}
 	
-	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro, Banco banco) {
+	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro) {
 		if (naPrisao)
 		{
 			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar", id);
@@ -40,7 +40,7 @@ class Peao {
 		//no instante so estao sendo verificados as posicoes dos de aluguel para pagamento automatico
 		if (posicao < tabuleiro.getTamListTerreno() && posicao != tabuleiro.getTerreno(pos).getDono())
 		{
-			banco.pagarAluguel(tabuleiro, id, pos);
+			Banco.getBanco().pagarAluguel(tabuleiro, id, pos);
 		}
 		
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);

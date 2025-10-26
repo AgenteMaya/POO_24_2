@@ -10,10 +10,9 @@ public class TerrenoEspecialTest {
 	@Test
 	public void testaEntradaComSaidaLivrePrisao()
 	{
-		Banco banco = new Banco();
 		Baralho baralhoTeste = new Baralho(new ArrayList<Carta>());
 		int posPrisao = 10;
-		TerrenoEspecial terreno = new TerrenoEspecial(posPrisao);
+		IrPraPrisao terreno = new IrPraPrisao(posPrisao);
 		Peao peao = new Peao(1);
 		int posInicial = peao.pegaPosicaoPeao();
 		
@@ -22,7 +21,7 @@ public class TerrenoEspecialTest {
 		assertEquals(true, peao.temCartaSaidaLivre());
 		assertEquals(0, baralhoTeste.tamanhoListaDescarte());
 		
-		terreno.realizaAcao(baralhoTeste, banco, peao);
+		terreno.realizaAcao(baralhoTeste, peao);
 		
 		assertEquals(false, peao.temCartaSaidaLivre());
 		assertEquals(1, baralhoTeste.tamanhoListaDescarte());
@@ -33,14 +32,13 @@ public class TerrenoEspecialTest {
 	@Test
 	public void testaEntradaSemSaidaLivrePrisao()
 	{
-		Banco banco = new Banco();
 		Baralho baralhoTeste = new Baralho(new ArrayList<Carta>());
 		int posPrisao = 10;
-		TerrenoEspecial terreno = new TerrenoEspecial(posPrisao);
+		IrPraPrisao terreno = new IrPraPrisao(posPrisao);
 		Peao peao = new Peao(1);
 		
 		assertEquals(false, peao.temCartaSaidaLivre());
-		terreno.realizaAcao(baralhoTeste, banco, peao);
+		terreno.realizaAcao(baralhoTeste, peao);
 		
 		assertEquals(true, peao.estaNaPrisao());
 		assertEquals(posPrisao, peao.pegaPosicaoPeao());	

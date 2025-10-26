@@ -1,9 +1,16 @@
 package Model;
 import java.util.ArrayList;
 
-public class Tabuleiro { // tranformar em singleton
+public class Tabuleiro 
+{ 
+
 	ArrayList<Terreno> lTerrenos=new ArrayList<>();
 	ArrayList<Peao> lPeoes=new ArrayList<>();
+	
+	public Tabuleiro (ArrayList<Terreno> listaTerrenos)
+	{
+		lTerrenos.addAll(listaTerrenos);
+	}
 	
 	Terreno getTerreno(int pos)
 	{
@@ -39,10 +46,5 @@ public class Tabuleiro { // tranformar em singleton
 	{
 		lTerrenos.add(terreno);
 	}
-	
-	
-	
-	
-	
 
 }

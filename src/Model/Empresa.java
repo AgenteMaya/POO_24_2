@@ -1,10 +1,10 @@
 package Model;
 
-class Empresa extends Terreno{	
+public class Empresa extends Terreno{	
 	
 	int valorAluguel = 0;
 	
-	Empresa(int valorA, int valorC)
+	public Empresa(int valorA, int valorC)
 	{
 		this.tipoTerreno = 2;
 		

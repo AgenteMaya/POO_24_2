@@ -1,15 +1,15 @@
 package Model;
 
-public class TerrenoEspecial extends Terreno{
+public class IrPraPrisao extends Terreno{
 	int posPrisao;
 	
-	public TerrenoEspecial(int posPrisao)
+	public IrPraPrisao(int posPrisao)
 	{
 		this.tipoTerreno = 4; // até o presente momento, esta classe serve para o campo de "Vá para a Prisão"
 		this.posPrisao = posPrisao;
 	}
 	
-	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
+	void realizaAcao(Baralho baralho, Peao peao)
 	{
 		Carta cartaSaidaPrisao = peao.vaiPraPrisao(posPrisao);
 		if (cartaSaidaPrisao == null)
