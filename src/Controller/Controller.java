@@ -1,17 +1,21 @@
 package Controller;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL; 
 
 // Controller só terá acesso a algumas classes da View e do Model
 import Model.*;
 import View.*;
 
 @SuppressWarnings("serial")
-class Controller extends JFrame{
+class Controller extends JFrame{ //controller herdando de Jframe?
 	
 	public final int LARG_DEFAULT = 1280;
 	public final int ALT_DEFAULT = 800;
@@ -19,6 +23,7 @@ class Controller extends JFrame{
 	ArrayList<String> cores = new ArrayList<>();
 
 	JPanel painelMenu;
+	JPanel painelTabuleiro;
 	
 	Controller()
 	{
@@ -47,7 +52,7 @@ class Controller extends JFrame{
 	
 	void janelaInicial() 
 	{
-		setSize(210, 210);
+		setSize(240, 170);
 		painelMenu = new JPanel();
 		painelMenu.setLayout(null);
 		
@@ -70,7 +75,7 @@ class Controller extends JFrame{
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        System.out.println("AÇÃO: Retornando a jogo salvo...");
-		        //janelaTabuleiro();
+		        janelaTabuleiro();
 		    }
 		});
 		
@@ -139,7 +144,7 @@ class Controller extends JFrame{
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 	                System.out.println("Começar partida");
-	              //ir para a janela do tabuleiro
+	                janelaTabuleiro();
 	            }
 	        });
 			painelConfiguracao.add(btnJogar);
@@ -213,6 +218,43 @@ class Controller extends JFrame{
 	        repaint();		
 		}
 		
+	}
+	
+	
+	Image carregaImagem(String nomeArquivo) 
+	{
+	    Image image = null;
+	    
+	    URL imageUrl = getClass().getResource(nomeArquivo); 
+	    
+	    if (imageUrl == null) {
+	        System.out.println("Erro: Não foi possível encontrar o recurso: " + nomeArquivo);
+	        System.exit(1);
+	    }
+	    
+	    try {
+	        image = ImageIO.read(imageUrl);
+	    }
+	    catch (IOException e) {
+	        System.out.println("Erro ao carregar a imagem: " + e.getMessage());
+	        System.exit(1);
+	    }
+	    
+	    return image;
+	}
+	
+	
+	void janelaTabuleiro()
+	{
+        getContentPane().removeAll();
+        setSize(1280, 800);
+        
+        Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
+        painelTabuleiro = new TabuleiroPanel(imagemTabuleiro);
+        painelTabuleiro.setBackground(Color.WHITE);
+        painelTabuleiro.setBounds(0, 0, 400, 400);
+        getContentPane().add(painelTabuleiro);
+        
 	}
 	
 }
