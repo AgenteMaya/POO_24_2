@@ -12,37 +12,42 @@ public class Tabuleiro
 		lTerrenos.addAll(listaTerrenos);
 	}
 	
-	Terreno getTerreno(int pos)
+	public Terreno getTerreno(int pos)
 	{
 		return lTerrenos.get(pos);
 	}
 	
-	Peao getPeao(int id)
+	public Peao getPeao(int id)
 	{
 		return lPeoes.get(id);
 	}
 	
-	int getTamListTerreno()
+	public ArrayList<Peao> getListaPeoes()
+	{
+		return lPeoes;
+	}
+	
+	public int getTamListTerreno()
 	{
 		return lTerrenos.size();
 	}
 	
-	int getTamListPeoes()
+	public int getTamListPeoes()
 	{
 		return lPeoes.size();
 	}
 	
-	void addPeao(Peao peao)
+	public void addPeao(Peao peao)
 	{
 		lPeoes.add(peao);
 	}
 	
-	void removePeao(Peao peao)
+	public void removePeao(Peao peao)
 	{
 		lPeoes.remove(peao);
 	}
 	
-	void addTerreno(Terreno terreno)
+	public void addTerreno(Terreno terreno)
 	{
 		lTerrenos.add(terreno);
 	}

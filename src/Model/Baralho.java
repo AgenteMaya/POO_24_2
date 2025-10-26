@@ -24,7 +24,7 @@ public class Baralho {
      * embaralha, e então pega a carta.
      * @return a carta do topo.
      */
-    Carta pegarCarta() {
+    public Carta pegarCarta() {
         if (lCartasCompra.isEmpty()) {
             System.out.println("O monte de compras acabou. Reabastecendo...");
 
@@ -43,7 +43,7 @@ public class Baralho {
      * Cartas de "Saída Livre da Prisão" geralmente são guardadas pelo jogador.
      * @param carta é a carta a ser descartada.
      */
-    void descartarCarta(Carta carta) {
+    public void descartarCarta(Carta carta) {
         if (carta != null) {
         	lCartasDescarte.add(carta);
         }

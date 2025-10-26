@@ -9,44 +9,4 @@ public class Sorte extends Terreno{
 		this.posPrisao = posPrisao;
 	}
 	
-	void realizaAcao(Baralho baralho, Peao peao)
-	{
-		Carta cartaRetirada = baralho.pegarCarta();
-		
-		// se for a carta de saída livre, o peão deverá guardá-la e não deve descartá-la
-		if (cartaRetirada.ehSaidaPrisao())
-		{
-			peao.atribuiSaidaLivrePrisao(cartaRetirada);
-		}
-		else if (cartaRetirada.ehIdaPrisao())
-		{
-			Carta cartaSaidaPrisao = peao.vaiPraPrisao(posPrisao);
-			if (cartaSaidaPrisao == null)
-			{
-				System.out.println("O jogador atual pegou a carta de ida à prisão e não tinha a de saída.");
-			}
-			else
-			{
-				System.out.println("O jogador atual pegou a carta de ida à prisão e tinha a de saída.");
-				baralho.descartarCarta(cartaSaidaPrisao);
-				peao.removeCartaSaidaLivrePrisao();
-			}
-			baralho.descartarCarta(cartaRetirada);
-		}
-		else
-		{
-			int valorTransferencia = cartaRetirada.getValorTransferencia();
-			
-			if (cartaRetirada.ehTranferenciaBanco())
-			{
-				// no lugar de null --> tabuleiro
-				Banco.getBanco().realizaTransferenciaBanco(peao.getId(), valorTransferencia, null); 
-			}
-			else
-			{
-				// no lugar de null --> tabuleiro
-				Banco.getBanco().realizaTransferenciaPeoes(peao.getId(), valorTransferencia, null); 
-			}
-		}
-	}
 }

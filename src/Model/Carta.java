@@ -28,25 +28,31 @@ public class Carta {
 	// função para auxiliar na transferência do valor --> enviar banco?
 	
 	// Função para verificar se a carta é de Saída da Prisão.
-	boolean ehSaidaPrisao()
+	public boolean ehSaidaPrisao()
 	{
 		return isSorte && envolvePrisao;
 	}
 	
 	// Função para verificar se a carta é de Ida para a Prisão.
-	boolean ehIdaPrisao()
+	public boolean ehIdaPrisao()
 	{
 		return !isSorte && envolvePrisao;
 	}
 	
 	// Função para verificar se a carta é de transferência entre usuário e peão ou entre peões.
-	boolean ehTranferenciaBanco()
+	public boolean ehTranferenciaBanco()
 	{
 		return tranferenciaBanco;
 	}
 	
+	// Função para verificar se a carta é de sortes.
+	public boolean ehSorte()
+	{
+		return isSorte;
+	}
+	
 	// Função para pegar o valor da tranferência.
-	int getValorTransferencia()
+	public int getValorTransferencia()
 	{
 		return valor;
 	}

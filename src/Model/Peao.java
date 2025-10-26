@@ -33,8 +33,13 @@ public class Peao {
 	{
 		return this.cor;
 	}
+	
+	public String getNome()
+	{
+		return this.nome;
+	}
 
-	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro, Banco banco) {
+	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro) {
 		if (naPrisao)
 		{
 			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar", id);
@@ -72,7 +77,7 @@ public class Peao {
      * Função que retorna o montante da instância de um peão
      * @return
      */
-	int getDinheiro()
+	public int getDinheiro()
 	{
 		return dinheiro;
 	}
@@ -81,18 +86,18 @@ public class Peao {
      * Função que adiciona um valor ao montante existente do peao
      * @param d
      */
-	void adicionaDinheiro(int d)
+	public void adicionaDinheiro(int d)
 	{
 		dinheiro += d;
 	}
 	
-	int getId()
+	public int getId()
 	{
 		return id;
 	}
 	
 	// função que verifica se o peão vai para a prisão e, se for, realiza seu deslocamento
-	Carta vaiPraPrisao(int posPrisao)
+	public Carta vaiPraPrisao(int posPrisao)
 	{
 		if (cartaSaidaPrisao != null) 
 		{
@@ -104,7 +109,7 @@ public class Peao {
 		return cartaSaidaPrisao;
 	}
 	
-	void saiDaPrisao(int deslocamento)
+	public void saiDaPrisao(int deslocamento)
 	{
 		if (!naPrisao) return;
 		
@@ -112,22 +117,22 @@ public class Peao {
 		posicao = deslocamento;
 	}
 	
-	void atribuiSaidaLivrePrisao(Carta carta)
+	public void atribuiSaidaLivrePrisao(Carta carta)
 	{
 		cartaSaidaPrisao = carta;
 	}
 	
-	void removeCartaSaidaLivrePrisao()
+	public void removeCartaSaidaLivrePrisao()
 	{
 		cartaSaidaPrisao = null;
 	}
 	
-	boolean estaNaPrisao()
+	public boolean estaNaPrisao()
 	{
 		return naPrisao;
 	}
 	
-	boolean temCartaSaidaLivre()
+	public boolean temCartaSaidaLivre()
 	{
 		return cartaSaidaPrisao != null;
 	}

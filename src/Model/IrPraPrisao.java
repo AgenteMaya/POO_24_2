@@ -5,22 +5,8 @@ public class IrPraPrisao extends Terreno{
 	
 	public IrPraPrisao(int posPrisao)
 	{
-		this.tipoTerreno = 4; // até o presente momento, esta classe serve para o campo de "Vá para a Prisão"
+		this.tipoTerreno = 4; 
 		this.posPrisao = posPrisao;
 	}
 	
-	void realizaAcao(Baralho baralho, Peao peao)
-	{
-		Carta cartaSaidaPrisao = peao.vaiPraPrisao(posPrisao);
-		if (cartaSaidaPrisao == null)
-		{
-			System.out.println("O jogador atual entrou no campo de ida à prisão e não tinha a carta de saída.");
-		}
-		else
-		{
-			System.out.println("O jogador atual entrou no campo de ida à prisão e tinha a carta de saída.");
-			baralho.descartarCarta(cartaSaidaPrisao);
-			peao.removeCartaSaidaLivrePrisao();
-		}
-	}
 }

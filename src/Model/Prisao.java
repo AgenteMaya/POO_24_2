@@ -7,14 +7,4 @@ public class Prisao extends Terreno{
 		this.tipoTerreno = 3;
 	}
 	
-	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
-	{
-		Dado dado = new Dado();
-		int deslocamento = dado.deslocamentoSaidaPrisao();
-		
-		if (deslocamento != -1) 
-		{
-			peao.saiDaPrisao(deslocamento);
-		}
-	}
 }

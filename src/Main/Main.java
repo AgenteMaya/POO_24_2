@@ -82,15 +82,49 @@ public class Main {
         Tabuleiro tabuleiro = new Tabuleiro(terrenos);
         return tabuleiro;
     }
+	
+	static Baralho criaBaralho()
+    {
+        ArrayList<Carta> todasCartas = new ArrayList<>();
+                
+        // --- CARTAS SORTE ---
+        // chance1.png
+        todasCartas.add(new Carta("A prefeitura mandou abrir uma nova avenida...", true, false, 25, true));
+        // chance2.png
+        todasCartas.add(new Carta("Houve um assalto à sua loja, mas você estava segurado.", true, false, 150, true));
+        // chance3.png
+        todasCartas.add(new Carta("Um amigo tinha lhe pedido um empréstimo e se esqueceu de devolver.", true, false, 80, true));
+        // chance4.png
+        todasCartas.add(new Carta("Você está com sorte. Suas ações na Bolsa de Valores estão em alta.", true, false, 200, true));
+        // ... (adicionar outras cartas de Sorte)
+
+        // --- CARTAS REVÉS ---
+        // chance25.png
+        todasCartas.add(new Carta("Você acaba de receber a comunicação do Imposto de Renda. Pague 50", false, false, -50, true));
+        // chance26.png
+        todasCartas.add(new Carta("Seu clube está ampliando as piscinas. Os sócios devem contribuir. Pague 25", false, false, -25, true));
+        // chance27.png
+        todasCartas.add(new Carta("Renove a tempo a licença do seu automóvel. Pague 30", false, false, -30, true));
+        // chance28.png
+        todasCartas.add(new Carta("Seus parentes do interior vieram passar umas 'férias' na sua casa. Pague 45", false, false, -45, true));
+        // chance29.png
+        todasCartas.add(new Carta("Seus filhos já vão para a escola. Pague a primeira mensalidade. Pague 50", false, false, -50, true));
+        // chance30.png
+        todasCartas.add(new Carta("A geada prejudicou a sua safra de café. Pague 50", false, false, -50, true));
+        // ... (adicionar outras cartas de Revés)
+        
+        // A própria classe Baralho vai embaralhar no construtor
+        return new Baralho(todasCartas);
+    }
 
     public static void main(String[] args) {
         Tabuleiro tabuleiro = criaTabuleiro();
-        //Baralho baralho = new Baralho();
+        Baralho baralho = criaBaralho();
         // criar cartas??
         
         JanelaPrincipal view = new JanelaPrincipal();
         
-        GameController controller = new GameController(tabuleiro, view);
+        GameController controller = new GameController(tabuleiro, baralho, view);
         
         view.setController(controller);
         

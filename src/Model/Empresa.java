@@ -17,19 +17,4 @@ public class Empresa extends Terreno{
 		return valorAluguel;
 	}
 	
-	void realizaAcao(Baralho baralho, Banco banco, Peao peao)
-	{
-		if (getDono() == -1) 
-		{
-			// perguntar pela interface se usuário deseja comprar
-			// se sim:
-			// banco.compraPropriedade()
-        } 
-		else 
-		{
-            // banco.pagarAluguel(tabuleiro, peao.getId(), getId());
-
-        } 
-	}
-	
 }
