@@ -7,29 +7,33 @@ import javax.swing.JLabel;
 import Model.*;
 import View.JanelaPrincipal;
 
-public class GameController {
-    
+public class GameController 
+{
     private Tabuleiro tabuleiro;
     private Baralho baralho;
-    //cartas???
     private JanelaPrincipal view;
     
     private ArrayList<String> coresDisponiveis;
     private int numJogadoresTotal;
     
     private Peao jogadorAtual;
+    
+    private Dado dado;
 
-    public GameController(Tabuleiro tabuleiro, Baralho baralho, JanelaPrincipal view) {
+    public GameController(Tabuleiro tabuleiro, Baralho baralho, JanelaPrincipal view) 
+    {
         this.tabuleiro = tabuleiro;
         this.baralho = baralho;
         this.view = view;
+        this.dado = new Dado();
         
         this.coresDisponiveis = new ArrayList<>();
         inicializaCores();
     }
     
     
-    private void inicializaCores() {
+    private void inicializaCores() 
+    {
         coresDisponiveis.add("Vermelho");
         coresDisponiveis.add("Azul");
         coresDisponiveis.add("Laranja");
@@ -39,43 +43,55 @@ public class GameController {
     }
     
     
-    public void solicitarInicioJogo() {
+    public void solicitarInicioJogo() 
+    {
         System.out.println("AÇÃO: Iniciando o jogo...");
         view.mostrarTelaNumJogadores();
     }
     
-    public void solicitarRetomadaJogo() {
+    public void solicitarRetomadaJogo() 
+    {
         System.out.println("AÇÃO: Retornando a jogo salvo...");
-        // lógica de carregar um save
+        // lógica de carregar um save!!
         view.mostrarTabuleiro();
     }
     
-    public void confirmarNumeroJogadores(String num) {
-        try {
+    public void confirmarNumeroJogadores(String num) 
+    {
+        try 
+        {
             int num_jogadores = Integer.parseInt(num);
             System.out.println("Jogadores: " + num_jogadores);
             
-            if (num_jogadores >= 3 && num_jogadores <= 6) { 
+            if (num_jogadores >= 3 && num_jogadores <= 6) 
+            { 
                 this.numJogadoresTotal = num_jogadores;
                 view.mostrarTelaConfigJogadores(num_jogadores);
-            } else {
+            } 
+            else 
+            {
                 System.out.println("Número de jogadores inválido.");
-                // view mandar erro?
+                view.mostrarMensagem("Número de jogadores inválido.");
             }
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) 
+        {
             System.out.println("Entrada inválida.");
-         // view mandar erro?
+            view.mostrarMensagem("Entrada inválida.");
         }
     }
     
-    public void configurarProximoJogador(int jogadoresRestantes, String nome, String cor) {
+    public void configurarProximoJogador(int jogadoresRestantes, String nome, String cor) 
+    {
         System.out.println("Configurando jogador... Restam: " + jogadoresRestantes);
         
-        if (coresDisponiveis.contains(cor)) {
-            // Lógica de Model
-            // Peao jogador = new Peao(numJogadoresTotal - jogadoresRestantes, nome, cor);
-            // tabuleiro.adicionarPeao(jogador);
-            // banco.darDinheiroInicial(jogador);
+        if (coresDisponiveis.contains(cor)) 
+        {
+            Peao jogador = new Peao(numJogadoresTotal - jogadoresRestantes);
+            tabuleiro.addPeao(jogador);
+            jogador.setNome(nome);
+            jogador.setCor(cor);
+            jogador.setDinheiro(4000);
+            
             coresDisponiveis.remove(cor);
             
             System.out.println("Jogador " + nome + " criado com a cor " + cor);
@@ -83,65 +99,78 @@ public class GameController {
             view.mostrarErroCor(false); 
             view.mostrarTelaConfigJogadores(jogadoresRestantes);
             
-        } else {
+        } 
+        else 
+        {
             System.out.println("Cor inválida ou já escolhida!");
-         // view mandar erro?
             view.mostrarErroCor(true);
         }
     }
     
-    public void iniciarPartida() {
+    public void iniciarPartida() 
+    {
         System.out.println("Começar partida");
         
         tabuleiro.sortearOrdemJogadores();
         tabuleiro.iniciarPrimeiroTurno();
 
         view.mostrarTabuleiro(); 
-
-        ArrayList<Peao> peoes = tabuleiro.getListaPeoes(); 
         
-        view.atualizarPaineisInfo(peoes);
+        view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
     }
     
-    public void setJogadorAtual(Peao peao) {
+    public void setJogadorAtual(Peao peao) 
+    {
         this.jogadorAtual = peao;
     }
     
 
     // chamado após o jogador lançar os dados e se mover --> analisa onde o peão caiu e decide o que fazer
-    public void processarJogada() {
+    public void processarJogada() 
+    {
         int posAtual = jogadorAtual.pegaPosicaoPeao(); 
         Terreno terrenoAtual = tabuleiro.getTerreno(posAtual);
         
-        if (terrenoAtual instanceof Propriedade || terrenoAtual instanceof Empresa) {
+        if (terrenoAtual instanceof Propriedade || terrenoAtual instanceof Empresa) 
+        {
             processarTerrenoCompra(terrenoAtual);
         }
-        else if (terrenoAtual instanceof Sorte) {
+        else if (terrenoAtual instanceof Sorte) 
+        {
             processarSorte((Sorte) terrenoAtual);
         }
-        else if (terrenoAtual instanceof IrPraPrisao) { 
+        else if (terrenoAtual instanceof IrPraPrisao) 
+        { 
             processarVaParaPrisao((IrPraPrisao) terrenoAtual);
         }
-        else if (terrenoAtual instanceof Imposto) {
+        else if (terrenoAtual instanceof Imposto) 
+        {
             processarImposto();
         }
-        else if (terrenoAtual instanceof Prisao) {
+        else if (terrenoAtual instanceof Prisao) 
+        {
             view.mostrarMensagem("Apenas visitando a prisão.");
         }
-        else if (terrenoAtual instanceof ParadaLivre) {
+        else if (terrenoAtual instanceof ParadaLivre) 
+        {
             view.mostrarMensagem("Parada Livre. Nada acontece.");
         }
-        else if (terrenoAtual instanceof PontoDePartida) {
+        else if (terrenoAtual instanceof PontoDePartida) 
+        {
             view.mostrarMensagem("Parou no Ponto de Partida.");
         }
     }
 
-    private void processarTerrenoCompra(Terreno terreno) {
+    private void processarTerrenoCompra(Terreno terreno) 
+    {
         int donoId = terreno.getDono();
         
-        if (donoId == -1) {
+        if (donoId == -1) 
+        {
             view.mostrarOpcaoCompra(terreno);
-        } else if (donoId != jogadorAtual.getId()) {
+        } 
+        else if (donoId != jogadorAtual.getId()) 
+        {
             view.mostrarMensagem("Pagando aluguel...");
             int idTerreno = jogadorAtual.pegaPosicaoPeao();
             
@@ -149,41 +178,56 @@ public class GameController {
             
             view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
             
-        } else {
+        } 
+        else 
+        {
 
-            if (terreno instanceof Propriedade) {
+            if (terreno instanceof Propriedade) 
+            {
                 view.mostrarOpcaoConstruir((Propriedade) terreno);
-            } else {
+            } 
+            else 
+            {
                 view.mostrarMensagem("Você parou em sua própria Empresa.");
             }
         }
     }
 
 
-    private void processarSorte(Sorte terrenoSorte) {
+    private void processarSorte(Sorte terrenoSorte) 
+    {
         Carta carta = baralho.pegarCarta();
         
         view.mostrarCarta(carta.getId()); 
         
-        if (carta.ehSaidaPrisao()) {
+        if (carta.ehSaidaPrisao()) 
+        {
             jogadorAtual.atribuiSaidaLivrePrisao(carta);
             view.mostrarMensagem(jogadorAtual.getNome() + " guardou uma carta de Saída Livre da Prisão!");
             
-        } else if (carta.ehIdaPrisao()) {
+        } 
+        else if (carta.ehIdaPrisao()) 
+        {
             view.mostrarMensagem("Sorte/Revés: Vá para a prisão!");
 
             Carta cartaSaida = jogadorAtual.vaiPraPrisao(9);
-            if (cartaSaida != null) {
+            if (cartaSaida != null) 
+            {
                 baralho.descartarCarta(cartaSaida);
             }
             baralho.descartarCarta(carta);
             view.atualizarPosicaoPeao(jogadorAtual); 
             
-        } else {
+        } 
+        else 
+        {
             int valor = carta.getValorTransferencia();
-            if (carta.ehTranferenciaBanco()) {
+            if (carta.ehTranferenciaBanco()) 
+            {
                 Banco.getBanco().realizaTransferenciaBanco(jogadorAtual.getId(), valor, tabuleiro);
-            } else {
+            } 
+            else 
+            {
                 Banco.getBanco().realizaTransferenciaPeoes(jogadorAtual.getId(), valor, tabuleiro);
             }
             view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
@@ -191,11 +235,13 @@ public class GameController {
     }
 
 
-    private void processarVaParaPrisao(IrPraPrisao terrenoPrisao) {
+    private void processarVaParaPrisao(IrPraPrisao terrenoPrisao) 
+    {
         view.mostrarMensagem(jogadorAtual.getNome() + " vai direto para a prisão!");
         
         Carta cartaSaida = jogadorAtual.vaiPraPrisao(9);
-        if (cartaSaida != null) {
+        if (cartaSaida != null) 
+        {
             baralho.descartarCarta(cartaSaida);
             jogadorAtual.removeCartaSaidaLivrePrisao();
             view.mostrarMensagem("...mas usou a carta de Saída Livre!");
@@ -204,7 +250,8 @@ public class GameController {
         view.atualizarPosicaoPeao(jogadorAtual);
     }
     
-    private void processarImposto() {
+    private void processarImposto() 
+    {
         int valorImposto = -200; 
         view.mostrarMensagem(jogadorAtual.getNome() + " paga R$ 200 de imposto.");
         
@@ -213,7 +260,8 @@ public class GameController {
     }
     
     
-    public void usuarioDecidiuComprar() {
+    public void usuarioDecidiuComprar() 
+    {
         int pos = jogadorAtual.pegaPosicaoPeao();
         
         Banco.getBanco().compraPropriedade(pos, jogadorAtual.getId(), tabuleiro);
@@ -223,12 +271,14 @@ public class GameController {
     }
 
 
-    public void usuarioDecidiuNaoComprar() {
+    public void usuarioDecidiuNaoComprar() 
+    {
         view.mostrarMensagem("Propriedade não foi comprada.");
     }
     
    
-    public void usuarioDecidiuConstruir(boolean ehCasa) { // true=casa, false=hotel
+    public void usuarioDecidiuConstruir(boolean ehCasa) // true=casa, false=hotel
+    { 
         int pos = jogadorAtual.pegaPosicaoPeao();
         
         Banco.getBanco().constroiCasa(jogadorAtual.getId(), pos, tabuleiro, ehCasa);
@@ -237,11 +287,58 @@ public class GameController {
         view.atualizarConstrucoes(pos); 
     }
 
+    // verificar!
     public void usuarioLancouDados(int deslocamento)
     {
-        int pos = jogadorAtual.pegaPosicaoPeao();
-        jogadorAtual.setaPosicaoPeao(deslocamento + pos, tabuleiro);
+    	this.jogadorAtual = tabuleiro.getJogadorDaVez();
+
+        int posAntiga = jogadorAtual.pegaPosicaoPeao();
+        // tabuleiro.getTamListTerreno() deve ser 40
+        int posNova = (posAntiga + deslocamento) % tabuleiro.getTamListTerreno(); 
+
+        if (posNova < posAntiga) {
+            System.out.println(jogadorAtual.getNome() + " passou pelo Ponto de Partida! Recebe R$ 200.");
+            Banco.getBanco().realizaTransferenciaBanco(jogadorAtual.getId(), 200, tabuleiro);
+            view.atualizarPaineisInfo(tabuleiro.getListaPeoes()); 
+        }
+
+        jogadorAtual.setaPosicaoPeao(posNova);
+        
         view.atualizarPosicaoPeao(jogadorAtual);
        
+        processarJogada();
+        
+        tabuleiro.proximoTurno();
+    }
+    
+ // Este é o método que o botão "Lançar Dados" REAL deve chamar
+    public void lancarDadosReal() {
+        this.jogadorAtual = tabuleiro.getJogadorDaVez();
+        
+        if (jogadorAtual.estaNaPrisao()) {
+            view.mostrarMensagem("Tentando sair da prisão...");
+            int deslocamentoPrisao = dado.deslocamentoSaidaPrisao(); // Tenta dados iguais
+            if (deslocamentoPrisao != -1) {
+                jogadorAtual.saiDaPrisao(deslocamentoPrisao); // Conseguiu!
+                // (chamar o resto da lógica)
+                usuarioLancouDados(deslocamentoPrisao); 
+            } else {
+                view.mostrarMensagem("Não tirou dados iguais. Fica na prisão.");
+                tabuleiro.proximoTurno();
+            }
+            return; // Termina o turno
+        }
+        
+        int deslocamento = dado.totalDeslocamento();
+
+        if (deslocamento == -1) {
+            view.mostrarMensagem("3 duplas! Vá para a prisão.");
+            jogadorAtual.vaiPraPrisao(9); // 9 = posPrisao
+            view.atualizarPosicaoPeao(jogadorAtual);
+            tabuleiro.proximoTurno();
+            return; 
+        }
+        
+        usuarioLancouDados(deslocamento);
     }
 }

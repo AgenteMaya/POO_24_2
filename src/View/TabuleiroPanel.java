@@ -13,7 +13,8 @@ import Model.Propriedade;
 import Model.Terreno;
 
 @SuppressWarnings("serial")
-public class TabuleiroPanel extends JPanel {
+public class TabuleiroPanel extends JPanel 
+{
     Image imgTabuleiro; 
     Image imgCartaAtual = null; 
 
@@ -23,7 +24,8 @@ public class TabuleiroPanel extends JPanel {
     private GameController controller;
     private ArrayList<Peao> listaPeoes;
     
-    private enum ViewState {
+    private enum ViewState 
+    {
         NORMAL, 
         EXIBINDO_CARTA,
         AGUARDANDO_DECISAO_COMPRA,
@@ -42,59 +44,54 @@ public class TabuleiroPanel extends JPanel {
     private Rectangle btnDialogoConstruirHotel;
     private Rectangle btnDialogoCancelar;
 
-    public TabuleiroPanel(Image i, HashMap<String, Image> imagens) {
+    public TabuleiroPanel (Image i, HashMap<String, Image> imagens) 
+    {
         this.imgTabuleiro = i;
         this.imagensPeoes = imagens;
         this.listaPeoes = new ArrayList<>();
-        
-        inicializaMapaPosicoes();
-        
-        this.addMouseListener(new MouseAdapter() {
+                
+        this.addMouseListener(new MouseAdapter() 
+        {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (controller != null) {
+            public void mouseClicked(MouseEvent e) 
+            {
+                if (controller != null) 
+                {
                     handleMouseClick(e.getPoint());
                 }
             }
         });
     }
 
-    private void inicializaMapaPosicoes() 
-	{
-        mapaPosicoes = new Point[40]; 
-        
-        int x = 0;
-        int y = 0;
+    private Point[] inicializaMapaPosicoes(int boardX, int boardY, int boardSize, int cropPx) 
+    {
+        Point[] pos = new Point[40];
+
+        double inner = boardSize - 2.0 * cropPx;
+        double cell  = inner / 11.0; 
 
         for (int i = 0; i < 40; i++) {
-            // Lado Inferior (Índices 0 a 10)
-            // Do "Ponto de Partida" (10,0) até a "Prisão" (0,0)
-            if (i >= 0 && i <= 10) {
-                x = 10 - i;
-                y = 0;
-            } 
-            // Lado Esquerdo (Índices 11 a 20)
-            // Da "Prisão" (0,0) [exclusivo] até "Parada Livre" (0,10)
-            else if (i > 10 && i <= 20) {
-                x = 0;
-                y = i - 10;
-            } 
-            // Lado Superior (Índices 21 a 30)
-            // De "Parada Livre" (0,10) [exclusivo] até "Vá para a Prisão" (10,10)
-            else if (i > 20 && i <= 30) {
-                x = i - 20;
-                y = 10;
-            } 
-            // Lado Direito (Índices 31 a 39)
-            // De "Vá para a Prisão" (10,10) [exclusivo] de volta ao "Ponto de Partida"
-            else if (i > 30 && i < 40) { // ou i <= 39
-                x = 10;
-                y = 40 - i; // (ex: i=31 -> y=9; i=39 -> y=1)
+            int gx, gy;
+
+            if (i >= 0 && i <= 10) {           
+                gx = 10 - i; gy = 10;
+            } else if (i <= 20) {               
+                gx = 0; gy = 20 - i;
+            } else if (i <= 30) {               
+                gx = i - 20; gy = 0;
+            } else {                            
+                gx = 10; gy = i - 30;
             }
 
-            mapaPosicoes[i] = new Point(x, y);
+            int cx = (int) Math.round(boardX + cropPx + (gx + 0.5) * cell);
+            int cy = (int) Math.round(boardY + cropPx + (gy + 0.5) * cell);
+
+            System.out.println("pos x - " + (cx) + "Pos y - " +  (cy));
+            pos[i] = new Point(cx, cy); 
         }
-	}
+
+        return pos;
+    }
     
     public void setController(GameController controller) {
         this.controller = controller;
@@ -180,157 +177,37 @@ public class TabuleiroPanel extends JPanel {
         // para centralizar o tabuleiro
         int w = getWidth();
         int h = getHeight();
-//        int boardSize = Math.min(w, h); 
-//        int boardX = (w - boardSize) / 2; 
-//        int boardY = (h - boardSize) / 2;
         
-        int boardDrawSize = Math.min(w, h);   // <- era: Math.min(W, H) - 60
+        int boardDrawSize = Math.min(w, h);   
         int boardX = (w - boardDrawSize) / 2;
         int boardY = (h - boardDrawSize) / 2;
         g2d.drawImage(imgTabuleiro, boardX, boardY, boardDrawSize, boardDrawSize, this);
 
-        //g2d.drawImage(imgTabuleiro, boardX, boardY, boardSize, boardSize, null);
-        
-        // Lógica para desenhar os peões (você fará isso no futuro)
-        // g.drawImage(imgPeao1, x, y, null);
-        
-        double fx = 0.935, fy = 0.935;
-        int centroStartX = (int) Math.round(boardX + fx * boardDrawSize);
-        int centroStartY = (int) Math.round(boardY + fy * boardDrawSize);
+        int cropPx = 0;
 
-        // tamanho do pino (25x38 nas suas imagens). Se variar, dá para pedir ao Image.
-        // vamos recentrar pelo meio do pino
-        // 3) pequenos offsets para até 4 pinos não se sobreporem
-        Point[] offsets = {
-            new Point(-12, -12),
-            new Point(+12, -12),
-            new Point(-12, +12),
-            new Point(+12, +12)
-        };
-        
-        ArrayList<Peao> listaJogadores = new ArrayList<>();
-		
-		Peao jogador1 = new Peao(1); 
-        jogador1.setNome("Alice");
-        jogador1.setCor("Vermelho");
-        jogador1.setDinheiro(4000); 
-   
+        Point[] centros = inicializaMapaPosicoes(boardX, boardY, boardDrawSize, cropPx);
 
-        Peao jogador2 = new Peao(2);
-        jogador2.setNome("Roberto");
-        jogador2.setCor("Azul");
-        jogador2.setDinheiro(4000);
+        int casaAtual = 0;
+        Point C = centros[casaAtual];
 
-   
-        Peao jogador3 = new Peao(3);
-        jogador3.setNome("Carla");
-        jogador3.setCor("Magenta");
-        jogador3.setDinheiro(4000);
-
-        
-        listaJogadores.add(jogador1);
-        listaJogadores.add(jogador2);
-        listaJogadores.add(jogador3);
-        
         int idx = 0;
-        for (Peao p : listaJogadores) {
-            String corPeao = p.getCor(); // "Vermelho", "Azul", "Magenta", "Amarelo" etc.
-            Image imgPeao = imagensPeoes.get(corPeao);
-            if (imgPeao == null) continue;
+        Point[] offsets = { new Point(-12,-12), new Point(+12,-12), new Point(-12,+12), new Point(+12,+12) };
+        for (Peao p : this.listaPeoes) 
+        {
+            Image pin = imagensPeoes.get(p.getCor());
+            if (pin == null) continue;
 
-            int pinW = imgPeao.getWidth(this);
-            int pinH = imgPeao.getHeight(this);
-
-            // garante que não estoura o array de offsets
+            int pinW = pin.getWidth(this);
+            int pinH = pin.getHeight(this);
             Point off = offsets[Math.min(idx, offsets.length - 1)];
 
-            int drawX = centroStartX - pinW / 2 + off.x;
-            int drawY = centroStartY - pinH / 2 + off.y;
+            int drawX = C.x - pinW/2 + off.x;
+            int drawY = C.y - pinH/2 + off.y;
 
-            g.drawImage(imgPeao, drawX, drawY, this);
+            System.out.println("drawX - " + (drawX) + " drawY - " +  (drawY));
+            g.drawImage(pin, drawX, drawY, this);
             idx++;
         }
-        
-        
-//        for (Peao p : listaJogadores) {
-//            int casaAtual = 30; 
-//            String corPeao = p.getCor();     
-//            
-//            Point posBase = mapaPosicoes[casaAtual];
-//            
-//            Image imgPeao = imagensPeoes.get(corPeao);
-//
-//            if (posBase != null && imgPeao != null) {
-//                int offset = listaJogadores.indexOf(p) * 6; 
-//                System.out.println("Offset -" + (offset) + " posBase.x -" + (posBase.x) + " posBase.y -"  + (posBase.y));
-//                g.drawImage(imgPeao, posBase.x + offset, posBase.y + offset, this);
-//            }
-//        }
-        
-//        ArrayList<Peao> listaJogadores = new ArrayList<>();
-//
-//        Peao jogador1 = new Peao(1);
-//        jogador1.setNome("Alice");
-//        jogador1.setCor("Vermelho");
-//        jogador1.setDinheiro(4000);
-//
-//        Peao jogador2 = new Peao(2);
-//        jogador2.setNome("Roberto");
-//        jogador2.setCor("Azul");
-//        jogador2.setDinheiro(4000);
-//
-//        Peao jogador3 = new Peao(3);
-//        jogador3.setNome("Carla");
-//        jogador3.setCor("Magenta"); // ⚠️ mapeará para “Magenta” acima
-//        jogador3.setDinheiro(4000);
-//
-//        jogador1.setaPosicaoPeao(5);
-//        jogador2.setaPosicaoPeao(5);
-//        jogador3.setaPosicaoPeao(5);
-//
-//        listaJogadores.add(jogador1);
-//        listaJogadores.add(jogador2);
-//        listaJogadores.add(jogador3);
-//
-//        desenharPeoes(g2d, listaJogadores, boardX, boardY, boardSize);
-
-//        System.out.println("PaintComponent: Desenhando " + (this.listaPeoes != null ? this.listaPeoes.size() : "0") + " peões.");
-//        if (this.listaPeoes != null) {
-//            for (int i = 0; i < listaPeoes.size(); i++) {
-//                Peao p = listaPeoes.get(i);
-//                
-//                int casaAtual = p.pegaPosicaoPeao(); 
-//                String corPeao = p.getCor();     
-//                
-//                Image imgPeao = imagensPeoes.get(corPeao);
-//                if (imgPeao == null) {
-//                    System.err.println("Imagem não encontrada para a cor: " + corPeao);
-//                    continue;
-//                }
-//                
-//                if (casaAtual < 0 || casaAtual >= 40) {
-//                    System.err.println("Posição inválida para o peão: " + casaAtual);
-//                    continue; 
-//                }
-//
-//                Point posBase = mapaPosicoes[casaAtual]; 
-//
-//                
-//                double gridUnitSize = (double)boardSize / 10.0; 
-//                
-//                int y_corrigido = 10 - posBase.y; 
-//                
-//                int x = (int)(boardX + posBase.x * gridUnitSize);
-//                int y = (int)(boardY + y_corrigido * gridUnitSize);
-//                
-//                x -= 16; 
-//                y -= 16; 
-//                
-//                int offset = i * 8; 
-//                
-//                g2d.drawImage(imgPeao, x + offset, y + offset, 32, 32, null);
-//            }
-//        }
         
         switch (currentState) {
 	        case EXIBINDO_CARTA:

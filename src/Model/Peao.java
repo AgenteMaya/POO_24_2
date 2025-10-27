@@ -39,24 +39,13 @@ public class Peao {
 		return this.nome;
 	}
 	
-	public void setaPosicaoPeao(int pos) {
-		posicao = pos;
-	}
-
-	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro) {
+    public void setaPosicaoPeao(int pos) {
 		if (naPrisao)
 		{
 			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar", id);
 			return;
 		}
 		posicao = pos;
-		
-		//no instante so estao sendo verificados as posicoes dos de aluguel para pagamento automatico
-		if (posicao < tabuleiro.getTamListTerreno() && posicao != tabuleiro.getTerreno(pos).getDono())
-		{
-			Banco.getBanco().pagarAluguel(tabuleiro, id, pos);
-		}
-		
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);
 	}
 	

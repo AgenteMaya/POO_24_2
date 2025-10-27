@@ -15,10 +15,10 @@ import Model.Propriedade;
 import Model.Terreno; 
 
 @SuppressWarnings("serial")
-public class JanelaPrincipal extends JFrame {
-
+public class JanelaPrincipal extends JFrame 
+{
 	public int LARG_DEFAULT = 1280;
-	public int ALT_DEFAULT = 800;
+	public int ALT_DEFAULT = 750;
 
 	private GameController controller;
 
@@ -32,10 +32,10 @@ public class JanelaPrincipal extends JFrame {
 	private HashMap<Integer, Image> imagensCartas;
 	private HashMap<String, Image> imagensPeoes;
 
-	public JanelaPrincipal() {
+	public JanelaPrincipal() 
+	{
 		mostrarMenuInicial();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		carregarImagens();
 	}
 
 	public void setController(GameController controller) {
@@ -117,15 +117,19 @@ public class JanelaPrincipal extends JFrame {
 		repaint();
 	}
 
-	public void mostrarTelaConfigJogadores(int num_jogadores) {
+	public void mostrarTelaConfigJogadores(int num_jogadores) 
+	{
 		JPanel painelConfiguracao = new JPanel();
 		painelConfiguracao.setLayout(null);
 		getContentPane().removeAll();
 		setSize(500, 500);
 
-		if (num_jogadores == 0) {
+		if (num_jogadores == 0) 
+		{
 			controller.iniciarPartida();
-		} else {
+		} 
+		else 
+		{
 			Texto textoCampoNome = new Texto();
 			textoCampoNome.setTexto("Nome jogador (até 8 caracteres):");
 			textoCampoNome.setBounds(10, 10, 190, 30);
@@ -173,52 +177,64 @@ public class JanelaPrincipal extends JFrame {
 			textoAviso.setVisible(mostrar);
 		}
 	}
-
+	
+	// Arrumar!
 	public void mostrarDados()
 	{
-		JFrame frame_dados = new JFrame("Dados");
-        frame_dados.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame_dados.setSize(300, 150);
+	    // 1. Use JDialog para "pausar" a janela principal
+	    JDialog dialogoDados = new JDialog(this, "Lançar Dados (Debug)", true); // 'true' = modal
+	    dialogoDados.setSize(350, 150);
+	    dialogoDados.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Fecha só o diálogo
+	    dialogoDados.setLocationRelativeTo(this); // Centraliza
 
-		JPanel painelDados = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+	    JPanel painelDados = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-		Integer[] numeros = { 1, 2, 3, 4, 5, 6 };
+	    Integer[] numeros = { 1, 2, 3, 4, 5, 6 };
 
-        JLabel label1 = new JLabel("Dado 1:");
-        JComboBox<Integer> comboBox1 = new JComboBox<>(numeros);
-        
-        JLabel label2 = new JLabel("Dado 2:");
-        JComboBox<Integer> comboBox2 = new JComboBox<>(numeros);
+	    JLabel label1 = new JLabel("Dado 1:");
+	    JComboBox<Integer> comboBox1 = new JComboBox<>(numeros);
+	    
+	    JLabel label2 = new JLabel("Dado 2:");
+	    JComboBox<Integer> comboBox2 = new JComboBox<>(numeros);
 
-        painelDados.add(label1);
-        painelDados.add(comboBox1);
-        painelDados.add(label2);
-        painelDados.add(comboBox2);
+	    // 2. Crie um botão de confirmação
+	    Botao btnConfirmar = new Botao("Lançar"); // Usando sua classe Botao
 
-		frame_dados.getContentPane().add(painelDados);
+	    // 3. A LÓGICA VAI PARA DENTRO DO LISTENER
+	    btnConfirmar.adicionaListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            // 4. Lê os valores SÓ QUANDO o usuário clicar
+	            int dado1 = (Integer) comboBox1.getSelectedItem();
+	            int dado2 = (Integer) comboBox2.getSelectedItem();
 
-        frame_dados.setLocationRelativeTo(null);
-        frame_dados.setVisible(true);
+	            // 5. Chama o controller
+	            controller.usuarioLancouDados(dado1 + dado2);
+	            
+	            // 6. Fecha o diálogo
+	            dialogoDados.dispose();
+	        }
+	    });
 
-		Object itemSelecionado1 = comboBox1.getSelectedItem();
-		Object itemSelecionado2 = comboBox2.getSelectedItem();
+	    painelDados.add(label1);
+	    painelDados.add(comboBox1);
+	    painelDados.add(label2);
+	    painelDados.add(comboBox2);
+	    painelDados.add(btnConfirmar); // Adiciona o botão
 
-		// 2. Converte (faz o "cast") para Integer e armazena
-		int dado1 = (Integer) itemSelecionado1;
-		int dado2 = (Integer) itemSelecionado2;
-
-		controller.usuarioLancouDados(dado1+dado2);
-
+	    dialogoDados.getContentPane().add(painelDados);
+	    dialogoDados.setVisible(true); // O código PAUSA AQUI até o diálogo fechar
 	}
 
-
-	public void mostrarTabuleiro() {
+	public void mostrarTabuleiro() 
+	{
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT); 
 	    setLocationRelativeTo(null); 
 		getContentPane().setLayout(new BorderLayout());
 
 		carregaImagemPeoes();
+		carregarImagemCartas();
         
 		Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
 		
@@ -245,6 +261,7 @@ public class JanelaPrincipal extends JFrame {
         // infoPanel.add(new JLabel("Informações dos Jogadores"));
         // getContentPane().add(infoPanel, BorderLayout.EAST);
 
+		painelTabuleiro.add(btnLancaDados);
 		revalidate();
 		repaint();
 	}
@@ -281,7 +298,7 @@ public class JanelaPrincipal extends JFrame {
 
 	}
 	
-	private void carregarImagens() 
+	private void carregarImagemCartas() 
 	{
 		imagensCartas = new HashMap<>();
 		
@@ -292,30 +309,30 @@ public class JanelaPrincipal extends JFrame {
 		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
 		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
 		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
-		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
-		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
-		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
-		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
-		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
-		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
-		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
-		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
-		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
-		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
-		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
-		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
-		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
-		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
-		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
-		imagensCartas.put(1, carregaImagem("/sorteReves/chance1.png"));
-		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
-		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
-		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
-		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
-		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
-		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
-		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
-		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(7, carregaImagem("/sorteReves/chance7.png"));
+		imagensCartas.put(8, carregaImagem("/sorteReves/chance8.png"));
+		imagensCartas.put(9, carregaImagem("/sorteReves/chance9.png"));
+		imagensCartas.put(10, carregaImagem("/sorteReves/chance10.png"));
+		imagensCartas.put(11, carregaImagem("/sorteReves/chance11.png"));
+		imagensCartas.put(12, carregaImagem("/sorteReves/chance12.png"));
+		imagensCartas.put(13, carregaImagem("/sorteReves/chance13.png"));
+		imagensCartas.put(14, carregaImagem("/sorteReves/chance14.png"));
+		imagensCartas.put(15, carregaImagem("/sorteReves/chance15.png"));
+		imagensCartas.put(16, carregaImagem("/sorteReves/chance16.png"));
+		imagensCartas.put(17, carregaImagem("/sorteReves/chance17.png"));
+		imagensCartas.put(18, carregaImagem("/sorteReves/chance18.png"));
+		imagensCartas.put(19, carregaImagem("/sorteReves/chance19.png"));
+		imagensCartas.put(20, carregaImagem("/sorteReves/chance20.png"));
+		imagensCartas.put(21, carregaImagem("/sorteReves/chance21.png"));
+		imagensCartas.put(22, carregaImagem("/sorteReves/chance22.png"));
+		imagensCartas.put(23, carregaImagem("/sorteReves/chance23.png"));
+		imagensCartas.put(24, carregaImagem("/sorteReves/chance24.png"));
+		imagensCartas.put(25, carregaImagem("/sorteReves/chance25.png"));
+		imagensCartas.put(26, carregaImagem("/sorteReves/chance26.png"));
+		imagensCartas.put(27, carregaImagem("/sorteReves/chance27.png"));
+		imagensCartas.put(28, carregaImagem("/sorteReves/chance28.png"));
+		imagensCartas.put(29, carregaImagem("/sorteReves/chance29.png"));
+		imagensCartas.put(30, carregaImagem("/sorteReves/chance30.png"));
 		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
     }
 	
@@ -354,7 +371,8 @@ public class JanelaPrincipal extends JFrame {
 	}
 	
 	
-	public void atualizarPaineisInfo(ArrayList<Peao> peoes) {
+	public void atualizarPaineisInfo(ArrayList<Peao> peoes) 
+	{
 		if (painelTabuleiro != null) {
 			painelTabuleiro.setListaPeoes(peoes); 
 			painelTabuleiro.repaint(); 

@@ -66,7 +66,7 @@ public class Tabuleiro
 	
 	public void sortearOrdemJogadores()
 	{
-		Collections.shuffle(this.lPeoes);
+		Collections.shuffle(this.lPeoes); // sorteia a ordem dos jogadores
 	}
 	
 	public void iniciarPrimeiroTurno()

@@ -99,6 +99,7 @@ public class Main {
         // ... (adicionar outras cartas de Sorte)
 
         // --- CARTAS REVÉS ---
+        // ... (adicionar outras cartas de Revés)
         // chance25.png
         todasCartas.add(new Carta(25, "Você acaba de receber a comunicação do Imposto de Renda. Pague 50", false, false, -50, true));
         // chance26.png
@@ -111,7 +112,6 @@ public class Main {
         todasCartas.add(new Carta(29, "Seus filhos já vão para a escola. Pague a primeira mensalidade. Pague 50", false, false, -50, true));
         // chance30.png
         todasCartas.add(new Carta(30, "A geada prejudicou a sua safra de café. Pague 50", false, false, -50, true));
-        // ... (adicionar outras cartas de Revés)
         
         return new Baralho(todasCartas);
     }

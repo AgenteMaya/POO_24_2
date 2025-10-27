@@ -32,7 +32,7 @@ public class PeaoTest {
 		int deslocamento = 6; //mocking de um possível valor retornado pela lanca_dados
 		
 		Peao peao = new Peao(peaoDaVez);
-		peao.setaPosicaoPeao(deslocamento, tabuleiro);
+		peao.setaPosicaoPeao(deslocamento);
 		int pos = peao.pegaPosicaoPeao();
 			
 		assertEquals("A posição setada não é a mesma do lançamento dos dados",
