@@ -6,28 +6,36 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import Controller.GameController;
+import Model.Peao;
+import Model.Propriedade; 
+import Model.Terreno; 
 
 @SuppressWarnings("serial")
 public class JanelaPrincipal extends JFrame {
 
-	public final int LARG_DEFAULT = 1280;
-	public final int ALT_DEFAULT = 800;
+	public int LARG_DEFAULT = 1280;
+	public int ALT_DEFAULT = 800;
 
 	private GameController controller;
 
 	JPanel painelMenu;
-	JPanel painelTabuleiro;
+	TabuleiroPanel painelTabuleiro;
 	private JTextField campoNumJogadores;
 	private JTextField campoNome;
 	private JTextField campoCor;
 	private Texto textoAviso;
+	
+	private HashMap<Integer, Image> imagensCartas;
+	private HashMap<String, Image> imagensPeoes;
 
 	public JanelaPrincipal() {
 		mostrarMenuInicial();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		carregarImagens();
 	}
 
 	public void setController(GameController controller) {
@@ -178,16 +186,24 @@ public class JanelaPrincipal extends JFrame {
 	public void mostrarTabuleiro() {
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
+		getContentPane().setLayout(new BorderLayout());
 
-		HashMap<String, Image> imagensPeoes;
-        imagensPeoes = new HashMap<>();
-        imagensPeoes = carregaImagemPeoes(imagensPeoes);
+		carregaImagemPeoes();
         
 		Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
+		
 		painelTabuleiro = new TabuleiroPanel(imagemTabuleiro, imagensPeoes);
+		painelTabuleiro.setController(controller);
+		
 		painelTabuleiro.setBackground(Color.WHITE);
-		painelTabuleiro.setBounds(0, 0, 400, 400);
-		getContentPane().add(painelTabuleiro);
+		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
+		
+		// TODO: Você pode adicionar seus painéis de info aqui, se permitido
+        // JPanel infoPanel = new JPanel();
+        // infoPanel.setPreferredSize(new Dimension(LARG_DEFAULT - ALT_DEFAULT, ALT_DEFAULT)); // ex: 480x800
+        // infoPanel.setBackground(Color.LIGHT_GRAY);
+        // infoPanel.add(new JLabel("Informações dos Jogadores"));
+        // getContentPane().add(infoPanel, BorderLayout.EAST);
 
 		revalidate();
 		repaint();
@@ -212,15 +228,90 @@ public class JanelaPrincipal extends JFrame {
 		return image;
 	}
 
-	private HashMap<String, Image> carregaImagemPeoes(HashMap<String, Image> imagens) 
+	private void carregaImagemPeoes() 
 	{
-		imagens.put("Vermelho", carregaImagem("/peao0.png"));
-		imagens.put("Azul", carregaImagem("/peao1.png"));
-		imagens.put("Laranja", carregaImagem("/peao2.png"));
-		imagens.put("Amarelo", carregaImagem("/peao3.png"));
-		imagens.put("Magenta", carregaImagem("/peao4.png"));
-		imagens.put("Cinza", carregaImagem("/peao5.png"));
+		imagensPeoes = new HashMap<>();
+        
+		imagensPeoes.put("Vermelho", carregaImagem("/pinos/pin0.png"));
+		imagensPeoes.put("Azul", carregaImagem("/pinos/pin1.png"));
+		imagensPeoes.put("Laranja", carregaImagem("/pinos/pin2.png"));
+		imagensPeoes.put("Amarelo", carregaImagem("/pinos/pin3.png"));
+		imagensPeoes.put("Magenta", carregaImagem("/pinos/pin4.png"));
+		imagensPeoes.put("Cinza", carregaImagem("/pinos/pin5.png"));
+
+	}
 	
-		return imagens;
+	private void carregarImagens() 
+	{
+		imagensCartas = new HashMap<>();
+		
+		// arquivos das imagens
+		imagensCartas.put(1, carregaImagem("/sorteReves/chance1.png"));
+		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
+		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
+		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
+		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
+    }
+	
+
+	public void mostrarMensagem(String msg) {
+		if (painelTabuleiro != null) {
+			painelTabuleiro.mostrarMensagem(msg);
+		}
+	}
+
+
+	public void mostrarCarta(int idCarta) {
+		if (painelTabuleiro != null) {
+			Image imgCarta = imagensCartas.get(idCarta);
+			if (imgCarta != null) {
+				painelTabuleiro.mostrarCarta(imgCarta);
+			} else {
+				System.err.println("Imagem da carta não encontrada no cache: " + idCarta);
+				painelTabuleiro.mostrarMensagem("Erro: Imagem da carta " + idCarta + " nao encontrada.");
+			}
+		}
+	}
+
+
+	public void mostrarOpcaoCompra(Terreno terreno) {
+		if (painelTabuleiro != null) {
+			painelTabuleiro.mostrarOpcaoCompra(terreno);
+		}
+	}
+
+
+	public void mostrarOpcaoConstruir(Propriedade propriedade) {
+		if (painelTabuleiro != null) {
+			painelTabuleiro.mostrarOpcaoConstruir(propriedade);
+		}
+	}
+	
+	
+	public void atualizarPaineisInfo(ArrayList<Peao> peoes) {
+		if (painelTabuleiro != null) {
+			painelTabuleiro.setListaPeoes(peoes); 
+			painelTabuleiro.repaint(); 
+		}
+	}
+
+	public void atualizarPosicaoPeao(Peao p) {
+		if (painelTabuleiro != null) {
+			painelTabuleiro.repaint();
+		}
+	}
+
+	public void atualizarDonoPropriedade(int pos, String cor) {
+		if (painelTabuleiro != null) {
+			// (O TabuleiroPanel pode ter lógica para armazenar isso)
+			painelTabuleiro.repaint();
+		}
+	}
+
+	public void atualizarConstrucoes(int pos) {
+		if (painelTabuleiro != null) {
+			painelTabuleiro.repaint();
+		}
 	}
 }

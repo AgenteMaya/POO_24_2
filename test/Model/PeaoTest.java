@@ -61,7 +61,7 @@ public class PeaoTest {
 		Peao peao = new Peao(peaoDaVez);
 		int posInicial = peao.pegaPosicaoPeao();
 		String descricao = "Saída livre da prisão.";
-		peao.atribuiSaidaLivrePrisao(new Carta(descricao, true, true, 0, true));
+		peao.atribuiSaidaLivrePrisao(new Carta(1, descricao, true, true, 0, true));
 		
 		Carta cartaSaida = peao.vaiPraPrisao(posPrisao);
 			
@@ -78,7 +78,7 @@ public class PeaoTest {
 		Peao peao = new Peao(peaoDaVez);
 		int posInicial = peao.pegaPosicaoPeao();
 		String descricao = "Saída livre da prisão.";
-		peao.atribuiSaidaLivrePrisao(new Carta(descricao, true, true, 0, true));
+		peao.atribuiSaidaLivrePrisao(new Carta(1, descricao, true, true, 0, true));
 		
 		Carta cartaSaida = peao.vaiPraPrisao(posPrisao);
 			

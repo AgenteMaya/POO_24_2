@@ -2,6 +2,7 @@ package Model;
 
 
 public class Carta {
+	int id;
 	String descricao;
 	boolean isSorte; // para verificar se a carta é de sorte ou não
 	boolean envolvePrisao; // para verificar se a carta envolve prisão ou não
@@ -17,7 +18,8 @@ public class Carta {
      * @param valor indica o valor da carta, se for de prisão o valor será 0.
      * @param tipoTransferencia indica se a tranferência irá ocorrer entre peão e banco ou entre peões.
      */
-	public Carta(String descricao, boolean sorte, boolean prisao, int valor, boolean tipoTransferencia) {
+	public Carta(int id, String descricao, boolean sorte, boolean prisao, int valor, boolean tipoTransferencia) {
+		this.id = id;
         this.descricao = descricao;
         this.isSorte = sorte;
         this.envolvePrisao = prisao;
@@ -62,4 +64,9 @@ public class Carta {
 	{
         return descricao;
     }
+	
+	public int getId()
+	{
+		return id;
+	}
 }

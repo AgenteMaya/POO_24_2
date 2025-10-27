@@ -15,8 +15,8 @@ public class BaralhoTest{
 		// por enquanto estamos trabalhando somente com as de prisão
 		ArrayList<Carta> listaCartasTeste = new ArrayList<Carta>();
 	
-		listaCartasTeste.add(new Carta("Vá para a prisão.", false, true, 0, true));
-		listaCartasTeste.add(new Carta("Saída livre da prisão.", true, true, 0, true));
+		listaCartasTeste.add(new Carta(1, "Vá para a prisão.", false, true, 0, true));
+		listaCartasTeste.add(new Carta(2, "Saída livre da prisão.", true, true, 0, true));
     	
     	baralhoTeste = new Baralho(listaCartasTeste);
 	}

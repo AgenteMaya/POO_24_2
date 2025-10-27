@@ -157,7 +157,7 @@ public class GameController {
     private void processarSorte(Sorte terrenoSorte) {
         Carta carta = baralho.pegarCarta();
         
-        view.mostrarCarta(carta.getDescricao(), carta.ehSorte()); 
+        view.mostrarCarta(carta.getId()); 
         
         if (carta.ehSaidaPrisao()) {
             jogadorAtual.atribuiSaidaLivrePrisao(carta);
