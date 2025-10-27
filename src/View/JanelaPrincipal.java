@@ -183,6 +183,44 @@ public class JanelaPrincipal extends JFrame {
 		}
 	}
 
+	public void mostrarDados()
+	{
+		JFrame frame_dados = new JFrame("Dados");
+        frame_dados.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame_dados.setSize(300, 150);
+
+		JPanel painelDados = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+		Integer[] numeros = { 1, 2, 3, 4, 5, 6 };
+
+        JLabel label1 = new JLabel("Dado 1:");
+        JComboBox<Integer> comboBox1 = new JComboBox<>(numeros);
+        
+        JLabel label2 = new JLabel("Dado 2:");
+        JComboBox<Integer> comboBox2 = new JComboBox<>(numeros);
+
+        painelDados.add(label1);
+        painelDados.add(comboBox1);
+        painelDados.add(label2);
+        painelDados.add(comboBox2);
+
+		frame_dados.getContentPane().add(painelDados);
+
+        frame_dados.setLocationRelativeTo(null);
+        frame_dados.setVisible(true);
+
+		Object itemSelecionado1 = comboBox1.getSelectedItem();
+		Object itemSelecionado2 = comboBox2.getSelectedItem();
+
+		// 2. Converte (faz o "cast") para Integer e armazena
+		int dado1 = (Integer) itemSelecionado1;
+		int dado2 = (Integer) itemSelecionado2;
+
+		controller.usuarioLancouDados(dado1+dado2);
+
+	}
+
+
 	public void mostrarTabuleiro() {
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
@@ -197,7 +235,17 @@ public class JanelaPrincipal extends JFrame {
 		
 		painelTabuleiro.setBackground(Color.WHITE);
 		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
-		
+
+		Botao btnLancaDados = new Botao("Próximo");
+		btnLancaDados.setBounds(120, 180, 100, 30);
+			
+		btnLancaDados.adicionaListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					mostrarDados();
+				}
+		});
+				
 		// TODO: Você pode adicionar seus painéis de info aqui, se permitido
         // JPanel infoPanel = new JPanel();
         // infoPanel.setPreferredSize(new Dimension(LARG_DEFAULT - ALT_DEFAULT, ALT_DEFAULT)); // ex: 480x800

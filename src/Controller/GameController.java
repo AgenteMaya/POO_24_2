@@ -1,6 +1,8 @@
 package Controller;
 
 import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 import Model.*;
 import View.JanelaPrincipal;
@@ -229,5 +231,13 @@ public class GameController {
         
         view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
         view.atualizarConstrucoes(pos); 
+    }
+
+    public void usuarioLancouDados(int deslocamento)
+    {
+        int pos = jogadorAtual.pegaPosicaoPeao();
+        jogadorAtual.setaPosicaoPeao(deslocamento + pos, tabuleiro);
+        view.atualizarPosicaoPeao(jogadorAtual);
+       
     }
 }
