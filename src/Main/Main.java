@@ -28,6 +28,7 @@ public class Main {
         ArrayList<Integer> aluguelPadrao = criarAlugueis(10, 50, 150, 450, 800, 1200);
         ArrayList<Integer> precoCasaPadrao = criarPrecoConstrucao(50, 250);
 
+        // inserir o nome dos terrenos???
         // -- LADO 1 (EMBAIXO) --
         terrenos.add(new PontoDePartida());                                 // 0: PONTO DE PARTIDA
         terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 60));  // 1: LEBLON
@@ -87,7 +88,6 @@ public class Main {
     {
         ArrayList<Carta> todasCartas = new ArrayList<>();
                 
-        // --- CARTAS SORTE ---
         // chance1.png
         todasCartas.add(new Carta(1, "A prefeitura mandou abrir uma nova avenida...", true, false, 25, true));
         // chance2.png
@@ -113,14 +113,12 @@ public class Main {
         todasCartas.add(new Carta(30, "A geada prejudicou a sua safra de café. Pague 50", false, false, -50, true));
         // ... (adicionar outras cartas de Revés)
         
-        // A própria classe Baralho vai embaralhar no construtor
         return new Baralho(todasCartas);
     }
 
     public static void main(String[] args) {
         Tabuleiro tabuleiro = criaTabuleiro();
         Baralho baralho = criaBaralho();
-        // criar cartas??
         
         JanelaPrincipal view = new JanelaPrincipal();
         
