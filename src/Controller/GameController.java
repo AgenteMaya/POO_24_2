@@ -34,12 +34,12 @@ public class GameController
     
     private void inicializaCores() 
     {
-        coresDisponiveis.add("Vermelho");
-        coresDisponiveis.add("Azul");
-        coresDisponiveis.add("Laranja");
-        coresDisponiveis.add("Amarelo");
-        coresDisponiveis.add("Magenta");
-        coresDisponiveis.add("Cinza");
+        coresDisponiveis.add("vermelho");
+        coresDisponiveis.add("azul");
+        coresDisponiveis.add("laranja");
+        coresDisponiveis.add("amarelo");
+        coresDisponiveis.add("magenta");
+        coresDisponiveis.add("cinza");
     }
     
     
@@ -56,17 +56,16 @@ public class GameController
         view.mostrarTabuleiro();
     }
     
-    public void confirmarNumeroJogadores(String num) 
+    public void confirmarNumeroJogadores(int num_jogadores) 
     {
         try 
         {
-            int num_jogadores = Integer.parseInt(num);
             System.out.println("Jogadores: " + num_jogadores);
             
             if (num_jogadores >= 3 && num_jogadores <= 6) 
             { 
                 this.numJogadoresTotal = num_jogadores;
-                view.mostrarTelaConfigJogadores(num_jogadores);
+                view.mostrarTelaConfigJogadores(num_jogadores, num_jogadores, coresDisponiveis);
             } 
             else 
             {
@@ -97,7 +96,7 @@ public class GameController
             System.out.println("Jogador " + nome + " criado com a cor " + cor);
             
             view.mostrarErroCor(false); 
-            view.mostrarTelaConfigJogadores(jogadoresRestantes);
+            view.mostrarTelaConfigJogadores(numJogadoresTotal, jogadoresRestantes, coresDisponiveis);
             
         } 
         else 

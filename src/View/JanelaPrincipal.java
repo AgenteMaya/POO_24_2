@@ -93,9 +93,10 @@ public class JanelaPrincipal extends JFrame
 		Texto texto_num_jogadores = new Texto();
 		texto_num_jogadores.setTexto("Quantidade de jodores (entre 3-6)?");
 		texto_num_jogadores.setBounds(10, 10, 250, 30);
-
-		campoNumJogadores = new JTextField();
-		campoNumJogadores.setBounds(10, 50, 100, 30);
+		
+	    Integer[] qtdJogadores = { 3, 4, 5, 6 };
+	    JComboBox<Integer> comboBox = new JComboBox<>(qtdJogadores);
+	    comboBox.setBounds(10, 50, 100, 30);
 
 		Botao btnConfirmar = new Botao("Confirmar");
 		btnConfirmar.setBounds(120, 50, 100, 30);
@@ -103,12 +104,13 @@ public class JanelaPrincipal extends JFrame
 		btnConfirmar.adicionaListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.confirmarNumeroJogadores(campoNumJogadores.getText());
+				int num = (Integer) comboBox.getSelectedItem();
+				controller.confirmarNumeroJogadores(num);
 			}
 		});
 
 		painelJogadores.add(texto_num_jogadores);
-		painelJogadores.add(campoNumJogadores);
+		painelJogadores.add(comboBox);
 		painelJogadores.add(btnConfirmar);
 
 		getContentPane().add(painelJogadores);
@@ -117,7 +119,7 @@ public class JanelaPrincipal extends JFrame
 		repaint();
 	}
 
-	public void mostrarTelaConfigJogadores(int num_jogadores) 
+	public void mostrarTelaConfigJogadores(int total_jogadores, int num_jogadores, ArrayList<String> cores) 
 	{
 		JPanel painelConfiguracao = new JPanel();
 		painelConfiguracao.setLayout(null);
@@ -131,8 +133,8 @@ public class JanelaPrincipal extends JFrame
 		else 
 		{
 			Texto textoCampoNome = new Texto();
-			textoCampoNome.setTexto("Nome jogador (até 8 caracteres):");
-			textoCampoNome.setBounds(10, 10, 190, 30);
+			textoCampoNome.setTexto("Nome jogador nº" + (total_jogadores - num_jogadores + 1) + " (até 8 caracteres):");
+			textoCampoNome.setBounds(10, 10, 220, 30);
 
 			campoNome = new JTextField();
 			campoNome.setBounds(10, 50, 100, 30);
@@ -141,13 +143,15 @@ public class JanelaPrincipal extends JFrame
 			textoCor.setTexto("Cor do peão:");
 			textoCor.setBounds(10, 90, 100, 30);
 
-			campoCor = new JTextField();
-			campoCor.setBounds(10, 130, 100, 30);
-
 			textoAviso = new Texto();
 			textoAviso.setTexto("Cor inválida!!!");
 			textoAviso.setBounds(10, 150, 100, 30);
 			textoAviso.setVisible(false);
+			
+			String[] listaCores = cores.toArray(new String[cores.size()]);
+			System.out.println(listaCores);
+		    JComboBox<String> comboBox = new JComboBox<>(listaCores);
+		    comboBox.setBounds(10, 130, 100, 30);
 
 			Botao btnProximo = new Botao("Próximo");
 			btnProximo.setBounds(120, 180, 100, 30);
@@ -155,14 +159,15 @@ public class JanelaPrincipal extends JFrame
 			btnProximo.adicionaListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					controller.configurarProximoJogador(num_jogadores - 1, campoNome.getText(), campoCor.getText());
+					String cor = (String) comboBox.getSelectedItem();
+					controller.configurarProximoJogador(num_jogadores - 1, campoNome.getText(), cor.toLowerCase());
 				}
 			});
 
 			painelConfiguracao.add(textoCampoNome);
 			painelConfiguracao.add(campoNome);
 			painelConfiguracao.add(textoCor);
-			painelConfiguracao.add(campoCor);
+			painelConfiguracao.add(comboBox);
 			painelConfiguracao.add(btnProximo);
 			painelConfiguracao.add(textoAviso);
 		}
@@ -181,11 +186,10 @@ public class JanelaPrincipal extends JFrame
 	// Arrumar!
 	public void mostrarDados()
 	{
-	    // 1. Use JDialog para "pausar" a janela principal
 	    JDialog dialogoDados = new JDialog(this, "Lançar Dados (Debug)", true); // 'true' = modal
 	    dialogoDados.setSize(350, 150);
-	    dialogoDados.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Fecha só o diálogo
-	    dialogoDados.setLocationRelativeTo(this); // Centraliza
+	    dialogoDados.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); 
+	    dialogoDados.setLocationRelativeTo(this); 
 
 	    JPanel painelDados = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
@@ -197,21 +201,16 @@ public class JanelaPrincipal extends JFrame
 	    JLabel label2 = new JLabel("Dado 2:");
 	    JComboBox<Integer> comboBox2 = new JComboBox<>(numeros);
 
-	    // 2. Crie um botão de confirmação
-	    Botao btnConfirmar = new Botao("Lançar"); // Usando sua classe Botao
+	    Botao btnConfirmar = new Botao("Lançar");
 
-	    // 3. A LÓGICA VAI PARA DENTRO DO LISTENER
 	    btnConfirmar.adicionaListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            // 4. Lê os valores SÓ QUANDO o usuário clicar
 	            int dado1 = (Integer) comboBox1.getSelectedItem();
 	            int dado2 = (Integer) comboBox2.getSelectedItem();
 
-	            // 5. Chama o controller
 	            controller.usuarioLancouDados(dado1 + dado2);
 	            
-	            // 6. Fecha o diálogo
 	            dialogoDados.dispose();
 	        }
 	    });
@@ -220,10 +219,10 @@ public class JanelaPrincipal extends JFrame
 	    painelDados.add(comboBox1);
 	    painelDados.add(label2);
 	    painelDados.add(comboBox2);
-	    painelDados.add(btnConfirmar); // Adiciona o botão
+	    painelDados.add(btnConfirmar); 
 
 	    dialogoDados.getContentPane().add(painelDados);
-	    dialogoDados.setVisible(true); // O código PAUSA AQUI até o diálogo fechar
+	    dialogoDados.setVisible(true);
 	}
 
 	public void mostrarTabuleiro() 
@@ -233,7 +232,7 @@ public class JanelaPrincipal extends JFrame
 	    setLocationRelativeTo(null); 
 		getContentPane().setLayout(new BorderLayout());
 
-		carregaImagemPeoes();
+		carregarImagemPeoes();
 		carregarImagemCartas();
         
 		Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
@@ -245,7 +244,7 @@ public class JanelaPrincipal extends JFrame
 		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
 
 		Botao btnLancaDados = new Botao("Próximo");
-		btnLancaDados.setBounds(120, 180, 100, 30);
+		btnLancaDados.setBounds(10, 10, 150, 30);
 			
 		btnLancaDados.adicionaListener(new ActionListener() {
 				@Override
@@ -285,7 +284,7 @@ public class JanelaPrincipal extends JFrame
 		return image;
 	}
 
-	private void carregaImagemPeoes() 
+	private void carregarImagemPeoes() 
 	{
 		imagensPeoes = new HashMap<>();
         

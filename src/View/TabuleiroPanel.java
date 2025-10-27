@@ -47,7 +47,7 @@ public class TabuleiroPanel extends JPanel
     public TabuleiroPanel (Image i, HashMap<String, Image> imagens) 
     {
         this.imgTabuleiro = i;
-        this.imagensPeoes = imagens;
+		this.imagensPeoes = imagens;
         this.listaPeoes = new ArrayList<>();
                 
         this.addMouseListener(new MouseAdapter() 
@@ -185,15 +185,15 @@ public class TabuleiroPanel extends JPanel
 
         int cropPx = 0;
 
-        Point[] centros = inicializaMapaPosicoes(boardX, boardY, boardDrawSize, cropPx);
-
-        int casaAtual = 0;
-        Point C = centros[casaAtual];
+        Point[] centros = inicializaMapaPosicoes(boardX, boardY, boardDrawSize, cropPx);        
 
         int idx = 0;
         Point[] offsets = { new Point(-12,-12), new Point(+12,-12), new Point(-12,+12), new Point(+12,+12) };
         for (Peao p : this.listaPeoes) 
         {
+        	int casaAtualPeao = p.pegaPosicaoPeao();
+        	Point C = centros[casaAtualPeao];
+        	
             Image pin = imagensPeoes.get(p.getCor());
             if (pin == null) continue;
 
