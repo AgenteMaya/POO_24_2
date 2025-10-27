@@ -90,10 +90,15 @@ public class GameController {
     
     public void iniciarPartida() {
         System.out.println("Começar partida");
-        // (Aqui entra a lógica final de setup, como sortear a ordem, etc.)
-        // ...
         
-        view.mostrarTabuleiro();
+        tabuleiro.sortearOrdemJogadores();
+        tabuleiro.iniciarPrimeiroTurno();
+
+        view.mostrarTabuleiro(); 
+
+        ArrayList<Peao> peoes = tabuleiro.getListaPeoes(); 
+        
+        view.atualizarPaineisInfo(peoes);
     }
     
     public void setJogadorAtual(Peao peao) {
@@ -140,7 +145,6 @@ public class GameController {
             
             Banco.getBanco().pagarAluguel(tabuleiro, jogadorAtual.getId(), idTerreno);
             
-            // Atualiza a UI (View)
             view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
             
         } else {

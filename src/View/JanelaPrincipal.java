@@ -124,16 +124,7 @@ public class JanelaPrincipal extends JFrame {
 		setSize(500, 500);
 
 		if (num_jogadores == 0) {
-			Botao btnJogar = new Botao("Jogar!");
-			btnJogar.setBounds(150, 180, 100, 30);
-
-			btnJogar.adicionaListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					controller.iniciarPartida();
-				}
-			});
-			painelConfiguracao.add(btnJogar);
+			controller.iniciarPartida();
 		} else {
 			Texto textoCampoNome = new Texto();
 			textoCampoNome.setTexto("Nome jogador (até 8 caracteres):");
@@ -186,6 +177,8 @@ public class JanelaPrincipal extends JFrame {
 	public void mostrarTabuleiro() {
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
+	    setResizable(false);   
+	    setLocationRelativeTo(null); 
 		getContentPane().setLayout(new BorderLayout());
 
 		carregaImagemPeoes();
@@ -252,6 +245,31 @@ public class JanelaPrincipal extends JFrame {
 		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
 		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
 		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
+		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
+		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
+		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
+		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
+		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
+		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
+		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
+		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
+		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
+		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
+		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
+		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
+		imagensCartas.put(1, carregaImagem("/sorteReves/chance1.png"));
+		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
+		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
+		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
+		imagensCartas.put(6, carregaImagem("/sorteReves/chance6.png"));
+		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
+		imagensCartas.put(3, carregaImagem("/sorteReves/chance3.png"));
+		imagensCartas.put(4, carregaImagem("/sorteReves/chance4.png"));
+		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
     }
 	
 

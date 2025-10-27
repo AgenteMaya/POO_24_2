@@ -1,5 +1,7 @@
 package Model;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Tabuleiro 
 { 
@@ -7,9 +9,12 @@ public class Tabuleiro
 	ArrayList<Terreno> lTerrenos=new ArrayList<>();
 	ArrayList<Peao> lPeoes=new ArrayList<>();
 	
+	private int jogadorDaVezIndex;
+	
 	public Tabuleiro (ArrayList<Terreno> listaTerrenos)
 	{
 		lTerrenos.addAll(listaTerrenos);
+		this.jogadorDaVezIndex = 0;
 	}
 	
 	public Terreno getTerreno(int pos)
@@ -19,7 +24,14 @@ public class Tabuleiro
 	
 	public Peao getPeao(int id)
 	{
-		return lPeoes.get(id);
+		for (Peao p : lPeoes) 
+		{
+			if (p.getId() == id) 
+			{ 
+				return p;
+			}
+		}
+		return null; 
 	}
 	
 	public ArrayList<Peao> getListaPeoes()
@@ -50,6 +62,35 @@ public class Tabuleiro
 	public void addTerreno(Terreno terreno)
 	{
 		lTerrenos.add(terreno);
+	}
+	
+	public void sortearOrdemJogadores()
+	{
+		Collections.shuffle(this.lPeoes);
+	}
+	
+	public void iniciarPrimeiroTurno()
+	{
+		this.jogadorDaVezIndex = 0;
+		
+		for (Peao p : lPeoes) {
+			p.setaPosicaoPeao(0); 
+		}
+	}
+
+	public Peao getJogadorDaVez()
+	{
+		if (lPeoes.isEmpty()) {
+			return null;
+		}
+		return lPeoes.get(jogadorDaVezIndex);
+	}
+	
+	public void proximoTurno()
+	{
+		if (!lPeoes.isEmpty()) {
+			this.jogadorDaVezIndex = (this.jogadorDaVezIndex + 1) % lPeoes.size();
+		}
 	}
 
 }

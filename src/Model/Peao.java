@@ -38,6 +38,10 @@ public class Peao {
 	{
 		return this.nome;
 	}
+	
+	public void setaPosicaoPeao(int pos) {
+		posicao = pos;
+	}
 
 	public void setaPosicaoPeao(int pos, Tabuleiro tabuleiro) {
 		if (naPrisao)
