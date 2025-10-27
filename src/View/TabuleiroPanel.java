@@ -180,14 +180,34 @@ public class TabuleiroPanel extends JPanel {
         // para centralizar o tabuleiro
         int w = getWidth();
         int h = getHeight();
-        int boardSize = Math.min(w, h); 
-        int boardX = (w - boardSize) / 2; 
-        int boardY = (h - boardSize) / 2;
+//        int boardSize = Math.min(w, h); 
+//        int boardX = (w - boardSize) / 2; 
+//        int boardY = (h - boardSize) / 2;
+        
+        int boardDrawSize = Math.min(w, h);   // <- era: Math.min(W, H) - 60
+        int boardX = (w - boardDrawSize) / 2;
+        int boardY = (h - boardDrawSize) / 2;
+        g2d.drawImage(imgTabuleiro, boardX, boardY, boardDrawSize, boardDrawSize, this);
 
-        g2d.drawImage(imgTabuleiro, boardX, boardY, boardSize, boardSize, null);
+        //g2d.drawImage(imgTabuleiro, boardX, boardY, boardSize, boardSize, null);
         
         // Lógica para desenhar os peões (você fará isso no futuro)
         // g.drawImage(imgPeao1, x, y, null);
+        
+        double fx = 0.935, fy = 0.935;
+        int centroStartX = (int) Math.round(boardX + fx * boardDrawSize);
+        int centroStartY = (int) Math.round(boardY + fy * boardDrawSize);
+
+        // tamanho do pino (25x38 nas suas imagens). Se variar, dá para pedir ao Image.
+        // vamos recentrar pelo meio do pino
+        // 3) pequenos offsets para até 4 pinos não se sobreporem
+        Point[] offsets = {
+            new Point(-12, -12),
+            new Point(+12, -12),
+            new Point(-12, +12),
+            new Point(+12, +12)
+        };
+        
         ArrayList<Peao> listaJogadores = new ArrayList<>();
 		
 		Peao jogador1 = new Peao(1); 
@@ -212,20 +232,67 @@ public class TabuleiroPanel extends JPanel {
         listaJogadores.add(jogador2);
         listaJogadores.add(jogador3);
         
-        
+        int idx = 0;
         for (Peao p : listaJogadores) {
-            int casaAtual = 5; 
-            String corPeao = p.getCor();     
-            
-            Point posBase = mapaPosicoes[casaAtual];
-            
+            String corPeao = p.getCor(); // "Vermelho", "Azul", "Magenta", "Amarelo" etc.
             Image imgPeao = imagensPeoes.get(corPeao);
+            if (imgPeao == null) continue;
 
-            if (posBase != null && imgPeao != null) {
-                int offset = listaJogadores.indexOf(p) * 6; 
-                g.drawImage(imgPeao, posBase.x + offset, posBase.y + offset, this);
-            }
+            int pinW = imgPeao.getWidth(this);
+            int pinH = imgPeao.getHeight(this);
+
+            // garante que não estoura o array de offsets
+            Point off = offsets[Math.min(idx, offsets.length - 1)];
+
+            int drawX = centroStartX - pinW / 2 + off.x;
+            int drawY = centroStartY - pinH / 2 + off.y;
+
+            g.drawImage(imgPeao, drawX, drawY, this);
+            idx++;
         }
+        
+        
+//        for (Peao p : listaJogadores) {
+//            int casaAtual = 30; 
+//            String corPeao = p.getCor();     
+//            
+//            Point posBase = mapaPosicoes[casaAtual];
+//            
+//            Image imgPeao = imagensPeoes.get(corPeao);
+//
+//            if (posBase != null && imgPeao != null) {
+//                int offset = listaJogadores.indexOf(p) * 6; 
+//                System.out.println("Offset -" + (offset) + " posBase.x -" + (posBase.x) + " posBase.y -"  + (posBase.y));
+//                g.drawImage(imgPeao, posBase.x + offset, posBase.y + offset, this);
+//            }
+//        }
+        
+//        ArrayList<Peao> listaJogadores = new ArrayList<>();
+//
+//        Peao jogador1 = new Peao(1);
+//        jogador1.setNome("Alice");
+//        jogador1.setCor("Vermelho");
+//        jogador1.setDinheiro(4000);
+//
+//        Peao jogador2 = new Peao(2);
+//        jogador2.setNome("Roberto");
+//        jogador2.setCor("Azul");
+//        jogador2.setDinheiro(4000);
+//
+//        Peao jogador3 = new Peao(3);
+//        jogador3.setNome("Carla");
+//        jogador3.setCor("Magenta"); // ⚠️ mapeará para “Magenta” acima
+//        jogador3.setDinheiro(4000);
+//
+//        jogador1.setaPosicaoPeao(5);
+//        jogador2.setaPosicaoPeao(5);
+//        jogador3.setaPosicaoPeao(5);
+//
+//        listaJogadores.add(jogador1);
+//        listaJogadores.add(jogador2);
+//        listaJogadores.add(jogador3);
+//
+//        desenharPeoes(g2d, listaJogadores, boardX, boardY, boardSize);
 
 //        System.out.println("PaintComponent: Desenhando " + (this.listaPeoes != null ? this.listaPeoes.size() : "0") + " peões.");
 //        if (this.listaPeoes != null) {
@@ -287,9 +354,7 @@ public class TabuleiroPanel extends JPanel {
     }
     
  // desenha todos os peões no centro da célula (11 células por lado)
-    private void desenharPeoes(Graphics2D g2d,
-                               java.util.List<Peao> jogadores,
-                               int boardX, int boardY, int boardSize) {
+    private void desenharPeoes(Graphics2D g2d, java.util.List<Peao> jogadores, int boardX, int boardY, int boardSize) {
 
         if (jogadores == null || jogadores.isEmpty()) return;
 
@@ -345,7 +410,6 @@ public class TabuleiroPanel extends JPanel {
             case "amarelo"  -> "Amarelo";
             case "magenta"  -> "Magenta";
             case "cinza"    -> "Cinza";
-            case "verde"    -> "Magenta"; // ⚠️ não existe "Verde" no mapa atual; ajuste se adicionar
             default -> c;
         };
     }

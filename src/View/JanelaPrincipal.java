@@ -214,8 +214,7 @@ public class JanelaPrincipal extends JFrame {
 
 	public void mostrarTabuleiro() {
 		getContentPane().removeAll();
-		setSize(LARG_DEFAULT, ALT_DEFAULT);
-	    setResizable(false);   
+		setSize(LARG_DEFAULT, ALT_DEFAULT); 
 	    setLocationRelativeTo(null); 
 		getContentPane().setLayout(new BorderLayout());
 
