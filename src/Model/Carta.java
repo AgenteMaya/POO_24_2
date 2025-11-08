@@ -1,7 +1,7 @@
 package Model;
 
 
-public class Carta {
+class Carta {
 	int id;
 	String descricao;
 	boolean isSorte; // para verificar se a carta é de sorte ou não

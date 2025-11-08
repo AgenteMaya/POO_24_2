@@ -1,7 +1,7 @@
 package Model;
 import java.util.ArrayList;
 
-public class Propriedade extends Terreno{
+class Propriedade extends Terreno{
 	
 	//hotel - 0; 1 = 1 casa; 2 = 2 casas...
 	ArrayList<Integer> lVAluguel;

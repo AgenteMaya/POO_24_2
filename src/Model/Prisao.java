@@ -1,6 +1,6 @@
 package Model;
 
-public class Prisao extends Terreno{
+class Prisao extends Terreno{
 	
 	public Prisao()
 	{

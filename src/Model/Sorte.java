@@ -1,6 +1,6 @@
 package Model;
 
-public class Sorte extends Terreno{
+class Sorte extends Terreno{
 	int posPrisao;
 	
 	public Sorte(int posPrisao)

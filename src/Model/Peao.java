@@ -1,6 +1,6 @@
 package Model;
 
-public class Peao {
+class Peao {
 	int id;
 	int dinheiro;
 	int posicao;
