@@ -69,6 +69,7 @@ public class Api {
 		jogadorAtual.atribuiSaidaLivrePrisao(cartaAtual);
 	}
 	
+	//olhar com mais detalhe esses dois métodos mais tarde!!
 	public void jogadorVaiPraPrisao() 
 	{
 		Carta cartaSaida = jogadorAtual.vaiPraPrisao(9);
@@ -82,6 +83,12 @@ public class Api {
         baralho.descartarCarta(cartaAtual);
 	}
 	
+	public void mandaJogadorPraPrisao() 
+	{
+		jogadorAtual.vaiPraPrisao(10);
+	}
+	///
+	///
 	public void processaTransferencias() 
 	{
 		int valor = cartaAtual.getValorTransferencia();
@@ -129,6 +136,12 @@ public class Api {
 	public void setPosicaoPeao(int posNova) 
 	{
 		 jogadorAtual.setaPosicaoPeao(posNova);
+	}
+	
+	public int[] getResultadoDados() 
+	{
+		Dado dado = getDado();
+		return dado.lanca_dados();
 	}
 	
 	public int getDeslocSaidaPrisao() 
@@ -248,6 +261,12 @@ public class Api {
 		return terrenoAtual instanceof PontoDePartida;
 	}
 	
+	public boolean ehLucro(int pos) 
+	{
+		Terreno terrenoAtual = getTerrenoAtual(pos);
+		return terrenoAtual instanceof Lucros;
+	}
+	
 	public void pagarAluguel(int idTerreno) 
 	{
 		Banco banco = Banco.getBanco();
@@ -259,107 +278,116 @@ public class Api {
 		return tabuleiro.getTerreno(pos);
 	}
 		
-	private static ArrayList<Integer> criarAlugueis(int base, int c1, int c2, int c3, int c4, int h) 
-	{
-	    return new ArrayList<>(Arrays.asList(base, c1, c2, c3, c4, h));
-	}
+	//Função auxiliar para criar dados de aluguel de exemplo. --> MUDAR DEPOIS
+    private static ArrayList<Integer> criarAlugueis(int base, int c1, int c2, int c3, int c4, int h) {
+        return new ArrayList<>(Arrays.asList(base, c1, c2, c3, c4, h));
+    }
 
-	//Função auxiliar para criar dados de compra de construção. --> MUDAR DEPOIS
-	private static ArrayList<Integer> criarPrecoConstrucao(int precoCasa, int precoHotel) 
-	{
-	    return new ArrayList<>(Arrays.asList(precoCasa, precoHotel));
-	}	
+    //Função auxiliar para criar dados de compra de construção. --> MUDAR DEPOIS
+    private static ArrayList<Integer> criarPrecoConstrucao(int precoCasa, int precoHotel) {
+        return new ArrayList<>(Arrays.asList(precoCasa, precoHotel));
+    }	
 		
 	private void criaTabuleiro() 
 	{
-		//talvez mover esse código todo para a tabuleiro??? 
 		ArrayList<Terreno> terrenos = new ArrayList<>();
-        int posPrisao = 9;
+        int posPrisao = 10;
 
         // Valores de exemplo para aluguéis e construções
         ArrayList<Integer> aluguelPadrao = criarAlugueis(10, 50, 150, 450, 800, 1200);
         ArrayList<Integer> precoCasaPadrao = criarPrecoConstrucao(50, 250);
 
-        // inserir o nome dos terrenos???
         // -- LADO 1 (EMBAIXO) --
-        terrenos.add(new PontoDePartida());                                 // 0: PONTO DE PARTIDA
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 60));  // 1: LEBLON
-        terrenos.add(new Sorte(posPrisao));                                 // 2: ? (SORTE/REVÉS)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 60));  // 3: AV. PRESIDENTE VARGAS
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 70));  // 4: AV. NOSSA S. DE COPACABANA
-        terrenos.add(new Empresa(100, 200));                                // 5: Estação (Trem)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 100)); // 6: AV. BRIG. FARIA LIMA
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 100)); // 7: AV. REBOUÇAS
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 120)); // 8: AV. 9 DE JULHO
-        terrenos.add(new Prisao());                                         // 9: PRISÃO (VISITA)
+        terrenos.add(new PontoDePartida());                                
+        terrenos.add(new Propriedade("Leblon", aluguelPadrao, precoCasaPadrao, 60)); 
+        terrenos.add(new Sorte(posPrisao));                                
+        terrenos.add(new Propriedade("Av. Presidente Vargas", aluguelPadrao, precoCasaPadrao, 60)); 
+        terrenos.add(new Propriedade("Av. Nossa S. de Copacabana", aluguelPadrao, precoCasaPadrao, 70)); 
+        terrenos.add(new Empresa("Companhia Ferroviária", 100, 200));                        
+        terrenos.add(new Propriedade("Av. Brig. Faria Lima", aluguelPadrao, precoCasaPadrao, 100));
+        terrenos.add(new Empresa("Companhia de Viação", 100, 200));   
+        terrenos.add(new Propriedade("Avenida Rebouças", aluguelPadrao, precoCasaPadrao, 100));
+        terrenos.add(new Propriedade("Av. 9 de Julho", aluguelPadrao, precoCasaPadrao, 120)); 
+        terrenos.add(new Prisao());                                         
 
         // -- LADO 2 (ESQUERDA) --
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 140)); // 10: AV. EUROPA
-        terrenos.add(new Sorte(posPrisao));                                 // 11: ? (SORTE/REVÉS)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 140)); // 12: RUA AUGUSTA
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 160)); // 13: AV. PACAEMBÚ
-        terrenos.add(new Empresa(100, 200));                                // 14: Companhia (Carro)
-        terrenos.add(new Sorte(posPrisao));                                 // 15: ? (SORTE/REVÉS)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 180)); // 16: INTERLAGOS
-        terrenos.add(new Empresa(75, 150));                                 // 17: $$ (Utility)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 200)); // 18: MORUMBI
-        terrenos.add(new ParadaLivre());                                    // 19: PARADA LIVRE
+        terrenos.add(new Propriedade("Av. Europa", aluguelPadrao, precoCasaPadrao, 140));
+        terrenos.add(new Sorte(posPrisao));                          
+        terrenos.add(new Propriedade("Rua Augusta", aluguelPadrao, precoCasaPadrao, 140)); 
+        terrenos.add(new Propriedade("Av. Pacaembú", aluguelPadrao, precoCasaPadrao, 160));
+        terrenos.add(new Empresa("Companhia de Táxi", 100, 200));                               
+        terrenos.add(new Sorte(posPrisao));                                
+        terrenos.add(new Propriedade("Interlagos", aluguelPadrao, precoCasaPadrao, 180)); 
+        terrenos.add(new Lucros());                            
+        terrenos.add(new Propriedade("Morumbi", aluguelPadrao, precoCasaPadrao, 200)); 
+        terrenos.add(new ParadaLivre());
 
         // -- LADO 3 (CIMA) --
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 220)); // 20: FLAMENGO
-        terrenos.add(new Sorte(posPrisao));                                 // 21: ? (SORTE/REVÉS)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 220)); // 22: BOTAFOGO
-        terrenos.add(new Empresa(75, 150));                                 // 23: $$ (Utility)
-        terrenos.add(new Empresa(100, 200));                                // 24: Companhia (Barco)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 260)); // 25: AV. BRASIL
-        terrenos.add(new Sorte(posPrisao));                                 // 26: ? (SORTE/REVÉS)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 260)); // 27: AV. PAULISTA
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 280)); // 28: JARDIM EUROPA
-        terrenos.add(new IrPraPrisao(posPrisao));                           // 29: VÁ PARA A PRISÃO
+        terrenos.add(new Propriedade("Flamengo", aluguelPadrao, precoCasaPadrao, 220)); 
+        terrenos.add(new Sorte(posPrisao));                                 
+        terrenos.add(new Propriedade("Botafogo", aluguelPadrao, precoCasaPadrao, 220)); 
+        terrenos.add(new Imposto());                               
+        terrenos.add(new Empresa("Companhia de Navegação", 100, 200));                             
+        terrenos.add(new Propriedade("Av. Brasil", aluguelPadrao, precoCasaPadrao, 260)); 
+        terrenos.add(new Sorte(posPrisao));                          
+        terrenos.add(new Propriedade("Av. Paulista", aluguelPadrao, precoCasaPadrao, 260)); 
+        terrenos.add(new Propriedade("Jardim Europa", aluguelPadrao, precoCasaPadrao, 280));
+        terrenos.add(new IrPraPrisao(posPrisao));
 
         // -- LADO 4 (DIREITA) --
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 300)); // 30: COPACABANA
-        terrenos.add(new Empresa(100, 200));                                // 31: Companhia (Avião)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 300)); // 32: AV. VIEIRA SOUTO
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 320)); // 33: AV. ATLÂNTICA
-        terrenos.add(new Empresa(100, 200));                                // 34: Companhia (Helicóptero)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 350)); // 35: IPANEMA
-        terrenos.add(new Sorte(posPrisao));                                 // 36: ? (SORTE/REVÉS)
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 370)); // 37: JARDIM PAULISTA
-        terrenos.add(new Propriedade(aluguelPadrao, precoCasaPadrao, 400)); // 38: BROOKLIN
-        terrenos.add(new Imposto());
+        terrenos.add(new Propriedade("Copacabana", aluguelPadrao, precoCasaPadrao, 300)); 
+        terrenos.add(new Empresa("Companhia de Aviação", 100, 200));                            
+        terrenos.add(new Propriedade("Av. Vieira Souto", aluguelPadrao, precoCasaPadrao, 300)); 
+        terrenos.add(new Propriedade("Av. Atlântica", aluguelPadrao, precoCasaPadrao, 320));
+        terrenos.add(new Empresa("Companhia de Táxi Aéreo", 100, 200));                               
+        terrenos.add(new Propriedade("Ipanema", aluguelPadrao, precoCasaPadrao, 350)); 
+        terrenos.add(new Sorte(posPrisao));                               
+        terrenos.add(new Propriedade("Jardim Paulista", aluguelPadrao, precoCasaPadrao, 370));
+        terrenos.add(new Propriedade("Brooklin", aluguelPadrao, precoCasaPadrao, 400)); 
+        terrenos.add(new ParadaLivre()); 
+
+        // Garante que temos 40 terrenos
+        System.out.println("Total de terrenos criados: " + terrenos.size());
         
         tabuleiro = new Tabuleiro(terrenos);
 	}
 	
 	private void criaBaralho()
     {
-        ArrayList<Carta> todasCartas = new ArrayList<>();
-                
-        // chance1.png
-        todasCartas.add(new Carta(1, "A prefeitura mandou abrir uma nova avenida...", true, false, 25, true));
-        // chance2.png
+		ArrayList<Carta> todasCartas = new ArrayList<>();
+        
+        todasCartas.add(new Carta(1, "A prefeitura mandou abrir uma nova avenida, para o que desapropiou vários prédios. Em consequência seu terreno valorizou.", true, false, 25, true));
         todasCartas.add(new Carta(2, "Houve um assalto à sua loja, mas você estava segurado.", true, false, 150, true));
-        // chance3.png
         todasCartas.add(new Carta(3, "Um amigo tinha lhe pedido um empréstimo e se esqueceu de devolver.", true, false, 80, true));
-        // chance4.png
         todasCartas.add(new Carta(4, "Você está com sorte. Suas ações na Bolsa de Valores estão em alta.", true, false, 200, true));
-        // ... (adicionar outras cartas de Sorte)
-
+        todasCartas.add(new Carta(5, "Você trocou seu carro usado com um amigo e ainda saiu lucrando.", true, false, 50, true));
+        todasCartas.add(new Carta(6, "Você acaba de receber uma parcela do seu 13º salário.", true, false, 50, true));
+        todasCartas.add(new Carta(7, "Você tirou o primeiro lugar no Torneio de Tênis do seu clube. Parabéns!", true, false, 100, true));
+        todasCartas.add(new Carta(8, "O seu cachorro policial tirou o 1º prêmio na exposição do Kennel Club.", true, false, 100, true));
+        todasCartas.add(new Carta(9, "Saída livre da prisão.", true, true, 0, true));
+        todasCartas.add(new Carta(10, "Você encontrou dinheiro no chão.", true, false, 50, true));
+        todasCartas.add(new Carta(11, "Você apostou com os parceiros deste jogo e ganhou.", true, false, 50, false));
+        todasCartas.add(new Carta(12, "Você saiu de férias e se hospedou na casa de um amigo. Você economizou o hotel.", true, false, 45, true));
+        todasCartas.add(new Carta(13, "Inesperadamente você recebeu uma herança que já estava esquecida.", true, false, 100, true));
+        todasCartas.add(new Carta(14, "Você foi promovido a diretor da sua empresa..", true, false, 100, true));
+        todasCartas.add(new Carta(15, "Você jogou na Loteria Esportiva com um grupo de amigos. Ganharam!.", true, false, 20, true));
+        
         // --- CARTAS REVÉS ---
-        // ... (adicionar outras cartas de Revés)
-        // chance25.png
-        todasCartas.add(new Carta(25, "Você acaba de receber a comunicação do Imposto de Renda. Pague 50", false, false, -50, true));
-        // chance26.png
-        todasCartas.add(new Carta(26, "Seu clube está ampliando as piscinas. Os sócios devem contribuir. Pague 25", false, false, -25, true));
-        // chance27.png
-        todasCartas.add(new Carta(27, "Renove a tempo a licença do seu automóvel. Pague 30", false, false, -30, true));
-        // chance28.png
-        todasCartas.add(new Carta(28, "Seus parentes do interior vieram passar umas 'férias' na sua casa. Pague 45", false, false, -45, true));
-        // chance29.png
-        todasCartas.add(new Carta(29, "Seus filhos já vão para a escola. Pague a primeira mensalidade. Pague 50", false, false, -50, true));
-        // chance30.png
-        todasCartas.add(new Carta(30, "A geada prejudicou a sua safra de café. Pague 50", false, false, -50, true));
+        todasCartas.add(new Carta(16, "Um amigo ppediu-lhe um empréstimo. Você não pode recusar.", false, false, -15, true));
+        todasCartas.add(new Carta(17, "Você vai casar e está comprando um apartamento novo.", false, false, -25, true));
+        todasCartas.add(new Carta(18, "O médico lhe recomendou repouso num bom hotel de montanha.", false, false, -45, true));
+        todasCartas.add(new Carta(19, "Você achou interessante assistir à estréia da temporada de ballet. Compre os ingressos.", false, false, -30, true));
+        todasCartas.add(new Carta(20, "Parabéns! Você convidou seus amigos para festejar o aniversário.", false, false, -100, true));
+        todasCartas.add(new Carta(21, "Você é papai outra vez! Despesas de maternidade.", false, false, -100, true));
+        todasCartas.add(new Carta(22, "Papai os livros do ano passado não servem mais, preciso de livros novos.", false, false, -40, true));
+        todasCartas.add(new Carta(23, "Vá para a prisão sem receber nada. (talvez eu lhe faça uma visita...)", false, true, 0, true));
+        todasCartas.add(new Carta(24, "Você estacionou seu carro em lugar proibido e entrou na contra mão.", false, false, -30, true));
+        todasCartas.add(new Carta(25, "Você acaba de receber a comunicação do Imposto de Renda.", false, false, -50, true));
+        todasCartas.add(new Carta(26, "Seu clube está ampliando as piscinas. Os sócios devem contribuir.", false, false, -25, true));
+        todasCartas.add(new Carta(27, "Renove a tempo a licença do seu automóvel.", false, false, -30, true));
+        todasCartas.add(new Carta(28, "Seus parentes do interior vieram passar umas 'férias' na sua casa.", false, false, -45, true));
+        todasCartas.add(new Carta(29, "Seus filhos já vão para a escola. Pague a primeira mensalidade.", false, false, -50, true));
+        todasCartas.add(new Carta(30, "A geada prejudicou a sua safra de café.", false, false, -50, true));
         
         baralho = new Baralho(todasCartas);
     }

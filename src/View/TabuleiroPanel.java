@@ -18,7 +18,6 @@ public class TabuleiroPanel extends JPanel
     Image imgTabuleiro; 
     Image imgCartaAtual = null; 
 
-    private Point[] mapaPosicoes;
     private HashMap<String, Image> imagensPeoes;
     
     private GameController controller;
@@ -62,36 +61,6 @@ public class TabuleiroPanel extends JPanel
             }
         });
     }
-
-    private Point[] inicializaMapaPosicoes(int boardX, int boardY, int boardSize, int cropPx) 
-    {
-        Point[] pos = new Point[40];
-
-        double inner = boardSize - 2.0 * cropPx;
-        double cell  = inner / 11.0; 
-
-        for (int i = 0; i < 40; i++) {
-            int gx, gy;
-
-            if (i >= 0 && i <= 10) {           
-                gx = 10 - i; gy = 10;
-            } else if (i <= 20) {               
-                gx = 0; gy = 20 - i;
-            } else if (i <= 30) {               
-                gx = i - 20; gy = 0;
-            } else {                            
-                gx = 10; gy = i - 30;
-            }
-
-            int cx = (int) Math.round(boardX + cropPx + (gx + 0.5) * cell);
-            int cy = (int) Math.round(boardY + cropPx + (gy + 0.5) * cell);
-
-            System.out.println("pos x - " + (cx) + "Pos y - " +  (cy));
-            pos[i] = new Point(cx, cy); 
-        }
-
-        return pos;
-    }
     
     public void setController(GameController controller) {
         this.controller = controller;
@@ -125,7 +94,6 @@ public class TabuleiroPanel extends JPanel
         repaint();
     }
 
-    
     private void handleMouseClick(Point p) {
         switch (currentState) {
             case EXIBINDO_CARTA:
@@ -167,46 +135,128 @@ public class TabuleiroPanel extends JPanel
                 break;
         }
     }
-
+    
+    private Point calculaPosicaoPeao(int casa, int numPeao)
+    {
+    	int posX = 0;
+    	int posY = 0;
+    	int aux = 0;
+    	int aux2 = 0;
+    	int aux3 = 0;
+    	int ajusteX = 128; 
+    	
+    	if (casa % 10 == 0)
+    	{
+    		if (casa == 0 || casa == 10) posY = 595;
+    		else posY = 10;
+    		
+    		if (casa == 0 || casa == 30) posX = 875 - ajusteX;
+    		else posX = 290 - ajusteX;
+    		
+    		if (numPeao < 3)
+            {
+    		  posX += 35 * numPeao;
+            }
+            else
+            {
+              posX += 35 * (numPeao - 3);
+              posY += 45;
+            } 
+    	}
+    	else if ((casa > 10 && casa < 20) || (casa > 30 && casa < 40)) 
+    	{
+    		if (casa > 10 && casa < 20) 
+    		{
+    			posX = 290 - ajusteX;
+    			aux = 11;
+    			aux2 = -53;
+    			posY = 551;
+    			aux3 = -1;
+    			
+    		}
+    		else if (casa > 30 && casa < 40) 
+    		{
+    			posX = 875 - ajusteX;
+    			aux = 31;
+    			aux2 = 53;
+    			posY = 110;
+    			aux3 = 1;
+    		}
+    			
+    		if (numPeao < 3)
+            {
+    		  posX += 35 * numPeao;
+    		  posY += + aux2 * (casa - aux) + aux3 * (casa - aux) * 2 - 28;
+            }
+            else
+            {
+              posX += 35 * (numPeao - 3);
+              posY += aux2 * (casa - aux) + aux3 * (casa - aux) * 2;
+            } 
+    	}
+    	else if ((casa > 0 && casa < 10) || (casa > 20 && casa < 30))
+    	{
+    		if (casa > 0 && casa < 10)
+    		{
+    			posY = 595;
+    			posX = 822 - ajusteX;
+    			aux = 1;
+    			aux2 = -55;
+    		}
+    		else
+    		{
+    			posY = 10;
+    			posX = 385 - ajusteX;
+    			aux = 21;
+    			aux2 = 55;
+    		}
+    		
+    		if (numPeao < 2)
+            {
+    		  posX += 30 * numPeao + aux2 * (casa - aux);
+            }
+            else if (numPeao < 4)
+            {
+              posX += 30 * (numPeao - 2) + aux2 * (casa - aux);
+              posY += 23;
+            } 
+            else
+            {
+              posX += 30 * (numPeao - 4) + aux2 * (casa - aux);
+              posY += 46;
+            }
+    		
+    	}
+    		
+    	return new Point(posX, posY);
+    }
+    
     
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
-        
-        // para centralizar o tabuleiro
+
         int w = getWidth();
         int h = getHeight();
-        
-        int boardDrawSize = Math.min(w, h);   
+
+        int boardDrawSize = Math.min(w, h);
         int boardX = (w - boardDrawSize) / 2;
         int boardY = (h - boardDrawSize) / 2;
+
         g2d.drawImage(imgTabuleiro, boardX, boardY, boardDrawSize, boardDrawSize, this);
 
-        int cropPx = 0;
+        int idxJog = 0; 
+        for (Peao p : this.listaPeoes) {
+            int casa = p.pegaPosicaoPeao();
 
-        Point[] centros = inicializaMapaPosicoes(boardX, boardY, boardDrawSize, cropPx);        
-
-        int idx = 0;
-        Point[] offsets = { new Point(-12,-12), new Point(+12,-12), new Point(-12,+12), new Point(+12,+12) };
-        for (Peao p : this.listaPeoes) 
-        {
-        	int casaAtualPeao = p.pegaPosicaoPeao();
-        	Point C = centros[casaAtualPeao];
-        	
             Image pin = imagensPeoes.get(p.getCor());
             if (pin == null) continue;
-
-            int pinW = pin.getWidth(this);
-            int pinH = pin.getHeight(this);
-            Point off = offsets[Math.min(idx, offsets.length - 1)];
-
-            int drawX = C.x - pinW/2 + off.x;
-            int drawY = C.y - pinH/2 + off.y;
-
-            System.out.println("drawX - " + (drawX) + " drawY - " +  (drawY));
-            g.drawImage(pin, drawX, drawY, this);
-            idx++;
+       
+            Point C = calculaPosicaoPeao(casa, idxJog);
+            g.drawImage(pin, C.x, C.y, this);
+            
+            idxJog++;
         }
         
         switch (currentState) {
@@ -230,73 +280,12 @@ public class TabuleiroPanel extends JPanel
         g2d.dispose();
     }
     
- // desenha todos os peões no centro da célula (11 células por lado)
-    private void desenharPeoes(Graphics2D g2d, java.util.List<Peao> jogadores, int boardX, int boardY, int boardSize) {
-
-        if (jogadores == null || jogadores.isEmpty()) return;
-
-        // cada lado do tabuleiro é dividido em 11 células (10 casas + 1 canto)
-        final double cell = boardSize / 11.0;
-
-        // tamanho do ícone do peão relativo à célula
-        final int pinSize = (int)Math.round(cell * 0.70); // ~70% da célula
-        final int half    = pinSize / 2;
-
-        for (int i = 0; i < jogadores.size(); i++) {
-            Peao p = jogadores.get(i);
-
-            int casa = p.pegaPosicaoPeao(); // 0..39
-            if (casa < 0 || casa >= 40) continue;
-
-            Point posBase = mapaPosicoes[casa]; // x,y em [0..10]
-            if (posBase == null) continue;
-
-            // seu mapa cresce "para cima"; a tela cresce "para baixo"
-            // usamos o centro da célula: +0.5
-            double cx = boardX + (posBase.x + 0.5) * cell;
-            double cy = boardY + ((10 - posBase.y) + 0.5) * cell;
-
-            // separa peões na mesma casa: offset em "anel"
-            // (você pode trocar por deslocamentos fixos 0,8,16 se preferir)
-            int ring = (i % 4);
-            int offX = (ring == 1 ? 7 : ring == 3 ? -7 : 0);
-            int offY = (ring == 2 ? 7 : ring == 0 ? -7 : 0);
-
-            String corKey = normalizaCor(p.getCor());
-            Image imgPeao = imagensPeoes.get(corKey);
-            if (imgPeao == null) {
-                System.err.println("Imagem não encontrada para a cor: " + p.getCor());
-                continue;
-            }
-
-            int px = (int)Math.round(cx) - half + offX;
-            int py = (int)Math.round(cy) - half + offY;
-
-            g2d.drawImage(imgPeao, px, py, pinSize, pinSize, null);
-        }
-    }
-    
- // normaliza para as chaves existentes do seu HashMap
-    private String normalizaCor(String c) {
-        if (c == null) return "";
-        c = c.trim().toLowerCase();
-        return switch (c) {
-            case "vermelho" -> "Vermelho";
-            case "azul"     -> "Azul";
-            case "laranja"  -> "Laranja";
-            case "amarelo"  -> "Amarelo";
-            case "magenta"  -> "Magenta";
-            case "cinza"    -> "Cinza";
-            default -> c;
-        };
-    }
-    
     private void desenharDialogoFundo(Graphics2D g2d) {
         g2d.setColor(new Color(0, 0, 0, 150));
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }
 
-    private void desenharMensagemTemporaria(Graphics2D g2d) {
+    private void desenharMensagemTemporaria(Graphics2D g2d) { // alterar para a mensagem desaparecer automaticamente
         if (mensagemTemporaria != null) {
             g2d.setColor(new Color(0, 0, 0, 180));
             g2d.setFont(new Font("Arial", Font.BOLD, 24));
@@ -341,7 +330,7 @@ public class TabuleiroPanel extends JPanel
         
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
         String txt1 = "Deseja comprar este terreno?";
-        String txt2 = "Nome: " + "NOME_DO_TERRENO"; // terrenoOfertado.getNome();
+        String txt2 = "Nome: " + terrenoOfertado.getNomeTerreno();
         String txt3 = "Preço: R$ " + terrenoOfertado.getValorCompra();
         
         g2d.drawString(txt1, dialogX + 20, dialogY + 40);

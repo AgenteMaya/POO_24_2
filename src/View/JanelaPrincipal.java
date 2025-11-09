@@ -11,29 +11,36 @@ import java.util.HashMap;
 
 import Controller.GameController;
 import Model.Peao;
-import Model.Propriedade; 
-import Model.Terreno; 
+import Model.Propriedade;
+import Model.Terreno;
 
 @SuppressWarnings("serial")
-public class JanelaPrincipal extends JFrame 
-{
+public class JanelaPrincipal extends JFrame {
 	public int LARG_DEFAULT = 1280;
-	public int ALT_DEFAULT = 750;
+	public int ALT_DEFAULT = 730;
 
 	private GameController controller;
 
 	JPanel painelMenu;
 	TabuleiroPanel painelTabuleiro;
-	private JTextField campoNumJogadores;
+	JPanel painelDados;
+
 	private JTextField campoNome;
-	private JTextField campoCor;
-	private Texto textoAviso;
-	
+
+	private int faceAtualD1 = 0, faceAtualD2 = 0;
+	private Color corPainelAtual = new Color(120, 120, 120);
+	private String nomeJogadorDaVez = "—";
+
+	private Rectangle btnRollRect = null;
+	private JComboBox<Integer> cbD1, cbD2;
+
 	private HashMap<Integer, Image> imagensCartas;
 	private HashMap<String, Image> imagensPeoes;
+	private HashMap<Integer, Image> imagensDados;
+	
+	private java.util.List<String> historicoLancamentos = new java.util.ArrayList<>();
 
-	public JanelaPrincipal() 
-	{
+	public JanelaPrincipal() {
 		mostrarMenuInicial();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -93,10 +100,10 @@ public class JanelaPrincipal extends JFrame
 		Texto texto_num_jogadores = new Texto();
 		texto_num_jogadores.setTexto("Quantidade de jodores (entre 3-6)?");
 		texto_num_jogadores.setBounds(10, 10, 250, 30);
-		
-	    Integer[] qtdJogadores = { 3, 4, 5, 6 };
-	    JComboBox<Integer> comboBox = new JComboBox<>(qtdJogadores);
-	    comboBox.setBounds(10, 50, 100, 30);
+
+		Integer[] qtdJogadores = { 3, 4, 5, 6 };
+		JComboBox<Integer> comboBox = new JComboBox<>(qtdJogadores);
+		comboBox.setBounds(10, 50, 100, 30);
 
 		Botao btnConfirmar = new Botao("Confirmar");
 		btnConfirmar.setBounds(120, 50, 100, 30);
@@ -119,19 +126,15 @@ public class JanelaPrincipal extends JFrame
 		repaint();
 	}
 
-	public void mostrarTelaConfigJogadores(int total_jogadores, int num_jogadores, ArrayList<String> cores) 
-	{
+	public void mostrarTelaConfigJogadores(int total_jogadores, int num_jogadores, ArrayList<String> cores) {
 		JPanel painelConfiguracao = new JPanel();
 		painelConfiguracao.setLayout(null);
 		getContentPane().removeAll();
 		setSize(500, 500);
 
-		if (num_jogadores == 0) 
-		{
+		if (num_jogadores == 0) {
 			controller.iniciarPartida();
-		} 
-		else 
-		{
+		} else {
 			Texto textoCampoNome = new Texto();
 			textoCampoNome.setTexto("Nome jogador nº" + (total_jogadores - num_jogadores + 1) + " (até 8 caracteres):");
 			textoCampoNome.setBounds(10, 10, 220, 30);
@@ -143,15 +146,9 @@ public class JanelaPrincipal extends JFrame
 			textoCor.setTexto("Cor do peão:");
 			textoCor.setBounds(10, 90, 100, 30);
 
-			textoAviso = new Texto();
-			textoAviso.setTexto("Cor inválida!!!");
-			textoAviso.setBounds(10, 150, 100, 30);
-			textoAviso.setVisible(false);
-			
 			String[] listaCores = cores.toArray(new String[cores.size()]);
-			System.out.println(listaCores);
-		    JComboBox<String> comboBox = new JComboBox<>(listaCores);
-		    comboBox.setBounds(10, 130, 100, 30);
+			JComboBox<String> comboBox = new JComboBox<>(listaCores);
+			comboBox.setBounds(10, 130, 100, 30);
 
 			Botao btnProximo = new Botao("Próximo");
 			btnProximo.setBounds(120, 180, 100, 30);
@@ -169,7 +166,6 @@ public class JanelaPrincipal extends JFrame
 			painelConfiguracao.add(textoCor);
 			painelConfiguracao.add(comboBox);
 			painelConfiguracao.add(btnProximo);
-			painelConfiguracao.add(textoAviso);
 		}
 
 		getContentPane().add(painelConfiguracao);
@@ -177,90 +173,211 @@ public class JanelaPrincipal extends JFrame
 		repaint();
 	}
 
-	public void mostrarErroCor(boolean mostrar) {
-		if (textoAviso != null) {
-			textoAviso.setVisible(mostrar);
+	private JPanel criarPainelLateralDados() {
+		// --- painel pintado em Java2D (CENTER) ---
+		painelDados = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D g2 = (Graphics2D) g.create();
+
+				int W = getWidth(), H = getHeight();
+
+				// fundo com a cor do jogador da vez
+				g2.setColor(corPainelAtual);
+				g2.fillRect(0, 0, W, H);
+
+				// título
+				g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
+				g2.setColor(contraste(corPainelAtual));
+				String titulo = "Lançamento de Dados";
+				g2.drawString(titulo, 16, 28);
+
+				// rótulo jogador da vez
+				g2.setFont(getFont().deriveFont(Font.BOLD, 13f));
+				g2.drawString("Vez de: " + nomeJogadorDaVez, 16, 52);
+
+				// área “cartucho” para as imagens
+				int boxX = 16, boxY = 72, boxW = W - 32, boxH = 140;
+				g2.setColor(new Color(255, 255, 255, 220));
+				g2.fillRoundRect(boxX, boxY, boxW, boxH, 12, 12);
+
+				int pad = 16;
+				int slotW = (boxW - pad * 3) / 2;
+				int slotH = boxH - pad * 2;
+				int x1 = boxX + pad;
+				int x2 = x1 + slotW + pad;
+				int y = boxY + pad;
+
+				if (faceAtualD1 >= 1 && faceAtualD1 <= 6) {
+					Image img1 = imagensDados.get(faceAtualD1);
+					drawCenteredScaled(g2, img1, x1, y, slotW, slotH);
+				}
+				if (faceAtualD2 >= 1 && faceAtualD2 <= 6) {
+					Image img2 = imagensDados.get(faceAtualD2);
+					drawCenteredScaled(g2, img2, x2, y, slotW, slotH);
+				}
+
+				// “botão” desenhado
+				int btnW = boxW, btnH = 44;
+				int btnX = boxX, btnY = boxY + boxH + 16;
+				g2.setColor(new Color(255, 255, 255, 230));
+				g2.fillRoundRect(btnX, btnY, btnW, btnH, 10, 10);
+				g2.setColor(new Color(0, 0, 0, 160));
+				g2.drawRoundRect(btnX, btnY, btnW, btnH, 10, 10);
+
+				String lbl = "Lançar";
+				g2.setFont(getFont().deriveFont(Font.BOLD, 14f));
+				int strW = g2.getFontMetrics().stringWidth(lbl);
+				int strH = g2.getFontMetrics().getAscent();
+				g2.setColor(Color.BLACK);
+				g2.drawString(lbl, btnX + (btnW - strW) / 2, btnY + (btnH + strH) / 2 - 4);
+
+				btnRollRect = new Rectangle(btnX, btnY, btnW, btnH);
+
+				g2.dispose();
+			}
+		};
+		// importante: não fixe o preferredSize do CENTER
+		painelDados.setOpaque(true);
+
+		painelDados.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (btnRollRect != null && btnRollRect.contains(e.getPoint())) {
+					controller.lancarDadosReal();
+				}
+			}
+		});
+
+		// --- rodapé de DEBUG (SOUTH) com altura fixa ---
+		JPanel painelDebug = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+		painelDebug.setOpaque(true);
+		painelDebug.setBackground(new Color(245, 245, 245));
+		painelDebug.setPreferredSize(new Dimension(260, 64)); // altura fixa p/ garantir visibilidade
+
+		Integer[] nums = { 1, 2, 3, 4, 5, 6 };
+		cbD1 = new JComboBox<>(nums);
+		cbD2 = new JComboBox<>(nums);
+
+		JButton btnDebug = new JButton("Debug");
+		btnDebug.addActionListener(ev -> {
+			int d1 = (Integer) cbD1.getSelectedItem();
+			int d2 = (Integer) cbD2.getSelectedItem();
+			controller.lancarDadosDebug(d1, d2);
+		});
+
+		painelDebug.add(new JLabel("D1:"));
+		painelDebug.add(cbD1);
+		painelDebug.add(new JLabel("D2:"));
+		painelDebug.add(cbD2);
+		painelDebug.add(btnDebug);
+
+		// --- container EAST (define só aqui o tamanho total) ---
+		JPanel container = new JPanel(new BorderLayout());
+		container.setPreferredSize(new Dimension(260, ALT_DEFAULT)); // largura fixa do lado direito
+		container.add(painelDados, BorderLayout.CENTER);
+		container.add(painelDebug, BorderLayout.SOUTH);
+
+		return container;
+	}
+
+	private static void drawCenteredScaled(Graphics2D g2, Image img, int x, int y, int w, int h) {
+		if (img == null)
+			return;
+		int iw = img.getWidth(null), ih = img.getHeight(null);
+		if (iw <= 0 || ih <= 0)
+			return;
+		double sx = w / (double) iw;
+		double sy = h / (double) ih;
+		double s = Math.min(sx, sy);
+		int dw = (int) Math.round(iw * s);
+		int dh = (int) Math.round(ih * s);
+		int dx = x + (w - dw) / 2;
+		int dy = y + (h - dh) / 2;
+		g2.drawImage(img, dx, dy, dw, dh, null);
+	}
+
+	private static Color contraste(Color bg) {
+		double l = 0.299 * bg.getRed() + 0.587 * bg.getGreen() + 0.114 * bg.getBlue();
+		return (l > 160) ? Color.BLACK : Color.WHITE;
+	}
+
+	public void indicarJogadorDaVez(Model.Peao p) {
+		if (p == null)
+			return;
+		nomeJogadorDaVez = p.getNome();
+
+		// mapeamento de cor -> Color
+		switch (p.getCor()) {
+		case "vermelho" -> corPainelAtual = new Color(220, 60, 60);
+		case "azul" -> corPainelAtual = new Color(70, 120, 220);
+		case "laranja" -> corPainelAtual = new Color(240, 140, 60);
+		case "amarelo" -> corPainelAtual = new Color(230, 200, 70);
+		case "magenta" -> corPainelAtual = new Color(200, 70, 200);
+		case "cinza" -> corPainelAtual = new Color(150, 150, 160);
+		default -> corPainelAtual = new Color(120, 120, 120);
 		}
+		if (painelDados != null)
+			painelDados.repaint();
+		
+		resetHistoricoLancamentos();
 	}
 	
-	// Arrumar!
-	public void mostrarDados()
-	{
-	    JDialog dialogoDados = new JDialog(this, "Lançar Dados (Debug)", true); // 'true' = modal
-	    dialogoDados.setSize(350, 150);
-	    dialogoDados.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); 
-	    dialogoDados.setLocationRelativeTo(this); 
-
-	    JPanel painelDados = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-	    Integer[] numeros = { 1, 2, 3, 4, 5, 6 };
-
-	    JLabel label1 = new JLabel("Dado 1:");
-	    JComboBox<Integer> comboBox1 = new JComboBox<>(numeros);
-	    
-	    JLabel label2 = new JLabel("Dado 2:");
-	    JComboBox<Integer> comboBox2 = new JComboBox<>(numeros);
-
-	    Botao btnConfirmar = new Botao("Lançar");
-
-	    btnConfirmar.adicionaListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            int dado1 = (Integer) comboBox1.getSelectedItem();
-	            int dado2 = (Integer) comboBox2.getSelectedItem();
-
-	            controller.usuarioLancouDados(dado1 + dado2);
-	            
-	            dialogoDados.dispose();
-	        }
-	    });
-
-	    painelDados.add(label1);
-	    painelDados.add(comboBox1);
-	    painelDados.add(label2);
-	    painelDados.add(comboBox2);
-	    painelDados.add(btnConfirmar); 
-
-	    dialogoDados.getContentPane().add(painelDados);
-	    dialogoDados.setVisible(true);
+	public void resetHistoricoLancamentos() {
+	    historicoLancamentos.clear();
+	    if (painelDados != null) painelDados.repaint();
 	}
 
-	public void mostrarTabuleiro() 
-	{
+	public void registraLancamento(int d1, int d2, String nota) {
+	    String s = d1 + " + " + d2 + " = " + (d1 + d2);
+	    if (nota != null && !nota.isBlank()) s += "  — " + nota;
+	    historicoLancamentos.add(s);
+	    // limita a, por ex., 10 linhas
+	    if (historicoLancamentos.size() > 10) {
+	        historicoLancamentos = historicoLancamentos.subList(
+	            historicoLancamentos.size() - 10, historicoLancamentos.size()
+	        );
+	    }
+	    if (painelDados != null) painelDados.repaint();
+	}
+
+	public void mostrarDados(int d1, int d2) {
+		faceAtualD1 = (d1 >= 1 && d1 <= 6) ? d1 : 0;
+		faceAtualD2 = (d2 >= 1 && d2 <= 6) ? d2 : 0;
+		if (painelDados != null)
+			painelDados.repaint();
+	}
+
+	public void mostrarTabuleiro() {
 		getContentPane().removeAll();
-		setSize(LARG_DEFAULT, ALT_DEFAULT); 
-	    setLocationRelativeTo(null); 
+		setSize(LARG_DEFAULT, ALT_DEFAULT);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 
 		carregarImagemPeoes();
 		carregarImagemCartas();
-        
+		carregarImagemDados();
+
 		Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
-		
+
 		painelTabuleiro = new TabuleiroPanel(imagemTabuleiro, imagensPeoes);
 		painelTabuleiro.setController(controller);
-		
 		painelTabuleiro.setBackground(Color.WHITE);
+
 		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
 
-		Botao btnLancaDados = new Botao("Próximo");
-		btnLancaDados.setBounds(10, 10, 150, 30);
-			
-		btnLancaDados.adicionaListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					mostrarDados();
-				}
-		});
-				
-		// TODO: Você pode adicionar seus painéis de info aqui, se permitido
-        // JPanel infoPanel = new JPanel();
-        // infoPanel.setPreferredSize(new Dimension(LARG_DEFAULT - ALT_DEFAULT, ALT_DEFAULT)); // ex: 480x800
-        // infoPanel.setBackground(Color.LIGHT_GRAY);
-        // infoPanel.add(new JLabel("Informações dos Jogadores"));
-        // getContentPane().add(infoPanel, BorderLayout.EAST);
+		JPanel painelLateral = criarPainelLateralDados();
+		getContentPane().add(painelLateral, BorderLayout.EAST);
 
-		painelTabuleiro.add(btnLancaDados);
+		// TODO: Você pode adicionar seus painéis de info aqui, se permitido
+		// JPanel infoPanel = new JPanel();
+		// infoPanel.setPreferredSize(new Dimension(LARG_DEFAULT - ALT_DEFAULT,
+		// ALT_DEFAULT)); // ex: 480x800
+		// infoPanel.setBackground(Color.LIGHT_GRAY);
+		// infoPanel.add(new JLabel("Informações dos Jogadores"));
+		// getContentPane().add(infoPanel, BorderLayout.EAST);
+
 		revalidate();
 		repaint();
 	}
@@ -284,23 +401,29 @@ public class JanelaPrincipal extends JFrame
 		return image;
 	}
 
-	private void carregarImagemPeoes() 
-	{
+	private void carregarImagemPeoes() {
 		imagensPeoes = new HashMap<>();
-        
-		imagensPeoes.put("Vermelho", carregaImagem("/pinos/pin0.png"));
-		imagensPeoes.put("Azul", carregaImagem("/pinos/pin1.png"));
-		imagensPeoes.put("Laranja", carregaImagem("/pinos/pin2.png"));
-		imagensPeoes.put("Amarelo", carregaImagem("/pinos/pin3.png"));
-		imagensPeoes.put("Magenta", carregaImagem("/pinos/pin4.png"));
-		imagensPeoes.put("Cinza", carregaImagem("/pinos/pin5.png"));
+
+		imagensPeoes.put("vermelho", carregaImagem("/pinos/pin0.png"));
+		imagensPeoes.put("azul", carregaImagem("/pinos/pin1.png"));
+		imagensPeoes.put("laranja", carregaImagem("/pinos/pin2.png"));
+		imagensPeoes.put("amarelo", carregaImagem("/pinos/pin3.png"));
+		imagensPeoes.put("magenta", carregaImagem("/pinos/pin4.png"));
+		imagensPeoes.put("cinza", carregaImagem("/pinos/pin5.png"));
 
 	}
-	
-	private void carregarImagemCartas() 
-	{
+
+	private void carregarImagemDados() {
+		imagensDados = new HashMap<>();
+
+		for (int f = 1; f <= 6; f++) {
+			imagensDados.put(f, carregaImagem("/dados/die_face_" + f + ".png"));
+		}
+	}
+
+	private void carregarImagemCartas() {
 		imagensCartas = new HashMap<>();
-		
+
 		// arquivos das imagens
 		imagensCartas.put(1, carregaImagem("/sorteReves/chance1.png"));
 		imagensCartas.put(2, carregaImagem("/sorteReves/chance2.png"));
@@ -332,16 +455,13 @@ public class JanelaPrincipal extends JFrame
 		imagensCartas.put(28, carregaImagem("/sorteReves/chance28.png"));
 		imagensCartas.put(29, carregaImagem("/sorteReves/chance29.png"));
 		imagensCartas.put(30, carregaImagem("/sorteReves/chance30.png"));
-		imagensCartas.put(5, carregaImagem("/sorteReves/chance5.png"));
-    }
-	
+	}
 
 	public void mostrarMensagem(String msg) {
 		if (painelTabuleiro != null) {
 			painelTabuleiro.mostrarMensagem(msg);
 		}
 	}
-
 
 	public void mostrarCarta(int idCarta) {
 		if (painelTabuleiro != null) {
@@ -355,26 +475,22 @@ public class JanelaPrincipal extends JFrame
 		}
 	}
 
-
 	public void mostrarOpcaoCompra(Terreno terreno) {
 		if (painelTabuleiro != null) {
 			painelTabuleiro.mostrarOpcaoCompra(terreno);
 		}
 	}
 
-
 	public void mostrarOpcaoConstruir(Propriedade propriedade) {
 		if (painelTabuleiro != null) {
 			painelTabuleiro.mostrarOpcaoConstruir(propriedade);
 		}
 	}
-	
-	
-	public void atualizarPaineisInfo(ArrayList<Peao> peoes) 
-	{
+
+	public void atualizarPaineisInfo(ArrayList<Peao> peoes) {
 		if (painelTabuleiro != null) {
-			painelTabuleiro.setListaPeoes(peoes); 
-			painelTabuleiro.repaint(); 
+			painelTabuleiro.setListaPeoes(peoes);
+			painelTabuleiro.repaint();
 		}
 	}
 

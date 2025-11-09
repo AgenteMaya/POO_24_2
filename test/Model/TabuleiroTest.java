@@ -14,12 +14,12 @@ public class TabuleiroTest {
 	@Test
 	public void testaAdicionarTerrenos() {
 		assertEquals(tabuleiro.getTamListTerreno(), 0);
-		Terreno terreno = new Empresa(50, 100);
+		Terreno terreno = new Empresa("", 50, 100);
 		tabuleiro.addTerreno(terreno);
 		
 		ArrayList<Integer> lVAluguel = new ArrayList<>(Arrays.asList(10,20,30,40));
 		ArrayList<Integer> lVCompra = new ArrayList<>(Arrays.asList(30,40,50,60));
-		Terreno terreno2 = new Propriedade(lVAluguel, lVCompra, 200);
+		Terreno terreno2 = new Propriedade("", lVAluguel, lVCompra, 200);
 		tabuleiro.addTerreno(terreno2);
 		assertEquals(tabuleiro.getTamListTerreno(), 2);
 		
