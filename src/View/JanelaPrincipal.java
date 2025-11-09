@@ -234,6 +234,36 @@ public class JanelaPrincipal extends JFrame {
 				g2.drawString(lbl, btnX + (btnW - strW) / 2, btnY + (btnH + strH) / 2 - 4);
 
 				btnRollRect = new Rectangle(btnX, btnY, btnW, btnH);
+				
+				int histX = 16;
+				int histY = (boxY + boxH + 16) + (44 + 12); // abaixo do botão
+				int histW = W - 32;
+				int histH = Math.max(80, H - histY - 16);   // usa o que sobrar de altura
+
+				// fundo do histórico
+				g2.setColor(new Color(255,255,255,220));
+				g2.fillRoundRect(histX, histY, histW, histH, 10, 10);
+				g2.setColor(new Color(0,0,0,160));
+				g2.drawRoundRect(histX, histY, histW, histH, 10, 10);
+
+				// título do histórico
+				g2.setFont(getFont().deriveFont(Font.BOLD, 13f));
+				g2.setColor(Color.BLACK);
+				int yText = histY + 18;
+				g2.drawString("Histórico deste turno:", histX + 10, yText);
+				yText += 6;
+
+				// linhas do histórico
+				g2.setFont(getFont().deriveFont(Font.PLAIN, 12f));
+				int lineHeight = g2.getFontMetrics().getHeight();
+				yText += lineHeight;
+
+				for (int i = 0; i < historicoLancamentos.size(); i++) {
+				    String ln = historicoLancamentos.get(i);
+				    if (yText + lineHeight > histY + histH - 8) break; // não estoura a caixa
+				    g2.drawString("• " + ln, histX + 10, yText);
+				    yText += lineHeight;
+				}
 
 				g2.dispose();
 			}

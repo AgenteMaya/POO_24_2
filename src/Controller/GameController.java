@@ -265,10 +265,10 @@ public class GameController
     
     private void processarLucros() 
     {
-        int valorImposto = 200; 
+        int valorLucros = 200; 
         view.mostrarMensagem(jogadorAtual.getNome() + " ganha R$ 200 de lucros.");
         
-        Banco.getBanco().realizaTransferenciaBanco(jogadorAtual.getId(), valorImposto, tabuleiro);
+        Banco.getBanco().realizaTransferenciaBanco(jogadorAtual.getId(), valorLucros, tabuleiro);
         view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
     }
     
@@ -382,6 +382,7 @@ public class GameController
         if (jogadorAtual.estaNaPrisao()) {
             int[] dados = dado.lanca_dados();
             view.mostrarDados(dados[0], dados[1]); // <- exibe as imagens (Java2D)
+            view.registraLancamento(dados[0], dados[1], (dados[0]==dados[1]) ? "dupla — sai da prisão" : "falhou em sair");
 
             if (dados[0] == dados[1]) {
                 int deslocamento = dados[0] + dados[1];
@@ -403,47 +404,46 @@ public class GameController
 
         // Turno normal (uma rolagem conforme seu fluxo atual)
         int[] dados = dado.lanca_dados();
-        view.mostrarDados(dados[0], dados[1]); // <- exibe as imagens
+        view.mostrarDados(dados[0], dados[1]);
+        view.registraLancamento(dados[0], dados[1], (dados[0]==dados[1]) ? "dupla #1" : "");
         deslocamentoPeao(dados[0] + dados[1]);
 
         if (dados[0] == dados[1]) {
-        	view.mostrarMensagem("Tirou a primeira dupla.");
-        	
-        	dados = dado.lanca_dados();
-            view.mostrarDados(dados[0], dados[1]);
-            deslocamentoPeao(dados[0] + dados[1]);
-            
-            if (dados[0] == dados[1])
-            {
-            	view.mostrarMensagem("Tirou a segunda dupla.");
-            	
-            	dados = dado.lanca_dados();
-                view.mostrarDados(dados[0], dados[1]);
-                deslocamentoPeao(dados[0] + dados[1]);
-                
-                if (dados[0] == dados[1])
-                {
-                	view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");
+            view.mostrarMensagem("Tirou a primeira dupla.");
 
-                    jogadorAtual.vaiPraPrisao(10); // 10 = posPrisao
+            // 2ª
+            dados = dado.lanca_dados();
+            view.mostrarDados(dados[0], dados[1]);
+            view.registraLancamento(dados[0], dados[1], (dados[0]==dados[1]) ? "dupla #2" : "");
+            deslocamentoPeao(dados[0] + dados[1]);
+
+            if (dados[0] == dados[1]) {
+                view.mostrarMensagem("Tirou a segunda dupla.");
+
+                // 3ª
+                dados = dado.lanca_dados();
+                view.mostrarDados(dados[0], dados[1]);
+                view.registraLancamento(dados[0], dados[1], (dados[0]==dados[1]) ? "dupla #3 → prisão" : "");
+                deslocamentoPeao(dados[0] + dados[1]);
+
+                if (dados[0] == dados[1]) {
+                    view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");
+                    jogadorAtual.vaiPraPrisao(10);
                     view.atualizarPosicaoPeao(jogadorAtual);
                     tabuleiro.proximoTurno();
+                    this.jogadorAtual = tabuleiro.getJogadorDaVez();
+                    view.indicarJogadorDaVez(this.jogadorAtual);
+                    return;
+                } else {
+                    terminarTurno();
                     return;
                 }
-                else
-                {
-                	terminarTurno();
-                	return;
-                }
+            } else {
+                terminarTurno();
+                return;
             }
-            else
-            {
-            	terminarTurno();
-            	return;
-            }
-            
         } else {
-        	terminarTurno();
+            terminarTurno();
             return;
         }
     }
