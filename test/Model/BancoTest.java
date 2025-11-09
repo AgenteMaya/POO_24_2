@@ -15,11 +15,11 @@ public class BancoTest {
 	
 	@Before
 	public void setup() {
-		Terreno terreno = new Empresa(50, 100);
+		Terreno terreno = new Empresa("", 50, 100);
 		tabuleiro.addTerreno(terreno);
 		ArrayList<Integer> lVAluguel = new ArrayList<>(Arrays.asList(10,20,30,40));
 		ArrayList<Integer> lVCompra = new ArrayList<>(Arrays.asList(30,40,50,60));
-		Terreno terreno2 = new Propriedade(lVAluguel, lVCompra, 50);
+		Terreno terreno2 = new Propriedade("", lVAluguel, lVCompra, 50);
 		tabuleiro.addTerreno(terreno2);
 		
 		tabuleiro.addPeao(new Peao(tabuleiro.getTamListPeoes()));

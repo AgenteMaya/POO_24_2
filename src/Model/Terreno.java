@@ -11,6 +11,7 @@ public class Terreno {
 	 * 5 -> Ponto de Partida
 	 * 6 -> Parada Livre
 	 * 7 -> Imposto
+	 * 8 -> Lucro
 	 */
 	int tipoTerreno;
 	
@@ -31,6 +32,11 @@ public class Terreno {
 	public int getValorCompra()
 	{
 		return valorCompra;
+	}
+	
+	public String getNomeTerreno()
+	{
+		return "";
 	}
 
 }

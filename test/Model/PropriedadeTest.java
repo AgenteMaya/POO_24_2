@@ -11,7 +11,7 @@ public class PropriedadeTest {
 	ArrayList<Integer> lVAluguel = new ArrayList<>(Arrays.asList(10,20,30,40));
 	ArrayList<Integer> lVCompra = new ArrayList<>(Arrays.asList(30,40,50,60));
 	int valorC = 4;
-	Propriedade propriedade = new Propriedade(lVAluguel, lVCompra, valorC);
+	Propriedade propriedade = new Propriedade("", lVAluguel, lVCompra, valorC);
 	@Test
 	public void testaConstrutorPropriedades() {
 		assertTrue(propriedade.lVAluguel.equals(lVAluguel));

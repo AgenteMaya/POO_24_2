@@ -9,7 +9,7 @@ public class EmpresaTest {
 
 	@Test
 	public void testaContrucaoEmpresa() {
-		Empresa empresa = new Empresa(valorAluguel, valorCompra);
+		Empresa empresa = new Empresa("", valorAluguel, valorCompra);
 		assertEquals(empresa.getValorAluguel(), valorAluguel);
 		assertEquals(empresa.getValorCompra(), valorCompra);
 	}

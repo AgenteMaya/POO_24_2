@@ -8,8 +8,8 @@ public class Dado {
 	//retorna o valor do lançamento dos dois dados
 	public int[] lanca_dados() 
 	{
-		int dado_um = random.nextInt(1,6);
-		int dado_dois = random.nextInt(1,6);
+		int dado_um = random.nextInt(1,7);
+		int dado_dois = random.nextInt(1,7);
 		return new int[] {dado_um, dado_dois};
 	}
 	

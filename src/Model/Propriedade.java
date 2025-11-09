@@ -9,11 +9,13 @@ public class Propriedade extends Terreno{
 	
 	int qtdCasas = 0;
 	boolean temHotel = false;
+	String nomeTerreno;
 	
-	public Propriedade(ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
+	public Propriedade(String nome, ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
 	{
 		this.tipoTerreno = 1;
 		
+		nomeTerreno = nome;
 		lVAluguel = new ArrayList<>(lAlug);
 		lVCompra = new ArrayList<>(lComp);
 		valorCompra = valorC;
@@ -22,6 +24,12 @@ public class Propriedade extends Terreno{
 	boolean temHotel()
 	{
 		return temHotel;
+	}
+	
+	@Override
+	public String getNomeTerreno()
+	{
+		return nomeTerreno;
 	}
 	
 	int getVAluguel(int num)
