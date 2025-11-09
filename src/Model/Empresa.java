@@ -1,6 +1,6 @@
 package Model;
 
-public class Empresa extends Terreno{	
+class Empresa extends Terreno{	
 	
 	int valorAluguel = 0;
 	String nomeEmpresa;
