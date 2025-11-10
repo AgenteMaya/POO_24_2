@@ -181,7 +181,7 @@ public class JanelaPrincipal extends JFrame {
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	private JPanel criarPainelLateralDireitoDados() {
+	private JPanel criarPainelLateralDireito() {
 		// --- painel pintado em Java2D (CENTER) ---
 		painelDados = new JPanel() {
 			@Override
@@ -317,7 +317,6 @@ public class JanelaPrincipal extends JFrame {
 		painelDebug.add(cbD2);
 		painelDebug.add(btnDebug);
 
-		// --- container EAST (define só aqui o tamanho total) ---
 		JPanel container = new JPanel(new BorderLayout());
 		container.setPreferredSize(new Dimension(260, ALT_DEFAULT)); // largura fixa do lado direito
 		container.add(painelDados, BorderLayout.CENTER);
@@ -326,17 +325,12 @@ public class JanelaPrincipal extends JFrame {
 		return container;
 	}
 	
-	private JPanel criarPainelLateralEsquerdoDados() {
-		// --- painel pintado em Java2D (CENTER) ---
+	private JPanel criarPainelLateralEsquerdo() {
 		painelInfo = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				Graphics2D g2 = (Graphics2D) g.create();
-
-				int W = getWidth(), H = getHeight();
-
-				// fundo com a cor do jogador da ve
 
 				// título
 				g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
@@ -347,12 +341,10 @@ public class JanelaPrincipal extends JFrame {
 				g2.dispose();
 			}
 		};
-		// importante: não fixe o preferredSize do CENTER
 		painelInfo.setOpaque(true);
 
-		// --- container EAST (define só aqui o tamanho total) ---
 		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(260, ALT_DEFAULT)); // largura fixa do lado direito
+		container.setPreferredSize(new Dimension(260, ALT_DEFAULT));
 		container.add(painelInfo, BorderLayout.CENTER);
 
 		return container;
@@ -446,10 +438,10 @@ public class JanelaPrincipal extends JFrame {
 
 		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
 
-		JPanel painelLateralDireito = criarPainelLateralDireitoDados();
+		JPanel painelLateralDireito = criarPainelLateralDireito();
 		getContentPane().add(painelLateralDireito, BorderLayout.EAST);
 		
-		JPanel painelLateralEsquerdo = criarPainelLateralEsquerdoDados();
+		JPanel painelLateralEsquerdo = criarPainelLateralEsquerdo();
 		getContentPane().add(painelLateralEsquerdo, BorderLayout.WEST);
 
 		revalidate();

@@ -100,8 +100,7 @@ public class Api {
 	{
 		jogadorAtual.vaiPraPrisao(10);
 	}
-	///
-	///
+ 
 	public void processaTransferencias() 
 	{
 		int valor = cartaAtual.getValorTransferencia();

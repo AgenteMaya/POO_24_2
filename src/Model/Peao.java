@@ -107,7 +107,6 @@ class Peao {
 		if (!naPrisao) return;
 		
 		naPrisao = false;
-		posicao = deslocamento;
 	}
 	
 	public void atribuiSaidaLivrePrisao(Carta carta)

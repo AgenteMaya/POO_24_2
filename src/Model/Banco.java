@@ -1,6 +1,6 @@
 package Model;
 
-public class Banco { 
+class Banco { 
 	
     private static Banco banco = null; // Banco é Singleton
     
@@ -16,7 +16,7 @@ public class Banco {
 	
 	int qtdDinheiro;
 	
-	public void compraPropriedade(int idTerreno, int idPeao, Tabuleiro tabuleiro)
+	void compraPropriedade(int idTerreno, int idPeao, Tabuleiro tabuleiro)
 	{		
 		Terreno terreno = tabuleiro.getTerreno(idTerreno);
 		Peao peao = tabuleiro.getPeao(idPeao);

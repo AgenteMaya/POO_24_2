@@ -330,10 +330,9 @@ public class GameController
             view.mostrarDados(dado1, dado2); // <- exibe as imagens (Java2D)
 
             if (dado1 == dado2) {
-                int deslocamento = dado1 + dado2;
-                deslocamentoPeao(deslocamento);
-                
+                int deslocamento = dado1 + dado2;                
                 api.libertaJodadorDaPrisao(deslocamento);
+                deslocamentoPeao(deslocamento);
                 
                 view.mostrarMensagem("Tirou dupla. Saiu da prisão.");
                 
