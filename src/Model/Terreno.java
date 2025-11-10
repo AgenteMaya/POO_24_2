@@ -1,6 +1,6 @@
 package Model;
 
-public class Terreno {
+class Terreno {
 	
 	/**
 	 * 0 -> Sorte 

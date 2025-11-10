@@ -77,6 +77,7 @@ public class Banco {
 		}
 
 		Peao peao = tabuleiro.getPeao(idPeao);
+		System.out.printf("\nValor a ser pago = R$ %d,00\n\n", valorASerPago);
 		
 		while (valorASerPago > peao.getDinheiro())
 		{	

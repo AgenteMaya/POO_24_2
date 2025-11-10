@@ -14,7 +14,6 @@ public class GameController
     private ArrayList<String> coresDisponiveis;
     private int numJogadoresTotal;
     
-    
     public GameController(JanelaPrincipal view) 
     {
         this.view = view;
@@ -39,13 +38,16 @@ public class GameController
     {
         System.out.println("AÇÃO: Iniciando o jogo...");
         view.mostrarTelaNumJogadores();
+        Api.getInstance().Inicializa();
     }
     
     public void solicitarRetomadaJogo() 
     {
         System.out.println("AÇÃO: Retornando a jogo salvo...");
-        // lógica de carregar um save!!
-        view.mostrarTabuleiro();
+        
+        // lógica de carregar um save!! --> inserir os peoes nas posicoes e tals
+        
+        view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
     }
     
     public void confirmarNumeroJogadores(int num_jogadores) 
@@ -80,7 +82,7 @@ public class GameController
         	Api api = Api.getInstance();
         	
         	int id = numJogadoresTotal - jogadoresRestantes;
-        	api.adicionaJogador(id, nome, cor, jogadoresRestantes);
+        	api.adicionaJogador(id, nome, cor, 4000);
             
             coresDisponiveis.remove(cor);
             
@@ -103,13 +105,13 @@ public class GameController
         api.sorteiaOrdem();
         api.iniciaTurno();
 
-        view.mostrarTabuleiro(); 
+        view.mostrarTabuleiro(api.carregarPosicoesPeoes()); 
         
         //talvez não precise passar a lista de peões como parâmetro
-        view.atualizarPaineisInfo(api.getListaPeoes());
+        view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
 
         api.setJogadorAtual();
-        view.indicarJogadorDaVez(this.jogadorAtual);
+        view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
 
     }
     
@@ -161,20 +163,20 @@ public class GameController
         if (donoId == -1) 
         {
         	//modificar o cabeçalho na view
-            view.mostrarOpcaoCompra(terreno);
+            view.mostrarOpcaoCompra(api.getNomeTerreno(posAtual), api.getValorTerreno(posAtual));
         } 
         else if (donoId != api.getIdJogadorAtual()) 
         {
             view.mostrarMensagem("Pagando aluguel...");
-            int idTerreno = api.getPosJogadorAtual();
+            int idTerreno = api.getPosJogadorAtual(); 
             
-            api.pagarAluguel(idTerreno);;
+            boolean continuaJogo = api.pagarAluguel(idTerreno);;
+            if (!continuaJogo) view.mostrarMensagem("O jogador atual faliu e foi retirado do jogo!");
             
             //esta função na view pode se inscrever em alguma função dentro da model que notifique a modi
             //ficação na lista de peoes?
             //Inclusive essa função de notify pode ser chamada aqui
-            view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
-            
+            view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         } 
         else 
         {
@@ -183,7 +185,7 @@ public class GameController
             {
             	//esta função na view pode se inscrever em alguma função dentro da model que notifique 
             	//o evento de construção de uma propriedade?
-                view.mostrarOpcaoConstruir((Propriedade) terreno);
+                view.mostrarOpcaoConstruir(api.getNomePropriedade(posAtual));
             } 
             else 
             {
@@ -211,13 +213,13 @@ public class GameController
 
             api.jogadorVaiPraPrisao();
             
-            view.atualizarPosicaoPeao(jogadorAtual); 
-            
+            view.atualizarPosicaoPeao(); 
+            view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         } 
         else 
         {
             api.processaTransferencias();
-            view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
+            view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         }
     }
 
@@ -226,7 +228,8 @@ public class GameController
     {
         view.mostrarMensagem(Api.getInstance().getNomeJogAtual() + " vai direto para a prisão!");  
         Api.getInstance().jogadorVaiPraPrisao();       
-        view.atualizarPosicaoPeao(jogadorAtual);
+        view.atualizarPosicaoPeao();
+        view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
     
     private void processarImposto() 
@@ -234,7 +237,7 @@ public class GameController
     	int valorImposto = -200; 
         Api.getInstance().realizaTransferenciaBanco(valorImposto);
         view.mostrarMensagem(Api.getInstance().getNomeJogAtual() + " paga R$ 200 de imposto.");    
-        view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
+        view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
     
     private void processarLucros() 
@@ -243,8 +246,7 @@ public class GameController
         view.mostrarMensagem(Api.getInstance().getNomeJogAtual() + " ganha R$ 200 de lucros.");
         
         Api.getInstance().realizaTransferenciaBanco(valorLucros);
-
-        view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
+        view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
     
     public void usuarioDecidiuComprar() 
@@ -254,8 +256,8 @@ public class GameController
         Api api = Api.getInstance();
         api.realizaCompraDePropriedade(pos);
         
-        view.atualizarDonoPropriedade(pos, api.getCorJogAtual());
-        view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
+        api.setDono(pos);
+        view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
 
 
@@ -271,8 +273,8 @@ public class GameController
         
         Api.getInstance().realizaConstrucao(ehCasa, pos);
         
-        view.atualizarPaineisInfo(tabuleiro.getListaPeoes());
         view.atualizarConstrucoes(pos); 
+        view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
 
     
@@ -290,30 +292,95 @@ public class GameController
         if (posNova < posAntiga) {
             System.out.println(api.getNomeJogAtual() + " passou pelo Ponto de Partida! Recebe R$ 200.");
             api.realizaTransferenciaBanco(200);
-            view.atualizarPaineisInfo(tabuleiro.getListaPeoes()); 
+            view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         }
 
        api.setPosicaoPeao(posNova);
+       view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         
-        view.atualizarPosicaoPeao(jogadorAtual);
+       view.atualizarPosicaoPeao();
+       view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
+    }
+    
+    public void iniciarProximoTurno() {
+        Api api = Api.getInstance();
+
+        api.setJogadorAtual();
+        view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+
+        view.setAguardandoProximoTurno(false);
     }
     
     public void terminarTurno()
-    {  	     
+    {
         processarJogada();
-       
         Api.getInstance().vaiProProximoTurno();
+
+        view.setAguardandoProximoTurno(true);
+    }
+    
+    public void lancarDadosDebug(int dado1, int dado2) {
+    	Api api = Api.getInstance();
+    	
+        api.setJogadorAtual();
+        view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+
+        // Jogador preso?
+        if (api.jogadorEstahNaPrisao()) {
+            view.mostrarDados(dado1, dado2); // <- exibe as imagens (Java2D)
+
+            if (dado1 == dado2) {
+                int deslocamento = dado1 + dado2;
+                deslocamentoPeao(deslocamento);
+                
+                api.libertaJodadorDaPrisao(deslocamento);
+                
+                view.mostrarMensagem("Tirou dupla. Saiu da prisão.");
+                
+                terminarTurno();
+            } else {
+                view.mostrarMensagem("Não tirou dupla. Fica na prisão.");
+                api.vaiProProximoTurno();
+                api.setJogadorAtual();
+                view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+            }
+            return;
+        }
+
+        view.mostrarDados(dado1, dado2); 
+        deslocamentoPeao(dado1 + dado2); // primeira dupla
+
+        if (dado1 == dado2) {        	
+        	deslocamentoPeao(dado1 + dado2); // segunda dupla
+        	
+        	deslocamentoPeao(dado1 + dado2); // terceira dupla
+        	
+        	int foiPraPrisao = api.jogadorVaiPraPrisao(); 
+            if (foiPraPrisao == 1) view.mostrarMensagem("Tirou a terceira dupla. Iria para a Prisão, mas possui a Carta de Saída Livre!");
+            
+            view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");
+            view.atualizarPosicaoPeao();
+            view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
+            
+            api.vaiProProximoTurno();
+            api.setJogadorAtual();
+            view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+        	return;            
+        } else {
+        	terminarTurno();
+            return;
+        }
     }
     
     public void lancarDadosReal() {
         Api api = Api.getInstance();
         api.setJogadorAtual();
         
-        
-        view.indicarJogadorDaVez(this.jogadorAtual);
+        view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
 
         // Jogador preso?
-        if (api.jogadorEstahNaPrisao()) {
+        if (api.jogadorEstahNaPrisao()) 
+        {
             int[] dados = api.getResultadoDados();
             view.mostrarDados(dados[0], dados[1]); // <- exibe as imagens (Java2D)
             view.registraLancamento(dados[0], dados[1], (dados[0]==dados[1]) ? "dupla — sai da prisão" : "falhou em sair");
@@ -330,7 +397,7 @@ public class GameController
                 view.mostrarMensagem("Não tirou dupla. Fica na prisão.");
                 api.vaiProProximoTurno();
                 api.setJogadorAtual();
-                view.indicarJogadorDaVez(this.jogadorAtual);
+                view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
             }
             return;
         }
@@ -344,7 +411,6 @@ public class GameController
         deslocamentoPeao(dados[0] + dados[1]);
 
         if (dados[0] == dados[1]) {
-            view.mostrarMensagem("Tirou a primeira dupla.");
 
             // 2ª
 			dados = api.getResultadoDados();
@@ -354,8 +420,6 @@ public class GameController
             deslocamentoPeao(dados[0] + dados[1]);
 
             if (dados[0] == dados[1]) {
-                view.mostrarMensagem("Tirou a segunda dupla.");
-
                 // 3ª
                 dados = api.getResultadoDados();
                 view.mostrarDados(dados[0], dados[1]);
@@ -363,15 +427,16 @@ public class GameController
                 deslocamentoPeao(dados[0] + dados[1]);
 
                 if (dados[0] == dados[1]) {
+                    int foiPraPrisao = api.jogadorVaiPraPrisao(); // 10 = posPrisao 
+                    if (foiPraPrisao == 1) view.mostrarMensagem("Tirou a terceira dupla. Iria para a Prisão, mas possui a Carta de Saída Livre!");
+                    
                     view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");
-                    
-                    api.mandaJogadorPraPrisao(); // 10 = posPrisao // !!!!!!!!!!!!!!!!!!!!!!! verificar
-                    
-                    view.atualizarPosicaoPeao(jogadorAtual);
+                    view.atualizarPosicaoPeao();
+                    view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
                     
                     api.vaiProProximoTurno();
-                    this.jogadorAtual = api.getJogadorDaVez();
-                    view.indicarJogadorDaVez(this.jogadorAtual);
+                    api.setJogadorAtual();
+                    view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
                     return;
                 } else {
                     terminarTurno();

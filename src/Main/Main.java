@@ -8,7 +8,7 @@ import View.JanelaPrincipal;
 
 public class Main {
 	
- static void main(String[] args) {
+	public static void main(String[] args) {
          
         JanelaPrincipal view = new JanelaPrincipal();
         
@@ -20,6 +20,5 @@ public class Main {
         view.setController(controller);
         view.iniciar();
     }
-    
-    
+   
 }

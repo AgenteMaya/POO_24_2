@@ -69,6 +69,30 @@ public class Tabuleiro
 		Collections.shuffle(this.lPeoes); // sorteia a ordem dos jogadores
 	}
 	
+	public String getPosPeaoNome(int pos) 
+    {
+        return lPeoes.get(pos).getNome();
+    }
+
+    public String getPosPeaoCor(int pos) 
+    {
+        return lPeoes.get(pos).getCor();
+    }
+    
+    public int getPosPeao(int index) 
+    {
+        return lPeoes.get(index).pegaPosicaoPeao();
+    }
+    
+    public int getIndicePeao(String cor) 
+    {
+    	for (int i = 0; i < getTamListPeoes(); i++)
+    	{
+    		if (lPeoes.get(i).getCor() == cor) return i;
+    	}
+        return -1;
+    }
+	
 	public void iniciarPrimeiroTurno()
 	{
 		this.jogadorDaVezIndex = 0;

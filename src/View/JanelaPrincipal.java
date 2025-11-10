@@ -8,11 +8,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import Controller.GameController;
-import Model.Peao;
-import Model.Propriedade;
-import Model.Terreno;
 
 @SuppressWarnings("serial")
 public class JanelaPrincipal extends JFrame {
@@ -33,10 +32,14 @@ public class JanelaPrincipal extends JFrame {
 
 	private Rectangle btnRollRect = null;
 	private JComboBox<Integer> cbD1, cbD2;
+	
+	private LinkedHashMap<String, Integer> listaPosicoesPeoes;
 
 	private HashMap<Integer, Image> imagensCartas;
 	private HashMap<String, Image> imagensPeoes;
 	private HashMap<Integer, Image> imagensDados;
+	
+	private boolean aguardandoProximoTurno = false;
 	
 	private java.util.List<String> historicoLancamentos = new java.util.ArrayList<>();
 
@@ -172,6 +175,12 @@ public class JanelaPrincipal extends JFrame {
 		revalidate();
 		repaint();
 	}
+	
+	public void limparDados() {
+	    faceAtualD1 = 0;
+	    faceAtualD2 = 0;
+	    if (painelDados != null) painelDados.repaint();
+	}
 
 	private JPanel criarPainelLateralDados() {
 		// --- painel pintado em Java2D (CENTER) ---
@@ -219,21 +228,22 @@ public class JanelaPrincipal extends JFrame {
 				}
 
 				// “botão” desenhado
-				int btnW = boxW, btnH = 44;
-				int btnX = boxX, btnY = boxY + boxH + 16;
-				g2.setColor(new Color(255, 255, 255, 230));
-				g2.fillRoundRect(btnX, btnY, btnW, btnH, 10, 10);
-				g2.setColor(new Color(0, 0, 0, 160));
-				g2.drawRoundRect(btnX, btnY, btnW, btnH, 10, 10);
+		        int btnW = boxW, btnH = 44;
+		        int btnX = boxX, btnY = boxY + boxH + 16;
+		        g2.setColor(new Color(255, 255, 255, 230));
+		        g2.fillRoundRect(btnX, btnY, btnW, btnH, 10, 10);
+		        g2.setColor(new Color(0, 0, 0, 160));
+		        g2.drawRoundRect(btnX, btnY, btnW, btnH, 10, 10);
 
-				String lbl = "Lançar";
-				g2.setFont(getFont().deriveFont(Font.BOLD, 14f));
-				int strW = g2.getFontMetrics().stringWidth(lbl);
-				int strH = g2.getFontMetrics().getAscent();
-				g2.setColor(Color.BLACK);
-				g2.drawString(lbl, btnX + (btnW - strW) / 2, btnY + (btnH + strH) / 2 - 4);
+		        String lbl = aguardandoProximoTurno ? "Próximo" : "Lançar";
 
-				btnRollRect = new Rectangle(btnX, btnY, btnW, btnH);
+		        g2.setFont(getFont().deriveFont(Font.BOLD, 14f));
+		        int strW = g2.getFontMetrics().stringWidth(lbl);
+		        int strH = g2.getFontMetrics().getAscent();
+		        g2.setColor(Color.BLACK);
+		        g2.drawString(lbl, btnX + (btnW - strW) / 2, btnY + (btnH + strH) / 2 - 4);
+
+		        btnRollRect = new Rectangle(btnX, btnY, btnW, btnH);
 				
 				int histX = 16;
 				int histY = (boxY + boxH + 16) + (44 + 12); // abaixo do botão
@@ -272,12 +282,17 @@ public class JanelaPrincipal extends JFrame {
 		painelDados.setOpaque(true);
 
 		painelDados.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent e) {
-				if (btnRollRect != null && btnRollRect.contains(e.getPoint())) {
-					controller.lancarDadosReal();
-				}
-			}
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent e) {
+		        if (btnRollRect != null && btnRollRect.contains(e.getPoint())) {
+		            if (aguardandoProximoTurno) {
+		            	limparDados();
+		                controller.iniciarProximoTurno();   // <<< novo método no controller
+		            } else {
+		                controller.lancarDadosReal();
+		            }
+		        }
+		    }
 		});
 
 		// --- rodapé de DEBUG (SOUTH) com altura fixa ---
@@ -332,14 +347,17 @@ public class JanelaPrincipal extends JFrame {
 		double l = 0.299 * bg.getRed() + 0.587 * bg.getGreen() + 0.114 * bg.getBlue();
 		return (l > 160) ? Color.BLACK : Color.WHITE;
 	}
+	
+	public void setAguardandoProximoTurno(boolean aguardando) {
+	    this.aguardandoProximoTurno = aguardando;
+	    if (painelDados != null) painelDados.repaint();
+	}
 
-	public void indicarJogadorDaVez(Model.Peao p) {
-		if (p == null)
-			return;
-		nomeJogadorDaVez = p.getNome();
+	public void indicarJogadorDaVez(String nomePeao, String corPeao) {
+		nomeJogadorDaVez = nomePeao;
 
 		// mapeamento de cor -> Color
-		switch (p.getCor()) {
+		switch (corPeao) {
 		case "vermelho" -> corPainelAtual = new Color(220, 60, 60);
 		case "azul" -> corPainelAtual = new Color(70, 120, 220);
 		case "laranja" -> corPainelAtual = new Color(240, 140, 60);
@@ -379,7 +397,7 @@ public class JanelaPrincipal extends JFrame {
 			painelDados.repaint();
 	}
 
-	public void mostrarTabuleiro() {
+	public void mostrarTabuleiro(LinkedHashMap<String, Integer> listaPosicoesPeoes) {
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
 		setLocationRelativeTo(null);
@@ -390,8 +408,8 @@ public class JanelaPrincipal extends JFrame {
 		carregarImagemDados();
 
 		Image imagemTabuleiro = carregaImagem("/tabuleiro.png");
-
-		painelTabuleiro = new TabuleiroPanel(imagemTabuleiro, imagensPeoes);
+		
+		painelTabuleiro = new TabuleiroPanel(imagemTabuleiro, imagensPeoes, listaPosicoesPeoes);
 		painelTabuleiro.setController(controller);
 		painelTabuleiro.setBackground(Color.WHITE);
 
@@ -505,34 +523,28 @@ public class JanelaPrincipal extends JFrame {
 		}
 	}
 
-	public void mostrarOpcaoCompra(Terreno terreno) {
+	public void mostrarOpcaoCompra(String nome, int valor) {
 		if (painelTabuleiro != null) {
-			painelTabuleiro.mostrarOpcaoCompra(terreno);
+			painelTabuleiro.mostrarOpcaoCompra(nome, valor);
 		}
 	}
 
-	public void mostrarOpcaoConstruir(Propriedade propriedade) {
+	public void mostrarOpcaoConstruir(String nome) {
 		if (painelTabuleiro != null) {
-			painelTabuleiro.mostrarOpcaoConstruir(propriedade);
+			painelTabuleiro.mostrarOpcaoConstruir(nome);
 		}
 	}
-
-	public void atualizarPaineisInfo(ArrayList<Peao> peoes) {
+	
+	public void atualizarPaineisInfo(LinkedHashMap<String, Integer> peoes) {
 		if (painelTabuleiro != null) {
 			painelTabuleiro.setListaPeoes(peoes);
 			painelTabuleiro.repaint();
 		}
 	}
 
-	public void atualizarPosicaoPeao(Peao p) {
-		if (painelTabuleiro != null) {
-			painelTabuleiro.repaint();
-		}
-	}
 
-	public void atualizarDonoPropriedade(int pos, String cor) {
+	public void atualizarPosicaoPeao() {
 		if (painelTabuleiro != null) {
-			// (O TabuleiroPanel pode ter lógica para armazenar isso)
 			painelTabuleiro.repaint();
 		}
 	}

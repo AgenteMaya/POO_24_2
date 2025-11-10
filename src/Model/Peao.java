@@ -92,13 +92,13 @@ class Peao {
 	// função que verifica se o peão vai para a prisão e, se for, realiza seu deslocamento
 	public Carta vaiPraPrisao(int posPrisao)
 	{
+		posicao = posPrisao;
 		if (cartaSaidaPrisao != null) 
 		{
 			return cartaSaidaPrisao;
 		}
 		
 		naPrisao = true;
-		posicao = posPrisao;
 		return cartaSaidaPrisao;
 	}
 	

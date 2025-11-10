@@ -3,6 +3,8 @@ package Model;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Api {
 	
@@ -55,6 +57,17 @@ public class Api {
 		tabuleiro.sortearOrdemJogadores();
 	}
 	
+	public LinkedHashMap<String, Integer> carregarPosicoesPeoes() {
+        LinkedHashMap<String, Integer> listaPosicoesPeoes = new LinkedHashMap<String, Integer>();
+
+        for(int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+        {
+            listaPosicoesPeoes.put(tabuleiro.getPosPeaoCor(i), tabuleiro.getPosPeao(i));
+        }
+
+        return listaPosicoesPeoes;
+    }
+	
 	public void iniciaTurno() 
 	{
 		tabuleiro.iniciarPrimeiroTurno();
@@ -70,17 +83,17 @@ public class Api {
 	}
 	
 	//olhar com mais detalhe esses dois métodos mais tarde!!
-	public void jogadorVaiPraPrisao() 
+	public int jogadorVaiPraPrisao() 
 	{
-		Carta cartaSaida = jogadorAtual.vaiPraPrisao(9);
+		Carta cartaSaida = jogadorAtual.vaiPraPrisao(10);
         if (cartaSaida != null) 
         {
             baralho.descartarCarta(cartaSaida);
             jogadorAtual.removeCartaSaidaLivrePrisao();
             //notificar a view que foi utilizada a carta de Saida Livre
-
+            return  1;
         }
-        baralho.descartarCarta(cartaAtual);
+        return 0;
 	}
 	
 	public void mandaJogadorPraPrisao() 
@@ -163,6 +176,8 @@ public class Api {
 	
 	public int getPosJogadorAtual() 
 	{
+		System.out.println(jogadorAtual.getCor());
+		System.out.println(jogadorAtual.pegaPosicaoPeao());
 		return jogadorAtual.pegaPosicaoPeao();
 	}
 	
@@ -170,6 +185,11 @@ public class Api {
 	{
 		Terreno terreno = getTerrenoAtual(posAtual);
 		return terreno.getDono();
+	}
+	
+	public void setDono(int posAtual) {
+	    Terreno terreno = getTerrenoAtual(posAtual);
+	    terreno.setDono(jogadorAtual.getId()); 
 	}
 	
 	public ArrayList<Peao> getListaPeoes()
@@ -267,16 +287,34 @@ public class Api {
 		return terrenoAtual instanceof Lucros;
 	}
 	
-	public void pagarAluguel(int idTerreno) 
+	public boolean pagarAluguel(int idTerreno) 
 	{
 		Banco banco = Banco.getBanco();
-		banco.pagarAluguel(tabuleiro, jogadorAtual.getId(), idTerreno);
+		return banco.pagarAluguel(tabuleiro, jogadorAtual.getId(), idTerreno);
 	}
 	
 	private Terreno getTerrenoAtual(int pos) 
 	{
 		return tabuleiro.getTerreno(pos);
 	}
+	
+	public String getNomeTerreno(int posTerreno) 
+    {
+        Terreno terreno = getTerrenoAtual(posTerreno);
+        return terreno.getNomeTerreno();
+    }
+
+    public int getValorTerreno(int posTerreno) 
+    {
+        Terreno terreno = getTerrenoAtual(posTerreno);
+        return terreno.getValorCompra();
+    }
+
+    public String getNomePropriedade(int posProp) 
+    {
+        Propriedade propriedade = (Propriedade) getTerrenoAtual(posProp);
+        return propriedade.getNomeTerreno();
+    }
 		
 	//Função auxiliar para criar dados de aluguel de exemplo. --> MUDAR DEPOIS
     private static ArrayList<Integer> criarAlugueis(int base, int c1, int c2, int c3, int c4, int h) {
@@ -344,7 +382,6 @@ public class Api {
         terrenos.add(new Sorte(posPrisao));                               
         terrenos.add(new Propriedade("Jardim Paulista", aluguelPadrao, precoCasaPadrao, 370));
         terrenos.add(new Propriedade("Brooklin", aluguelPadrao, precoCasaPadrao, 400)); 
-        terrenos.add(new ParadaLivre()); 
 
         // Garante que temos 40 terrenos
         System.out.println("Total de terrenos criados: " + terrenos.size());

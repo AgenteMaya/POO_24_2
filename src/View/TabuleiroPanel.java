@@ -6,11 +6,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import Controller.GameController;
-import Model.Peao;
-import Model.Propriedade;
-import Model.Terreno;
 
 @SuppressWarnings("serial")
 public class TabuleiroPanel extends JPanel 
@@ -20,8 +19,9 @@ public class TabuleiroPanel extends JPanel
 
     private HashMap<String, Image> imagensPeoes;
     
+    private LinkedHashMap<String, Integer> posicoesPeoes; // relaciona a cor (String) com a posição de um respectivo peão
+    
     private GameController controller;
-    private ArrayList<Peao> listaPeoes;
     
     private enum ViewState 
     {
@@ -32,8 +32,11 @@ public class TabuleiroPanel extends JPanel
     }
     private ViewState currentState = ViewState.NORMAL;
     
-    private Terreno terrenoOfertado;
-    private Propriedade propriedadeOfertada;
+    private String terrenoOfertadoNome;
+    private int terrenoOfertadoValor;
+    
+    private String propriedadeOfertadaNome;
+    
     private String mensagemTemporaria = null;
     
     private Rectangle btnDialogoFechar;
@@ -43,11 +46,11 @@ public class TabuleiroPanel extends JPanel
     private Rectangle btnDialogoConstruirHotel;
     private Rectangle btnDialogoCancelar;
 
-    public TabuleiroPanel (Image i, HashMap<String, Image> imagens) 
+    public TabuleiroPanel (Image i, HashMap<String, Image> imagens, LinkedHashMap<String, Integer> listaPeoes) 
     {
         this.imgTabuleiro = i;
 		this.imagensPeoes = imagens;
-        this.listaPeoes = new ArrayList<>();
+		this.posicoesPeoes = listaPeoes;
                 
         this.addMouseListener(new MouseAdapter() 
         {
@@ -66,8 +69,8 @@ public class TabuleiroPanel extends JPanel
         this.controller = controller;
     }
     
-    public void setListaPeoes(ArrayList<Peao> peoes) {
-        this.listaPeoes = peoes;
+    public void setListaPeoes(LinkedHashMap<String, Integer> peoes) {
+        this.posicoesPeoes = peoes;
     }
 
     public void mostrarMensagem(String msg) {
@@ -82,14 +85,15 @@ public class TabuleiroPanel extends JPanel
         repaint();
     }
     
-    public void mostrarOpcaoCompra(Terreno terreno) {
-        this.terrenoOfertado = terreno;
+    public void mostrarOpcaoCompra(String nome, int valor) {
+        this.terrenoOfertadoNome = nome;
+        this.terrenoOfertadoValor = valor;
         this.currentState = ViewState.AGUARDANDO_DECISAO_COMPRA;
         repaint();
     }
     
-    public void mostrarOpcaoConstruir(Propriedade prop) {
-        this.propriedadeOfertada = prop;
+    public void mostrarOpcaoConstruir(String nome) {
+        this.propriedadeOfertadaNome = nome;
         this.currentState = ViewState.AGUARDANDO_DECISAO_CONSTRUCAO;
         repaint();
     }
@@ -247,10 +251,13 @@ public class TabuleiroPanel extends JPanel
         g2d.drawImage(imgTabuleiro, boardX, boardY, boardDrawSize, boardDrawSize, this);
 
         int idxJog = 0; 
-        for (Peao p : this.listaPeoes) {
-            int casa = p.pegaPosicaoPeao();
+        for (Map.Entry<String, Integer> entry : posicoesPeoes.entrySet()) {
+        	String corPeao = entry.getKey();
+            Integer posicao = entry.getValue();
+            
+            int casa = posicao;
 
-            Image pin = imagensPeoes.get(p.getCor());
+            Image pin = imagensPeoes.get(corPeao);
             if (pin == null) continue;
        
             Point C = calculaPosicaoPeao(casa, idxJog);
@@ -330,8 +337,8 @@ public class TabuleiroPanel extends JPanel
         
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
         String txt1 = "Deseja comprar este terreno?";
-        String txt2 = "Nome: " + terrenoOfertado.getNomeTerreno();
-        String txt3 = "Preço: R$ " + terrenoOfertado.getValorCompra();
+        String txt2 = "Nome: " + terrenoOfertadoNome;
+        String txt3 = "Preço: R$ " + terrenoOfertadoValor;
         
         g2d.drawString(txt1, dialogX + 20, dialogY + 40);
         g2d.drawString(txt2, dialogX + 20, dialogY + 70);
@@ -357,7 +364,7 @@ public class TabuleiroPanel extends JPanel
         g2d.drawRect(dialogX, dialogY, dialogW, dialogH);
         
         g2d.setFont(new Font("Arial", Font.BOLD, 18));
-        String txt1 = "Construir em " + "NOME_PROPRIEDADE"; // prop.getNome()
+        String txt1 = "Construir em " + propriedadeOfertadaNome;
         g2d.drawString(txt1, dialogX + 20, dialogY + 40);
         
         int btnW = (dialogW / 3) - 20;
