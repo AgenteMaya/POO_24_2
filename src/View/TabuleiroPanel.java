@@ -147,7 +147,7 @@ public class TabuleiroPanel extends JPanel
     	int aux = 0;
     	int aux2 = 0;
     	int aux3 = 0;
-    	int ajusteX = 128; 
+    	int ajusteX = 258; 
     	
     	if (casa % 10 == 0)
     	{

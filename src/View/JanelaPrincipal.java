@@ -23,6 +23,7 @@ public class JanelaPrincipal extends JFrame {
 	JPanel painelMenu;
 	TabuleiroPanel painelTabuleiro;
 	JPanel painelDados;
+	JPanel painelInfo;
 
 	private JTextField campoNome;
 
@@ -33,8 +34,6 @@ public class JanelaPrincipal extends JFrame {
 	private Rectangle btnRollRect = null;
 	private JComboBox<Integer> cbD1, cbD2;
 	
-	private LinkedHashMap<String, Integer> listaPosicoesPeoes;
-
 	private HashMap<Integer, Image> imagensCartas;
 	private HashMap<String, Image> imagensPeoes;
 	private HashMap<Integer, Image> imagensDados;
@@ -182,7 +181,7 @@ public class JanelaPrincipal extends JFrame {
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	private JPanel criarPainelLateralDados() {
+	private JPanel criarPainelLateralDireitoDados() {
 		// --- painel pintado em Java2D (CENTER) ---
 		painelDados = new JPanel() {
 			@Override
@@ -326,6 +325,38 @@ public class JanelaPrincipal extends JFrame {
 
 		return container;
 	}
+	
+	private JPanel criarPainelLateralEsquerdoDados() {
+		// --- painel pintado em Java2D (CENTER) ---
+		painelInfo = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D g2 = (Graphics2D) g.create();
+
+				int W = getWidth(), H = getHeight();
+
+				// fundo com a cor do jogador da ve
+
+				// título
+				g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
+				g2.setColor(contraste(Color.LIGHT_GRAY));
+				String titulo = "Painel de Informações";
+				g2.drawString(titulo, 16, 28);
+
+				g2.dispose();
+			}
+		};
+		// importante: não fixe o preferredSize do CENTER
+		painelInfo.setOpaque(true);
+
+		// --- container EAST (define só aqui o tamanho total) ---
+		JPanel container = new JPanel(new BorderLayout());
+		container.setPreferredSize(new Dimension(260, ALT_DEFAULT)); // largura fixa do lado direito
+		container.add(painelInfo, BorderLayout.CENTER);
+
+		return container;
+	}
 
 	private static void drawCenteredScaled(Graphics2D g2, Image img, int x, int y, int w, int h) {
 		if (img == null)
@@ -415,16 +446,11 @@ public class JanelaPrincipal extends JFrame {
 
 		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
 
-		JPanel painelLateral = criarPainelLateralDados();
-		getContentPane().add(painelLateral, BorderLayout.EAST);
-
-		// TODO: Você pode adicionar seus painéis de info aqui, se permitido
-		// JPanel infoPanel = new JPanel();
-		// infoPanel.setPreferredSize(new Dimension(LARG_DEFAULT - ALT_DEFAULT,
-		// ALT_DEFAULT)); // ex: 480x800
-		// infoPanel.setBackground(Color.LIGHT_GRAY);
-		// infoPanel.add(new JLabel("Informações dos Jogadores"));
-		// getContentPane().add(infoPanel, BorderLayout.EAST);
+		JPanel painelLateralDireito = criarPainelLateralDireitoDados();
+		getContentPane().add(painelLateralDireito, BorderLayout.EAST);
+		
+		JPanel painelLateralEsquerdo = criarPainelLateralEsquerdoDados();
+		getContentPane().add(painelLateralEsquerdo, BorderLayout.WEST);
 
 		revalidate();
 		repaint();
