@@ -127,6 +127,91 @@ public class JanelaPrincipal extends JFrame {
 		revalidate();
 		repaint();
 	}
+	
+	public void mostrarTelaFimDeJogo(String nome_vencedor, String cor, double saldo_vencedor) {
+	    getContentPane().removeAll();
+	    setSize(600, 500);
+	    setLocationRelativeTo(null);
+
+	    Color corDeFundo;
+	    switch (cor.toLowerCase()) {
+	        case "vermelho" -> corDeFundo = new Color(220, 60, 60);
+	        case "azul" -> corDeFundo = new Color(70, 120, 220);
+	        case "laranja" -> corDeFundo = new Color(240, 140, 60);
+	        case "amarelo" -> corDeFundo = new Color(230, 200, 70);
+	        case "magenta" -> corDeFundo = new Color(200, 70, 200);
+	        case "cinza" -> corDeFundo = new Color(150, 150, 160);
+	        default -> corDeFundo = new Color(120, 120, 120);
+	    }
+
+	    JPanel painelFim = new JPanel();
+	    painelFim.setLayout(new GridBagLayout());
+	    painelFim.setBackground(corDeFundo);
+
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(10, 10, 10, 10); 
+	    gbc.gridx = 0;
+	    gbc.gridy = GridBagConstraints.RELATIVE;
+	    gbc.anchor = GridBagConstraints.CENTER;
+
+	    Color corTexto = contraste(corDeFundo);
+
+	    JLabel lblTitulo = new JLabel("FIM DE JOGO!");
+	    lblTitulo.setFont(new Font("Arial", Font.BOLD, 36));
+	    lblTitulo.setForeground(corTexto);
+	    painelFim.add(lblTitulo, gbc);
+
+	    JLabel lblVencedor = new JLabel("Vencedor: " + nome_vencedor);
+	    lblVencedor.setFont(new Font("Arial", Font.BOLD, 24));
+	    lblVencedor.setForeground(corTexto);
+	    painelFim.add(lblVencedor, gbc);
+
+	    JLabel lblSaldo = new JLabel(String.format("Saldo Final: R$ %.2f", saldo_vencedor));
+	    lblSaldo.setFont(new Font("Arial", Font.PLAIN, 20));
+	    lblSaldo.setForeground(corTexto);
+	    painelFim.add(lblSaldo, gbc);
+
+	    gbc.insets = new Insets(40, 10, 10, 10);
+
+	    JButton btnNovoJogo = new JButton("Novo Jogo");
+	    btnNovoJogo.setPreferredSize(new Dimension(200, 40));
+	    btnNovoJogo.setFont(new Font("Arial", Font.BOLD, 14));
+	    btnNovoJogo.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            controller.solicitarInicioJogo();
+	        }
+	    });
+	    painelFim.add(btnNovoJogo, gbc);
+
+	    gbc.insets = new Insets(10, 10, 10, 10);
+
+	    JButton btnMenu = new JButton("Voltar ao Menu");
+	    btnMenu.setPreferredSize(new Dimension(200, 40));
+	    btnMenu.setFont(new Font("Arial", Font.PLAIN, 14));
+	    btnMenu.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            mostrarMenuInicial();
+	        }
+	    });
+	    painelFim.add(btnMenu, gbc);
+
+	    JButton btnSair = new JButton("Sair do Jogo");
+	    btnSair.setPreferredSize(new Dimension(200, 40));
+	    btnSair.setFont(new Font("Arial", Font.PLAIN, 14));
+	    btnSair.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            System.exit(0);
+	        }
+	    });
+	    painelFim.add(btnSair, gbc);
+
+	    getContentPane().add(painelFim);
+	    revalidate();
+	    repaint();
+	}
 
 	public void mostrarTelaConfigJogadores(int total_jogadores, int num_jogadores, ArrayList<String> cores) {
 		JPanel painelConfiguracao = new JPanel();
@@ -325,7 +410,7 @@ public class JanelaPrincipal extends JFrame {
 		return container;
 	}
 	
-	private JPanel criarPainelLateralEsquerdo() {
+	private JPanel criarPainelLateralEsquerdo() { // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 		painelInfo = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

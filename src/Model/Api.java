@@ -57,6 +57,11 @@ public class Api {
 		tabuleiro.sortearOrdemJogadores();
 	}
 	
+	public int getQtdPeoes()
+	{
+		return tabuleiro.getTamListPeoes();
+	}
+	
 	public LinkedHashMap<String, Integer> carregarPosicoesPeoes() {
         LinkedHashMap<String, Integer> listaPosicoesPeoes = new LinkedHashMap<String, Integer>();
 
@@ -119,14 +124,14 @@ public class Api {
 		Banco.getBanco().realizaTransferenciaBanco(jogadorAtual.getId(), valor, tabuleiro);
 	}
 	
-	public void realizaCompraDePropriedade(int pos) 
+	public boolean realizaCompraDePropriedade(int pos) 
 	{
-		Banco.getBanco().compraPropriedade(pos, jogadorAtual.getId(), tabuleiro);
+		return Banco.getBanco().compraPropriedade(pos, jogadorAtual.getId(), tabuleiro);
 	}
 	
-	public void realizaConstrucao(boolean ehCasa, int pos) 
+	public boolean realizaConstrucao(boolean ehCasa, int pos) 
 	{
-		Banco.getBanco().constroiCasa(jogadorAtual.getId(), pos, tabuleiro, ehCasa);
+		return Banco.getBanco().constroiCasa(jogadorAtual.getId(), pos, tabuleiro, ehCasa);
 	}
 	
 	public void vaiProProximoTurno() 
@@ -286,10 +291,16 @@ public class Api {
 		return terrenoAtual instanceof Lucros;
 	}
 	
-	public boolean pagarAluguel(int idTerreno) 
+	public boolean pagarAluguelPropriedade(int idTerreno) 
 	{
 		Banco banco = Banco.getBanco();
-		return banco.pagarAluguel(tabuleiro, jogadorAtual.getId(), idTerreno);
+		return banco.pagarAluguelPropriedade(tabuleiro, jogadorAtual.getId(), idTerreno);
+	}
+	
+	public boolean pagarAluguelEmpresa(int idTerreno, int deslocamento) 
+	{
+		Banco banco = Banco.getBanco();
+		return banco.pagarAluguelEmpresa(tabuleiro, jogadorAtual.getId(), idTerreno, deslocamento);
 	}
 	
 	private Terreno getTerrenoAtual(int pos) 
@@ -313,16 +324,6 @@ public class Api {
     {
         Propriedade propriedade = (Propriedade) getTerrenoAtual(posProp);
         return propriedade.getNomeTerreno();
-    }
-		
-	//Função auxiliar para criar dados de aluguel de exemplo. --> MUDAR DEPOIS
-    private static ArrayList<Integer> criarAlugueis(int base, int c1, int c2, int c3, int c4, int h) {
-        return new ArrayList<>(Arrays.asList(base, c1, c2, c3, c4, h));
-    }
-
-    //Função auxiliar para criar dados de compra de construção. --> MUDAR DEPOIS
-    private static ArrayList<Integer> criarPrecoConstrucao(int precoCasa, int precoHotel) {
-        return new ArrayList<>(Arrays.asList(precoCasa, precoHotel));
     }	
 		
 	private void criaTabuleiro() 
@@ -330,57 +331,53 @@ public class Api {
 		ArrayList<Terreno> terrenos = new ArrayList<>();
         int posPrisao = 10;
 
-        // Valores de exemplo para aluguéis e construções
-        ArrayList<Integer> aluguelPadrao = criarAlugueis(10, 50, 150, 450, 800, 1200);
-        ArrayList<Integer> precoCasaPadrao = criarPrecoConstrucao(50, 250);
-
         // -- LADO 1 (EMBAIXO) --
         terrenos.add(new PontoDePartida());                                
-        terrenos.add(new Propriedade("Leblon", aluguelPadrao, precoCasaPadrao, 60)); 
+        terrenos.add(new Propriedade("Leblon", 100)); 
         terrenos.add(new Sorte(posPrisao));                                
-        terrenos.add(new Propriedade("Av. Presidente Vargas", aluguelPadrao, precoCasaPadrao, 60)); 
-        terrenos.add(new Propriedade("Av. Nossa S. de Copacabana", aluguelPadrao, precoCasaPadrao, 70)); 
-        terrenos.add(new Empresa("Companhia Ferroviária", 100, 200));                        
-        terrenos.add(new Propriedade("Av. Brig. Faria Lima", aluguelPadrao, precoCasaPadrao, 100));
-        terrenos.add(new Empresa("Companhia de Viação", 100, 200));   
-        terrenos.add(new Propriedade("Avenida Rebouças", aluguelPadrao, precoCasaPadrao, 100));
-        terrenos.add(new Propriedade("Av. 9 de Julho", aluguelPadrao, precoCasaPadrao, 120)); 
+        terrenos.add(new Propriedade("Av. Presidente Vargas", 60)); 
+        terrenos.add(new Propriedade("Av. Nossa S. de Copacabana", 60)); 
+        terrenos.add(new Empresa("Companhia Ferroviária", 50, 200));                        
+        terrenos.add(new Propriedade("Av. Brig. Faria Lima", 240));
+        terrenos.add(new Empresa("Companhia de Viação", 50, 200));   
+        terrenos.add(new Propriedade("Avenida Rebouças", 220));
+        terrenos.add(new Propriedade("Av. 9 de Julho", 220)); 
         terrenos.add(new Prisao());                                         
 
         // -- LADO 2 (ESQUERDA) --
-        terrenos.add(new Propriedade("Av. Europa", aluguelPadrao, precoCasaPadrao, 140));
+        terrenos.add(new Propriedade("Av. Europa", 200));
         terrenos.add(new Sorte(posPrisao));                          
-        terrenos.add(new Propriedade("Rua Augusta", aluguelPadrao, precoCasaPadrao, 140)); 
-        terrenos.add(new Propriedade("Av. Pacaembú", aluguelPadrao, precoCasaPadrao, 160));
-        terrenos.add(new Empresa("Companhia de Táxi", 100, 200));                               
+        terrenos.add(new Propriedade("Rua Augusta", 180)); 
+        terrenos.add(new Propriedade("Av. Pacaembú", 180));
+        terrenos.add(new Empresa("Companhia de Táxi", 40, 150));                               
         terrenos.add(new Sorte(posPrisao));                                
-        terrenos.add(new Propriedade("Interlagos", aluguelPadrao, precoCasaPadrao, 180)); 
+        terrenos.add(new Propriedade("Interlagos", 350)); 
         terrenos.add(new Lucros());                            
-        terrenos.add(new Propriedade("Morumbi", aluguelPadrao, precoCasaPadrao, 200)); 
+        terrenos.add(new Propriedade("Morumbi", 400)); 
         terrenos.add(new ParadaLivre());
 
         // -- LADO 3 (CIMA) --
-        terrenos.add(new Propriedade("Flamengo", aluguelPadrao, precoCasaPadrao, 220)); 
+        terrenos.add(new Propriedade("Flamengo", 120)); 
         terrenos.add(new Sorte(posPrisao));                                 
-        terrenos.add(new Propriedade("Botafogo", aluguelPadrao, precoCasaPadrao, 220)); 
+        terrenos.add(new Propriedade("Botafogo", 100)); 
         terrenos.add(new Imposto());                               
-        terrenos.add(new Empresa("Companhia de Navegação", 100, 200));                             
-        terrenos.add(new Propriedade("Av. Brasil", aluguelPadrao, precoCasaPadrao, 260)); 
+        terrenos.add(new Empresa("Companhia de Navegação", 40, 150));                             
+        terrenos.add(new Propriedade("Av. Brasil", 160)); 
         terrenos.add(new Sorte(posPrisao));                          
-        terrenos.add(new Propriedade("Av. Paulista", aluguelPadrao, precoCasaPadrao, 260)); 
-        terrenos.add(new Propriedade("Jardim Europa", aluguelPadrao, precoCasaPadrao, 280));
+        terrenos.add(new Propriedade("Av. Paulista", 140)); 
+        terrenos.add(new Propriedade("Jardim Europa", 140));
         terrenos.add(new IrPraPrisao(posPrisao));
 
         // -- LADO 4 (DIREITA) --
-        terrenos.add(new Propriedade("Copacabana", aluguelPadrao, precoCasaPadrao, 300)); 
-        terrenos.add(new Empresa("Companhia de Aviação", 100, 200));                            
-        terrenos.add(new Propriedade("Av. Vieira Souto", aluguelPadrao, precoCasaPadrao, 300)); 
-        terrenos.add(new Propriedade("Av. Atlântica", aluguelPadrao, precoCasaPadrao, 320));
-        terrenos.add(new Empresa("Companhia de Táxi Aéreo", 100, 200));                               
-        terrenos.add(new Propriedade("Ipanema", aluguelPadrao, precoCasaPadrao, 350)); 
+        terrenos.add(new Propriedade("Copacabana", 260)); 
+        terrenos.add(new Empresa("Companhia de Aviação", 50, 200));                            
+        terrenos.add(new Propriedade("Av. Vieira Souto", 320)); 
+        terrenos.add(new Propriedade("Av. Atlântica", 300));
+        terrenos.add(new Empresa("Companhia de Táxi Aéreo", 50, 200));                               
+        terrenos.add(new Propriedade("Ipanema", 300)); 
         terrenos.add(new Sorte(posPrisao));                               
-        terrenos.add(new Propriedade("Jardim Paulista", aluguelPadrao, precoCasaPadrao, 370));
-        terrenos.add(new Propriedade("Brooklin", aluguelPadrao, precoCasaPadrao, 400)); 
+        terrenos.add(new Propriedade("Jardim Paulista", 280));
+        terrenos.add(new Propriedade("Brooklin", 260)); 
 
         // Garante que temos 40 terrenos
         System.out.println("Total de terrenos criados: " + terrenos.size());

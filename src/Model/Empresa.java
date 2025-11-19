@@ -2,15 +2,15 @@ package Model;
 
 class Empresa extends Terreno{	
 	
-	int valorAluguel = 0;
+	int valorTaxa = 0;
 	String nomeEmpresa;
 	
-	public Empresa(String nome, int valorA, int valorC)
+	public Empresa(String nome, int valorT, int valorC)
 	{
 		this.tipoTerreno = 2;
 		
 		nomeEmpresa = nome;
-		valorAluguel = valorA;
+		valorTaxa = valorT;
 		valorCompra = valorC;
 	}
 	
@@ -20,9 +20,9 @@ class Empresa extends Terreno{
 		return nomeEmpresa;
 	}
 	
-	int getValorAluguel()
+	int getValorTaxa()
 	{
-		return valorAluguel;
+		return valorTaxa;
 	}
 	
 }

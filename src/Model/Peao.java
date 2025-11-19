@@ -2,7 +2,7 @@ package Model;
 
 class Peao {
 	int id;
-	int dinheiro;
+	double dinheiro;
 	int posicao;
 	String cor;
 	String nome;
@@ -15,31 +15,31 @@ class Peao {
      * Construtor do Peão do jogador que recebe o id do mesmo
      * @param id_peao indice que identifica qual é o peão do jogador
      */
-	public Peao(int id_peao) {
+	Peao(int id_peao) {
 		this.id = id_peao;
 	} 
 	
-	public void setCor(String cor) 
+	void setCor(String cor) 
 	{
 		this.cor = cor;
 	}
 	
-	public void setNome(String nome) 
+	void setNome(String nome) 
 	{
 		this.nome = nome;
 	}
 
-	public String getCor()
+	String getCor()
 	{
 		return this.cor;
 	}
 	
-	public String getNome()
+	String getNome()
 	{
 		return this.nome;
 	}
 	
-    public void setaPosicaoPeao(int pos) {
+    void setaPosicaoPeao(int pos) {
 		if (naPrisao)
 		{
 			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar", id);
@@ -53,7 +53,7 @@ class Peao {
      * Função que pega a posição da intância de um peão
      * @return
      */
-	public int pegaPosicaoPeao() {
+	int pegaPosicaoPeao() {
 		return posicao;
 	}		
 	
@@ -61,7 +61,7 @@ class Peao {
      * Função que seta o montante de dinheiro do jogador
      * @param d
      */
-	public void setDinheiro(int d)
+	void setDinheiro(double d)
 	{
 		dinheiro = d;
 	}
@@ -70,7 +70,7 @@ class Peao {
      * Função que retorna o montante da instância de um peão
      * @return
      */
-	public int getDinheiro()
+	double getDinheiro()
 	{
 		return dinheiro;
 	}
@@ -79,18 +79,18 @@ class Peao {
      * Função que adiciona um valor ao montante existente do peao
      * @param d
      */
-	public void adicionaDinheiro(int d)
+	void adicionaDinheiro(double d)
 	{
 		dinheiro += d;
 	}
 	
-	public int getId()
+	int getId()
 	{
 		return id;
 	}
 	
 	// função que verifica se o peão vai para a prisão e, se for, realiza seu deslocamento
-	public Carta vaiPraPrisao(int posPrisao)
+	Carta vaiPraPrisao(int posPrisao)
 	{
 		posicao = posPrisao;
 		if (cartaSaidaPrisao != null) 
@@ -102,29 +102,29 @@ class Peao {
 		return cartaSaidaPrisao;
 	}
 	
-	public void saiDaPrisao(int deslocamento)
+	void saiDaPrisao(int deslocamento)
 	{
 		if (!naPrisao) return;
 		
 		naPrisao = false;
 	}
 	
-	public void atribuiSaidaLivrePrisao(Carta carta)
+	void atribuiSaidaLivrePrisao(Carta carta)
 	{
 		cartaSaidaPrisao = carta;
 	}
 	
-	public void removeCartaSaidaLivrePrisao()
+	void removeCartaSaidaLivrePrisao()
 	{
 		cartaSaidaPrisao = null;
 	}
 	
-	public boolean estaNaPrisao()
+	boolean estaNaPrisao()
 	{
 		return naPrisao;
 	}
 	
-	public boolean temCartaSaidaLivre()
+	boolean temCartaSaidaLivre()
 	{
 		return cartaSaidaPrisao != null;
 	}

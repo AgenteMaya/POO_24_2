@@ -3,7 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Tabuleiro 
+class Tabuleiro 
 { 
 
 	ArrayList<Terreno> lTerrenos=new ArrayList<>();
@@ -11,18 +11,18 @@ public class Tabuleiro
 	
 	private int jogadorDaVezIndex;
 	
-	public Tabuleiro (ArrayList<Terreno> listaTerrenos)
+	Tabuleiro (ArrayList<Terreno> listaTerrenos)
 	{
 		lTerrenos.addAll(listaTerrenos);
 		this.jogadorDaVezIndex = 0;
 	}
 	
-	public Terreno getTerreno(int pos)
+	Terreno getTerreno(int pos)
 	{
 		return lTerrenos.get(pos);
 	}
 	
-	public Peao getPeao(int id)
+	Peao getPeao(int id)
 	{
 		for (Peao p : lPeoes) 
 		{
@@ -34,57 +34,62 @@ public class Tabuleiro
 		return null; 
 	}
 	
-	public ArrayList<Peao> getListaPeoes()
+	ArrayList<Peao> getListaPeoes()
 	{
 		return lPeoes;
 	}
 	
-	public int getTamListTerreno()
+	int getTamListTerreno()
 	{
 		return lTerrenos.size();
 	}
 	
-	public int getTamListPeoes()
+	int getTamListPeoes()
 	{
 		return lPeoes.size();
 	}
 	
-	public void addPeao(Peao peao)
+	void addPeao(Peao peao)
 	{
 		lPeoes.add(peao);
 	}
 	
-	public void removePeao(Peao peao)
+	void removePeao(Peao peao)
 	{
 		lPeoes.remove(peao);
 	}
 	
-	public void addTerreno(Terreno terreno)
+	void addTerreno(Terreno terreno)
 	{
 		lTerrenos.add(terreno);
 	}
 	
-	public void sortearOrdemJogadores()
+	void sortearOrdemJogadores()
 	{
 		Collections.shuffle(this.lPeoes); // sorteia a ordem dos jogadores
 	}
 	
-	public String getPosPeaoNome(int pos) 
+	String getPosPeaoNome(int pos) 
     {
         return lPeoes.get(pos).getNome();
     }
 
-    public String getPosPeaoCor(int pos) 
+    String getPosPeaoCor(int pos) 
     {
         return lPeoes.get(pos).getCor();
     }
     
-    public int getPosPeao(int index) 
+    int getPosPeao(int index) 
     {
         return lPeoes.get(index).pegaPosicaoPeao();
     }
     
-    public int getIndicePeao(String cor) 
+    Peao getPeaoPorPos(int pos) 
+    {
+        return lPeoes.get(pos);
+    }
+    
+    int getIndicePeao(String cor) 
     {
     	for (int i = 0; i < getTamListPeoes(); i++)
     	{
@@ -93,7 +98,7 @@ public class Tabuleiro
         return -1;
     }
 	
-	public void iniciarPrimeiroTurno()
+	void iniciarPrimeiroTurno()
 	{
 		this.jogadorDaVezIndex = 0;
 		
@@ -102,7 +107,7 @@ public class Tabuleiro
 		}
 	}
 
-	public Peao getJogadorDaVez()
+	Peao getJogadorDaVez()
 	{
 		if (lPeoes.isEmpty()) {
 			return null;
@@ -110,7 +115,7 @@ public class Tabuleiro
 		return lPeoes.get(jogadorDaVezIndex);
 	}
 	
-	public void proximoTurno()
+	void proximoTurno()
 	{
 		if (!lPeoes.isEmpty()) {
 			this.jogadorDaVezIndex = (this.jogadorDaVezIndex + 1) % lPeoes.size();

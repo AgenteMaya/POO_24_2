@@ -1,23 +1,17 @@
 package Model;
 import java.util.ArrayList;
 
-class Propriedade extends Terreno{
-	
-	//hotel - 0; 1 = 1 casa; 2 = 2 casas...
-	ArrayList<Integer> lVAluguel;
-	ArrayList<Integer> lVCompra;
-	
+class Propriedade extends Terreno
+{
 	int qtdCasas = 0;
 	boolean temHotel = false;
 	String nomeTerreno;
 	
-	public Propriedade(String nome, ArrayList<Integer> lAlug, ArrayList<Integer> lComp, int valorC)
+	public Propriedade(String nome, int valorC)
 	{
 		this.tipoTerreno = 1;
 		
 		nomeTerreno = nome;
-		lVAluguel = new ArrayList<>(lAlug);
-		lVCompra = new ArrayList<>(lComp);
 		valorCompra = valorC;
 	}
 	
@@ -30,16 +24,6 @@ class Propriedade extends Terreno{
 	public String getNomeTerreno()
 	{
 		return nomeTerreno;
-	}
-	
-	int getVAluguel(int num)
-	{
-		return lVAluguel.get(num);
-	}
-	
-	int getVCompra(int num)
-	{
-		return lVCompra.get(num);
 	}
 	
 	int getQtdCasas()
@@ -55,6 +39,26 @@ class Propriedade extends Terreno{
 	void setTemHotel(boolean b)
 	{
 		temHotel = b;
+	}
+	
+	double getAluguel()
+	{
+		return valorCompra * 0.1 + getValorCasa() + getValorHotel();
+	}
+	
+	double getValorCasa()
+	{
+		return (valorCompra * 0.15) * qtdCasas;
+	}
+	
+	double getValorHotel()
+	{
+		double Vh = 0;
+		if (temHotel)
+		{
+			Vh = valorCompra * 0.3;
+		}
+		return Vh;
 	}
 	
 }
