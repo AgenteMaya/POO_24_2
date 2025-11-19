@@ -84,7 +84,7 @@ public class GameController
         	
         	int id = numJogadoresTotal - jogadoresRestantes;
         	System.out.println("Id do jogador: " + id);
-        	api.adicionaJogador(id, nome, cor, 4000); /// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        	api.adicionaJogador(id, nome, cor, 210); /// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             
             coresDisponiveis.remove(cor);
             
@@ -177,7 +177,7 @@ public class GameController
             int idTerreno = api.getPosJogadorAtual(); 
             
             boolean continuaJogo = api.pagarAluguelPropriedade(idTerreno);;
-            if (!continuaJogo) view.mostrarMensagem("O jogador atual faliu e foi retirado do jogo!");
+            if (!continuaJogo) view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!");
 
             //esta função na view pode se inscrever em alguma função dentro da model que notifique a modi
             //ficação na lista de peoes?
@@ -357,10 +357,21 @@ public class GameController
         view.setAguardandoProximoTurno(false);
     }
     
+    
     public void terminarTurno()
     {
         processarJogada();
-        Api.getInstance().vaiProProximoTurno();
+        
+        Api api = Api.getInstance();
+        System.out.println("Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
+        
+        if (api.getDinheiroJogadorAtual() < 0)
+        {
+        	view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!"); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        	api.carregarPosicoesPeoes();
+        }
+        
+        api.vaiProProximoTurno();
         deslocamentoAtual = 0;
 
         view.setAguardandoProximoTurno(true);

@@ -201,6 +201,19 @@ public class Api {
 		return tabuleiro.getListaPeoes();
 	}
 	
+	public double getDinheiroPeao(int index)
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+    		if (i == index)
+    		{
+    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    			return peaoTemp.getDinheiro();
+    		}
+    	}
+		return -1;
+	}
+	
 	public int getIdJogadorAtual() 
 	{
 		return jogadorAtual.getId();
@@ -214,6 +227,16 @@ public class Api {
 	public String getCorJogAtual() 
 	{
 		return jogadorAtual.getCor();
+	}
+	
+	public double getDinheiroJogadorAtual()
+	{
+		return jogadorAtual.getDinheiro();
+	}
+	
+	public void removeJogadorAtual()
+	{
+		tabuleiro.removePeao(tabuleiro.getPeaoPorPos(getIdJogadorAtual() - 1));
 	}
 	
 	public int getIdCarta() 

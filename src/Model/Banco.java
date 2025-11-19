@@ -26,7 +26,7 @@ class Banco {
 			terreno.setDono(peao.getId());
 			
 			double valor = terreno.getValorCompra();
-			peao.adicionaDinheiro(-valor);
+			peao.adicionaDinheiro(-valor); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 			qtdDinheiro += valor;
 			return true;
 		}
