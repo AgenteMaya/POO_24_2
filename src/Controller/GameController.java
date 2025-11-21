@@ -1,8 +1,6 @@
 package Controller;
 
 import java.util.ArrayList;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 
 import View.JanelaPrincipal;
 import Model.Api;
@@ -37,6 +35,9 @@ public class GameController
     
     public void solicitarInicioJogo() 
     {
+        this.coresDisponiveis = new ArrayList<>();
+        inicializaCores();
+        
         System.out.println("AÇÃO: Iniciando o jogo...");
         view.mostrarTelaNumJogadores();
         Api.getInstance().Inicializa();
@@ -84,7 +85,7 @@ public class GameController
         	
         	int id = numJogadoresTotal - jogadoresRestantes;
         	System.out.println("Id do jogador: " + id);
-        	api.adicionaJogador(id, nome, cor, 210); /// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        	api.adicionaJogador(id, nome, cor, 4000);
             
             coresDisponiveis.remove(cor);
             
@@ -114,108 +115,101 @@ public class GameController
 
         api.setJogadorAtual();
         view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
-
+        view.limparDados();
+        view.setAguardandoProximoTurno(false);
     }
     
     // chamado após o jogador lançar os dados e se mover --> analisa onde o peão caiu e decide o que fazer
-    public void processarJogada() 
-    {
-    	Api api = Api.getInstance();
-        int posAtual = api.getPosJogadorAtual(); 
-        
-        if (api.ehPropriedade(posAtual)) 
-        {
-        	processarPropriedade(posAtual);
+    public boolean processarJogada() {
+        Api api = Api.getInstance();
+        int posAtual = api.getPosJogadorAtual();
+
+        if (api.ehPropriedade(posAtual)) {
+            return processarPropriedade(posAtual); 
+        } 
+        else if (api.ehEmpresa(posAtual)) {
+            return processarEmpresa(posAtual); 
         }
-        else if (api.ehEmpresa(posAtual))
-        {
-        	processarEmpresa(posAtual);
-        }
-        else if (api.ehSorte(posAtual)) 
-        {
+        else if (api.ehSorte(posAtual)) {
             processarSorte();
+            System.out.println("SORTE: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
-        else if (api.ehIrPraPrisao(posAtual)) 
-        { 
+        else if (api.ehIrPraPrisao(posAtual)) {
             processarVaParaPrisao();
         }
-        else if (api.ehImposto(posAtual)) 
-        {
+        else if (api.ehImposto(posAtual)) {
             processarImposto();
+            System.out.println("IMPOSTO: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
-        else if (api.ehLucro(posAtual)) 
-        {
-        	processarLucros();
+        else if (api.ehLucro(posAtual)) {
+            processarLucros();
+            System.out.println("LUCROS: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
-        else if (api.ehPrisao(posAtual)) 
-        {
+        else if (api.ehPrisao(posAtual)) {
             view.mostrarMensagem("Apenas visitando a prisão.");
         }
-        else if (api.ehParadaLivre(posAtual)) 
-        {
+        else if (api.ehParadaLivre(posAtual)) {
             view.mostrarMensagem("Parada Livre. Nada acontece.");
         }
-        else if (api.ehPontoDePartida(posAtual)) 
-        {
+        else if (api.ehPontoDePartida(posAtual)) {
             view.mostrarMensagem("Parou no Ponto de Partida.");
             processarPontoDePartida();
+            System.out.println("PONTO DE PARTIDA: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
+        
+        return false; 
     }
 
-    private void processarPropriedade(int posAtual) 
-    {
-    	Api api = Api.getInstance();
+    private boolean processarPropriedade(int posAtual) {
+        Api api = Api.getInstance();
         int donoId = api.getIdDono(posAtual);
-        
-        if (donoId == -1) 
-        {
-            view.mostrarOpcaoCompra(api.getNomeTerreno(posAtual), api.getValorTerreno(posAtual));
-        } 
-        else if (donoId != api.getIdJogadorAtual()) 
-        {
-            view.mostrarMensagem("Pagando aluguel...");
-            int idTerreno = api.getPosJogadorAtual(); 
-            
-            boolean continuaJogo = api.pagarAluguelPropriedade(idTerreno);;
-            if (!continuaJogo) view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!");
 
-            //esta função na view pode se inscrever em alguma função dentro da model que notifique a modi
-            //ficação na lista de peoes?
-            //Inclusive essa função de notify pode ser chamada aqui
+        if (donoId == -1) {
+            // AQUI ESTÁ O PULO DO GATO:
+            // Mostramos a opção e retornamos TRUE para avisar o controller 
+            // que ele deve PAUSAR o turno e esperar o clique do botão.
+            view.mostrarOpcaoCompra(api.getNomeTerreno(posAtual), api.getValorTerreno(posAtual));
+            return true; 
+        } 
+        else if (donoId != api.getIdJogadorAtual()) {
+            view.mostrarMensagem("Pagando aluguel...");
+            int idTerreno = api.getPosJogadorAtual();
+            boolean continuaJogo = api.pagarAluguelPropriedade(idTerreno);
+            
+            if (!continuaJogo) view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!");
+            
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         } 
-        else 
-        {
-        	view.mostrarOpcaoConstruir(api.getNomePropriedade(posAtual));
+        else {
+            // Se já é dono, pode construir. 
+            // Se a construção também for via botão Sim/Não, retorne true. 
+            // Se for síncrono ou apenas informativo, retorne false.
+            view.mostrarOpcaoConstruir(api.getNomePropriedade(posAtual));
+            // Assumindo que construir também abre botões:
+            return true; 
         }
+        return false;
     }
     
-    private void processarEmpresa(int posAtual)
-    {
-    	Api api = Api.getInstance();
+    private boolean processarEmpresa(int posAtual) {
+        Api api = Api.getInstance();
         int donoId = api.getIdDono(posAtual);
-        
-        if (donoId == -1) 
-        {
+
+        if (donoId == -1) {
             view.mostrarOpcaoCompra(api.getNomeTerreno(posAtual), api.getValorTerreno(posAtual));
+            return true; // PAUSA O TURNO
         } 
-        else if (donoId != api.getIdJogadorAtual()) 
-        {
+        else if (donoId != api.getIdJogadorAtual()) {
             view.mostrarMensagem("Pagando taxa...");
-            int idTerreno = api.getPosJogadorAtual(); 
-            
+            int idTerreno = api.getPosJogadorAtual();
             boolean continuaJogo = api.pagarAluguelEmpresa(idTerreno, deslocamentoAtual);
             if (!continuaJogo) view.mostrarMensagem("O jogador atual faliu e foi retirado do jogo!");
-            
-            //esta função na view pode se inscrever em alguma função dentro da model que notifique a modi
-            //ficação na lista de peoes?
-            //Inclusive essa função de notify pode ser chamada aqui
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         } 
-        else 
-        {
-        	view.mostrarMensagem("Você parou em sua própria Empresa.");
+        else {
+            view.mostrarMensagem("Você parou em sua própria Empresa.");
         }
+        return false;
     }
 
     private void processarSorte() 
@@ -281,40 +275,43 @@ public class GameController
         view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
     
-    public void usuarioDecidiuComprar() 
-    {
+    public void usuarioDecidiuComprar() {
         int pos = Api.getInstance().getPosJogadorAtual();
-        
         Api api = Api.getInstance();
-        if (api.realizaCompraDePropriedade(pos))
-        {
-        	api.setDono(pos);
-        	view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
-        	return;
+
+        if (api.realizaCompraDePropriedade(pos)) {
+            api.setDono(pos);
+            view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
+            view.mostrarMensagem("Compra realizada com sucesso!"); // Feedback visual
+        } else {
+            view.mostrarMensagem("Propriedade não foi comprada por falta de dinheiro.");
         }
         
-        view.mostrarMensagem("Propriedade não foi comprada por falta de dinheiro.");
+        // AGORA SIM, finalizamos o turno após a ação do usuário
+        finalizarTurno();
     }
 
 
-    public void usuarioDecidiuNaoComprar() 
-    {
+    public void usuarioDecidiuNaoComprar() {
         view.mostrarMensagem("Propriedade não foi comprada.");
+        
+        // AGORA SIM, finalizamos o turno após a ação do usuário
+        finalizarTurno();
     }
     
    
-    public void usuarioDecidiuConstruir(boolean ehCasa) // true=casa, false=hotel
-    { 
+    public void usuarioDecidiuConstruir(boolean ehCasa) { 
         int pos = Api.getInstance().getPosJogadorAtual();
-        
-        if (Api.getInstance().realizaConstrucao(ehCasa, pos))
-        {
-        	view.atualizarConstrucoes(pos); 
-        	view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());  
-        	return;
+        if (Api.getInstance().realizaConstrucao(ehCasa, pos)) {
+            view.atualizarConstrucoes(pos); 
+            view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());  
+            // Não esqueça de retornar ou mensagem de sucesso
+        } else {
+            view.mostrarMensagem("Não foi possível realizar a construção.");
         }
-
-        view.mostrarMensagem("Não foi possível realizar a construção.");
+        
+        // Finaliza o turno
+        finalizarTurno();
     }
 
     
@@ -342,15 +339,93 @@ public class GameController
        view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
     }
     
+//    public void terminoSolicitado()
+//    {
+//    	Api api = Api.getInstance();
+//    	
+//    	int indexGanhador = -1;
+//    	double qtdDinheiroGanhador = -1;
+//    	
+//    	for (int i = 0; i < api.getQtdPeoes(); i++)
+//    	{
+//    		System.out.println("Cor: " + api.getCorPeao(i) + " | Nome: " + api.getNomePeao(i) + " - saldo: R$" + api.getDinheiroPeao(i));
+//    		
+//    		if (api.getDinheiroPeao(i) > qtdDinheiroGanhador)
+//    		{
+//    			indexGanhador = i;
+//    			qtdDinheiroGanhador = api.getDinheiroPeao(i);
+//    		}
+//    	}
+//    	
+//    	System.out.println(api.getNomePeao(indexGanhador) + " venceu o jogo!");
+//		view.mostrarTelaFimDeJogo(api.getNomePeao(indexGanhador), api.getCorPeao(indexGanhador), api.getDinheiroPeao(indexGanhador));
+//    }
+    
+    public void terminoSolicitado() {
+        Api api = Api.getInstance();
+        
+        ArrayList<Ranking> ranking = new ArrayList<>();
+        
+        for (int i = 0; i < api.getQtdPeoes(); i++) {
+            String nome = api.getNomePeao(i); 
+            String cor = api.getCorPeao(i);
+            double dinheiro = api.getDinheiroPeao(i);
+            
+            ranking.add(new Ranking(nome, cor, dinheiro));
+        }
+        
+        ranking.sort((p1, p2) -> Double.compare(p2.saldo, p1.saldo));
+        
+        System.out.println("Jogo encerrado! Vencedor: " + ranking.get(0).nome);
+        
+        view.mostrarTelaFimDeJogo(ranking);
+    }
+    
+    public void finalizarTurno() {
+        Api api = Api.getInstance();
+
+        System.out.println("Saldo final do turno - Jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
+
+        boolean jogadorFoiRemovido = false;
+
+        if (api.getDinheiroJogadorAtual() < 0) 
+        {
+            view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!");
+            api.removeJogadorAtual();
+            view.atualizarPaineisInfo(api.carregarPosicoesPeoes()); 
+            
+            jogadorFoiRemovido = true;
+        }
+
+        if (!jogadorFoiRemovido) {
+            api.vaiProProximoTurno();
+        }
+
+        deslocamentoAtual = 0;
+
+        view.setAguardandoProximoTurno(true);
+    }
+    
     public void iniciarProximoTurno() {
         Api api = Api.getInstance();
 
-        api.setJogadorAtual();
-        
     	if (api.getQtdPeoes() == 1)
     	{
-    		System.out.println(api.getNomeJogAtual() + " venceu o jogo!");
+    		// o vencedor estará na posição 0 da lista neste caso de ser o último que sobrou
+    		System.out.println(api.getNomeVencedor() + " venceu o jogo!");
+    		
+    		ArrayList<Ranking> ranking = new ArrayList<>();
+    		String nome = api.getNomeVencedor(); 
+    		String cor = api.getCorVencedor();
+    		double dinheiro = api.getDinheiroVencedor();
+    		ranking.add(new Ranking(nome, cor, dinheiro));
+            
+    		view.mostrarTelaFimDeJogo(ranking);
+    		return;
     	}
+    	
+    	api.setJogadorAtual();
+        System.out.println("Saldo início do turno - Jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         
         view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
 
@@ -358,23 +433,12 @@ public class GameController
     }
     
     
-    public void terminarTurno()
-    {
-        processarJogada();
-        
-        Api api = Api.getInstance();
-        System.out.println("Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
-        
-        if (api.getDinheiroJogadorAtual() < 0)
-        {
-        	view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!"); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        	api.carregarPosicoesPeoes();
-        }
-        
-        api.vaiProProximoTurno();
-        deslocamentoAtual = 0;
+    public void terminarTurno() {
+        boolean aguardandoAcaoUsuario = processarJogada();
 
-        view.setAguardandoProximoTurno(true);
+        if (!aguardandoAcaoUsuario) {
+            finalizarTurno();
+        }
     }
     
     public void lancarDadosDebug(int dado1, int dado2) {

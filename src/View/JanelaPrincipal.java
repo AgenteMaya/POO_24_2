@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import Controller.GameController;
+import Controller.Ranking;
 
 @SuppressWarnings("serial")
 public class JanelaPrincipal extends JFrame {
@@ -128,84 +129,214 @@ public class JanelaPrincipal extends JFrame {
 		repaint();
 	}
 	
-	public void mostrarTelaFimDeJogo(String nome_vencedor, String cor, double saldo_vencedor) {
+//	public void mostrarTelaFimDeJogo(String nome_vencedor, String cor, double saldo_vencedor) {
+//	    getContentPane().removeAll();
+//	    setSize(600, 500);
+//	    setLocationRelativeTo(null);
+//
+//	    // Define a cor base
+//	    Color corBase;
+//	    switch (cor.toLowerCase()) {
+//	        case "vermelho" -> corBase = new Color(220, 60, 60);
+//	        case "azul" -> corBase = new Color(70, 120, 220);
+//	        case "laranja" -> corBase = new Color(240, 140, 60);
+//	        case "amarelo" -> corBase = new Color(230, 200, 70);
+//	        case "magenta" -> corBase = new Color(200, 70, 200);
+//	        case "cinza" -> corBase = new Color(150, 150, 160);
+//	        default -> corBase = new Color(120, 120, 120);
+//	    }
+//	    
+//	    // AQUI É A MUDANÇA: Usamos um JPanel customizado para desenhar (Java2D)
+//	    JPanel painelFim = new JPanel() {
+//	        @Override
+//	        protected void paintComponent(Graphics g) {
+//	            super.paintComponent(g);
+//	            Graphics2D g2 = (Graphics2D) g.create();
+//	            
+//	            // Melhora a renderização de texto
+//	            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//
+//	            int w = getWidth();
+//	            int h = getHeight();
+//
+//	            // 1. Desenhar o Fundo (Java2D)
+//	            g2.setColor(corBase);
+//	            g2.fillRect(0, 0, w, h);
+//
+//	            // 2. Desenhar os Textos (Java2D - drawString em vez de JLabel)
+//	            Color corTexto = contraste(corBase);
+//	            g2.setColor(corTexto);
+//
+//	            // Título
+//	            g2.setFont(new Font("Arial", Font.BOLD, 36));
+//	            drawCentralizado(g2, "FIM DE JOGO!", w, h / 3);
+//
+//	            // Vencedor
+//	            g2.setFont(new Font("Arial", Font.BOLD, 24));
+//	            drawCentralizado(g2, "Vencedor: " + nome_vencedor, w, h / 2);
+//
+//	            // Saldo
+//	            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+//	            String textoSaldo = String.format("Saldo Final: R$ %.2f", saldo_vencedor);
+//	            drawCentralizado(g2, textoSaldo, w, (h / 2) + 40);
+//
+//	            g2.dispose();
+//	        }
+//
+//	        // Função auxiliar para centralizar texto horizontalmente
+//	        private void drawCentralizado(Graphics2D g2, String text, int larguraPainel, int y) {
+//	            FontMetrics fm = g2.getFontMetrics();
+//	            int x = (larguraPainel - fm.stringWidth(text)) / 2;
+//	            g2.drawString(text, x, y);
+//	        }
+//	    };
+//
+//	    // Usamos layout null ou GridBag apenas para posicionar os BOTÕES
+//	    // Como vamos desenhar o texto no fundo, os botões precisam ficar em uma posição fixa (ex: embaixo)
+//	    painelFim.setLayout(new GridBagLayout());
+//	    
+//	    // Configuração para empurrar os botões para baixo
+//	    GridBagConstraints gbc = new GridBagConstraints();
+//	    gbc.gridx = 0;
+//	    gbc.gridy = 0;
+//	    gbc.insets = new Insets(10, 10, 10, 10);
+//	    
+//	    // Adicionamos um componente invisível para empurrar os botões para o fundo
+//	    // (Já que o texto ocupa a metade de cima visualmente)
+//	    gbc.weighty = 1.0; // ocupa espaço vertical
+//	    painelFim.add(Box.createGlue(), gbc); // Espaço vazio
+//
+//	    gbc.weighty = 0.0; // botões não esticam
+//	    gbc.gridy++;
+//	    
+//	    JButton btnNovoJogo = new JButton("Novo Jogo");
+//	    btnNovoJogo.setPreferredSize(new Dimension(200, 40));
+//	    btnNovoJogo.setFont(new Font("Arial", Font.BOLD, 14));
+//	    btnNovoJogo.addActionListener(e -> controller.solicitarInicioJogo());
+//	    painelFim.add(btnNovoJogo, gbc);
+//
+//	    gbc.gridy++;
+//	    JButton btnMenu = new JButton("Voltar ao Menu");
+//	    btnMenu.setPreferredSize(new Dimension(200, 40));
+//	    btnMenu.setFont(new Font("Arial", Font.PLAIN, 14));
+//	    btnMenu.addActionListener(e -> mostrarMenuInicial());
+//	    painelFim.add(btnMenu, gbc);
+//
+//	    gbc.gridy++;
+//	    JButton btnSair = new JButton("Sair do Jogo");
+//	    btnSair.setPreferredSize(new Dimension(200, 40));
+//	    btnSair.setFont(new Font("Arial", Font.PLAIN, 14));
+//	    btnSair.addActionListener(e -> System.exit(0));
+//	    painelFim.add(btnSair, gbc);
+//
+//	    getContentPane().add(painelFim);
+//	    revalidate();
+//	    repaint();
+//	}
+	
+	public void mostrarTelaFimDeJogo(ArrayList<Ranking> ranking) {
 	    getContentPane().removeAll();
-	    setSize(600, 500);
+	    setSize(600, 500); 
 	    setLocationRelativeTo(null);
 
-	    Color corDeFundo;
-	    switch (cor.toLowerCase()) {
-	        case "vermelho" -> corDeFundo = new Color(220, 60, 60);
-	        case "azul" -> corDeFundo = new Color(70, 120, 220);
-	        case "laranja" -> corDeFundo = new Color(240, 140, 60);
-	        case "amarelo" -> corDeFundo = new Color(230, 200, 70);
-	        case "magenta" -> corDeFundo = new Color(200, 70, 200);
-	        case "cinza" -> corDeFundo = new Color(150, 150, 160);
-	        default -> corDeFundo = new Color(120, 120, 120);
+	    Ranking vencedor = ranking.get(0);
+
+	    Color corBase;
+	    switch (vencedor.cor.toLowerCase()) {
+	        case "vermelho" -> corBase = new Color(220, 60, 60);
+	        case "azul" -> corBase = new Color(70, 120, 220);
+	        case "laranja" -> corBase = new Color(240, 140, 60);
+	        case "amarelo" -> corBase = new Color(230, 200, 70);
+	        case "magenta" -> corBase = new Color(200, 70, 200);
+	        case "cinza" -> corBase = new Color(150, 150, 160);
+	        default -> corBase = new Color(120, 120, 120);
 	    }
 
-	    JPanel painelFim = new JPanel();
+	    JPanel painelFim = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            Graphics2D g2 = (Graphics2D) g.create();
+	            
+	            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+	            int w = getWidth();
+	            int h = getHeight();
+
+	            g2.setColor(corBase);
+	            g2.fillRect(0, 0, w, h);
+
+	            Color corTexto = contraste(corBase);
+	            g2.setColor(corTexto);
+
+	            g2.setFont(new Font("Arial", Font.BOLD, 32));
+	            drawCentralizado(g2, "FIM DE JOGO!", w, 50);
+
+	            g2.setFont(new Font("Arial", Font.BOLD, 20));
+	            drawCentralizado(g2, "Vencedor: " + vencedor.nome, w, 90);
+
+	            g2.setFont(new Font("Arial", Font.PLAIN, 16));
+	            
+	            int startY = 140;
+	            int lineHeight = 30;
+	            
+	            g2.drawLine(100, startY - 20, w - 100, startY - 20);
+
+	            for (int i = 0; i < ranking.size(); i++) {
+	            	Ranking jog = ranking.get(i);
+	                
+	                String posicao = (i + 1) + "º";
+	                String linhaTexto = String.format("%s  |  %s  |  R$ %.2f", posicao, jog.nome, jog.saldo);
+	                
+	                if (i == 0) {
+	                    g2.setFont(new Font("Arial", Font.BOLD, 18));
+	                } else {
+	                    g2.setFont(new Font("Arial", Font.PLAIN, 16));
+	                }
+	                
+	                drawCentralizado(g2, linhaTexto, w, startY + (i * lineHeight));
+	            }
+
+	            g2.dispose();
+	        }
+
+	        private void drawCentralizado(Graphics2D g2, String text, int larguraPainel, int y) {
+	            FontMetrics fm = g2.getFontMetrics();
+	            int x = (larguraPainel - fm.stringWidth(text)) / 2;
+	            g2.drawString(text, x, y);
+	        }
+	    };
+
 	    painelFim.setLayout(new GridBagLayout());
-	    painelFim.setBackground(corDeFundo);
-
 	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(10, 10, 10, 10); 
 	    gbc.gridx = 0;
-	    gbc.gridy = GridBagConstraints.RELATIVE;
-	    gbc.anchor = GridBagConstraints.CENTER;
+	    gbc.gridy = 0;
+	    gbc.insets = new Insets(10, 10, 10, 10);
+	    
+	    gbc.weighty = 1.0; 
+	    painelFim.add(Box.createGlue(), gbc); 
 
-	    Color corTexto = contraste(corDeFundo);
-
-	    JLabel lblTitulo = new JLabel("FIM DE JOGO!");
-	    lblTitulo.setFont(new Font("Arial", Font.BOLD, 36));
-	    lblTitulo.setForeground(corTexto);
-	    painelFim.add(lblTitulo, gbc);
-
-	    JLabel lblVencedor = new JLabel("Vencedor: " + nome_vencedor);
-	    lblVencedor.setFont(new Font("Arial", Font.BOLD, 24));
-	    lblVencedor.setForeground(corTexto);
-	    painelFim.add(lblVencedor, gbc);
-
-	    JLabel lblSaldo = new JLabel(String.format("Saldo Final: R$ %.2f", saldo_vencedor));
-	    lblSaldo.setFont(new Font("Arial", Font.PLAIN, 20));
-	    lblSaldo.setForeground(corTexto);
-	    painelFim.add(lblSaldo, gbc);
-
-	    gbc.insets = new Insets(40, 10, 10, 10);
-
+	    gbc.weighty = 0.0; 
+	    gbc.gridy++;
+	    
 	    JButton btnNovoJogo = new JButton("Novo Jogo");
 	    btnNovoJogo.setPreferredSize(new Dimension(200, 40));
 	    btnNovoJogo.setFont(new Font("Arial", Font.BOLD, 14));
-	    btnNovoJogo.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            controller.solicitarInicioJogo();
-	        }
-	    });
+	    btnNovoJogo.addActionListener(e -> controller.solicitarInicioJogo());
 	    painelFim.add(btnNovoJogo, gbc);
 
-	    gbc.insets = new Insets(10, 10, 10, 10);
-
+	    gbc.gridy++;
 	    JButton btnMenu = new JButton("Voltar ao Menu");
 	    btnMenu.setPreferredSize(new Dimension(200, 40));
 	    btnMenu.setFont(new Font("Arial", Font.PLAIN, 14));
-	    btnMenu.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            mostrarMenuInicial();
-	        }
-	    });
+	    btnMenu.addActionListener(e -> mostrarMenuInicial());
 	    painelFim.add(btnMenu, gbc);
 
+	    gbc.gridy++;
 	    JButton btnSair = new JButton("Sair do Jogo");
 	    btnSair.setPreferredSize(new Dimension(200, 40));
 	    btnSair.setFont(new Font("Arial", Font.PLAIN, 14));
-	    btnSair.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            System.exit(0);
-	        }
-	    });
+	    btnSair.addActionListener(e -> System.exit(0));
 	    painelFim.add(btnSair, gbc);
 
 	    getContentPane().add(painelFim);
@@ -266,7 +397,7 @@ public class JanelaPrincipal extends JFrame {
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	private JPanel criarPainelLateralDireito() {
+	private JPanel criarPainelLateralDados() {
 		// --- painel pintado em Java2D (CENTER) ---
 		painelDados = new JPanel() {
 			@Override
@@ -410,31 +541,78 @@ public class JanelaPrincipal extends JFrame {
 		return container;
 	}
 	
-	private JPanel criarPainelLateralEsquerdo() { // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-		painelInfo = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				Graphics2D g2 = (Graphics2D) g.create();
+	private JPanel criarPainelBotoesControle() {
+	    JPanel painelBotoes = new JPanel();
+	    painelBotoes.setLayout(new GridLayout(4, 1, 5, 5));
+	    
+	    painelBotoes.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+	    painelBotoes.setBackground(new Color(240, 240, 240)); 
 
-				// título
-				g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
-				g2.setColor(contraste(Color.LIGHT_GRAY));
-				String titulo = "Painel de Informações";
-				g2.drawString(titulo, 16, 28);
+	    JButton btnSalvar = new JButton("Salvar Jogo");
+	    btnSalvar.setFont(new Font("Arial", Font.PLAIN, 12));
+	    btnSalvar.addActionListener(e -> {
+	        // salvarJogo()
+	        JOptionPane.showMessageDialog(this, "Jogo Salvo!");
+	    });
 
-				g2.dispose();
-			}
-		};
-		painelInfo.setOpaque(true);
+	    JButton btnEncerrar = new JButton("Encerrar Jogo");
+	    btnEncerrar.setFont(new Font("Arial", Font.PLAIN, 12));
+	    btnEncerrar.addActionListener(e -> {
+	        int resp = JOptionPane.showConfirmDialog(this, "Deseja realmente encerrar a partida atual?", "Encerrar", JOptionPane.YES_NO_OPTION);
+	        if (resp == JOptionPane.YES_OPTION) {
+	        	controller.terminoSolicitado(); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	        }
+	    });
 
-		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(260, ALT_DEFAULT));
-		container.add(painelInfo, BorderLayout.CENTER);
+	    JButton btnMenu = new JButton("Voltar ao Menu");
+	    btnMenu.setFont(new Font("Arial", Font.PLAIN, 12));
+	    btnMenu.addActionListener(e -> mostrarMenuInicial());
 
-		return container;
+	    JButton btnFechar = new JButton("Fechar Jogo");
+	    btnFechar.setFont(new Font("Arial", Font.BOLD, 12));
+	    btnFechar.setForeground(new Color(150, 0, 0)); // Um vermelho escuro para destacar perigo
+	    btnFechar.addActionListener(e -> System.exit(0));
+
+	    painelBotoes.add(btnSalvar);
+	    painelBotoes.add(btnEncerrar);
+	    painelBotoes.add(btnMenu);
+	    painelBotoes.add(btnFechar);
+
+	    return painelBotoes;
 	}
+	
+	
+	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	{
+	    painelInfo = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            Graphics2D g2 = (Graphics2D) g.create();
 
+	            g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
+	            g2.setColor(contraste(Color.LIGHT_GRAY));
+	            String titulo = "Painel de Informações";
+	            g2.drawString(titulo, 16, 28);
+	            
+	            // Aqui você pode desenhar mais infos do jogo futuramente (saldos, propriedades, etc)
+
+	            g2.dispose();
+	        }
+	    };
+	    painelInfo.setOpaque(true);
+	    painelInfo.setBackground(Color.LIGHT_GRAY); 
+
+	    JPanel container = new JPanel(new BorderLayout());
+	    container.setPreferredSize(new Dimension(260, ALT_DEFAULT));
+	    
+	    container.add(painelInfo, BorderLayout.CENTER);
+	    
+	    container.add(criarPainelBotoesControle(), BorderLayout.SOUTH);
+
+	    return container;
+	}
+	
 	private static void drawCenteredScaled(Graphics2D g2, Image img, int x, int y, int w, int h) {
 		if (img == null)
 			return;
@@ -523,10 +701,10 @@ public class JanelaPrincipal extends JFrame {
 
 		getContentPane().add(painelTabuleiro, BorderLayout.CENTER);
 
-		JPanel painelLateralDireito = criarPainelLateralDireito();
+		JPanel painelLateralDireito = criarPainelLateralDados();
 		getContentPane().add(painelLateralDireito, BorderLayout.EAST);
 		
-		JPanel painelLateralEsquerdo = criarPainelLateralEsquerdo();
+		JPanel painelLateralEsquerdo = criarPainelLateralInformacoes();
 		getContentPane().add(painelLateralEsquerdo, BorderLayout.WEST);
 
 		revalidate();

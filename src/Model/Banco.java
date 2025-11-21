@@ -26,6 +26,7 @@ class Banco {
 			terreno.setDono(peao.getId());
 			
 			double valor = terreno.getValorCompra();
+			System.out.println("Valor do terreno "+ terreno.getNomeTerreno() + " = " + valor);
 			peao.adicionaDinheiro(-valor); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 			qtdDinheiro += valor;
 			return true;
@@ -43,6 +44,7 @@ class Banco {
 			if (terreno.getDono() == id)
 			{
 				double valor = terreno.getValorCompra() * 0.90;
+				System.out.println("Valor de venda do terreno "+ terreno.getNomeTerreno() + " = " + valor);
 				peao.adicionaDinheiro(valor);
 				qtdDinheiro -= valor;
 				
@@ -59,15 +61,16 @@ class Banco {
 		double valorASerPago = propriedadeCaida.getAluguel();
 
 		Peao peao = tabuleiro.getPeao(idPeao);
-		System.out.printf("\nValor a ser pago = R$ %f\n\n", valorASerPago);
+		System.out.printf("Terreno: %s\nValor a ser pago = R$ %f\n\n", propriedadeCaida.getNomeTerreno(), valorASerPago);
 		
 		while (valorASerPago > peao.getDinheiro())
 		{	
 			if(!vendePropriedade(peao, tabuleiro))
 			{
-				System.out.printf("\nO jogador %d faliu e, portanto, sairá do jogo. Saldo final = R$ %d,00.\n\n", idPeao, peao.getDinheiro());
-				tabuleiro.removePeao(peao); // remove o peão, pois ele foi à falência
-				return false;
+				peao.adicionaDinheiro(-valorASerPago); 
+	            
+	            System.out.printf("\nO jogador %d não conseguiu pagar e faliu.\n\n", idPeao);
+	            return false;
 			}
 		}
 		
@@ -84,15 +87,16 @@ class Banco {
 		double valorASerPago = empresaCaida.getValorTaxa() * deslocamento;
 
 		Peao peao = tabuleiro.getPeao(idPeao);
-		System.out.printf("\nValor a ser pago = R$ %f\n\n", valorASerPago);
+		System.out.printf("Terreno: %s\nValor a ser pago = R$ %f\n\n", empresaCaida.getNomeTerreno(), valorASerPago);
 		
 		while (valorASerPago > peao.getDinheiro())
 		{	
 			if(!vendePropriedade(peao, tabuleiro))
 			{
-				System.out.printf("\nO jogador %d faliu e, portanto, sairá do jogo. Saldo final = R$ %d,00.\n\n", idPeao, peao.getDinheiro());
-				tabuleiro.removePeao(peao); // remove o peão, pois ele foi à falência
-				return false;
+				peao.adicionaDinheiro(-valorASerPago); // Força o saldo negativo
+	            
+	            System.out.printf("\nO jogador %d não conseguiu pagar e faliu.\n\n", idPeao);
+	            return false;
 			}
 		}
 		

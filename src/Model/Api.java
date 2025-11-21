@@ -196,11 +196,6 @@ public class Api {
 	    terreno.setDono(jogadorAtual.getId()); 
 	}
 	
-	public ArrayList<Peao> getListaPeoes()
-	{
-		return tabuleiro.getListaPeoes();
-	}
-	
 	public double getDinheiroPeao(int index)
 	{
 		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
@@ -212,6 +207,44 @@ public class Api {
     		}
     	}
 		return -1;
+	}
+	
+	public String getNomePeao(int index) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+    		if (i == index)
+    		{
+    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    			return peaoTemp.getNome();
+    		}
+    	}
+		return "";
+	}
+	
+	public String getCorPeao(int index) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+    		if (i == index)
+    		{
+    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    			return peaoTemp.getCor();
+    		}
+    	}
+		return "";
+	}
+	
+	public String getNomeVencedor() {
+	    return tabuleiro.getPeaoPorPos(0).getNome();
+	}
+
+	public String getCorVencedor() {
+	    return tabuleiro.getPeaoPorPos(0).getCor();
+	}
+
+	public double getDinheiroVencedor() {
+	    return tabuleiro.getPeaoPorPos(0).getDinheiro();
 	}
 	
 	public int getIdJogadorAtual() 
@@ -236,7 +269,7 @@ public class Api {
 	
 	public void removeJogadorAtual()
 	{
-		tabuleiro.removePeao(tabuleiro.getPeaoPorPos(getIdJogadorAtual() - 1));
+	    tabuleiro.removePeao(this.jogadorAtual);
 	}
 	
 	public int getIdCarta() 
