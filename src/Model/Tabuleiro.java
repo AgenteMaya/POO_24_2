@@ -38,6 +38,11 @@ class Tabuleiro
 	{
 		return lPeoes;
 	}
+
+	ArrayList<Terreno> getListaTerrenos()
+	{
+		return lTerrenos;
+	}
 	
 	int getTamListTerreno()
 	{
@@ -113,6 +118,13 @@ class Tabuleiro
 			return null;
 		}
 		return lPeoes.get(jogadorDaVezIndex);
+	}
+
+	void setJogadorDaVezIndex(int index)
+	{
+		if (index >= 0 && index < lPeoes.size()) {
+			this.jogadorDaVezIndex = index;
+		}
 	}
 	
 	void proximoTurno()

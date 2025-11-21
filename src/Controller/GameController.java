@@ -47,7 +47,8 @@ public class GameController
     {
         System.out.println("AÇÃO: Retornando a jogo salvo...");
         
-        // lógica de carregar um save!! --> inserir os peoes nas posicoes e tals
+        Api.getInstance().Inicializa();
+        Api.getInstance().carregarJogo("./");
         
         view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
     }
