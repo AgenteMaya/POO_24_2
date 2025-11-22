@@ -27,7 +27,7 @@ class Banco {
 			
 			double valor = terreno.getValorCompra();
 			System.out.println("Valor do terreno "+ terreno.getNomeTerreno() + " = " + valor);
-			peao.adicionaDinheiro(-valor); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+			peao.adicionaDinheiro(-valor); 
 			qtdDinheiro += valor;
 			return true;
 		}

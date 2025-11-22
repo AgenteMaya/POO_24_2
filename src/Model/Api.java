@@ -1,10 +1,8 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Api {
 	
@@ -78,10 +76,7 @@ public class Api {
 		tabuleiro.iniciarPrimeiroTurno();
 	}
 	
-	/*
-	 * Função é chamada quando a carta retirada pelo jogador
-	 * é de saída da prisão
-	 */
+	// função é chamada quando a carta retirada pelo jogador é de saída da prisão
 	public void jogadorGanhaSaiDaPrisao() 
 	{
 		jogadorAtual.atribuiSaidaLivrePrisao(cartaAtual);
@@ -141,7 +136,7 @@ public class Api {
 	
 	public void libertaJodadorDaPrisao(int desl) 
 	{
-		jogadorAtual.saiDaPrisao(desl); // Conseguiu!
+		jogadorAtual.saiDaPrisao(desl); // conseguiu!
 	}
 	
 	public void setJogadorAtual() 
@@ -164,7 +159,7 @@ public class Api {
 	public int getDeslocSaidaPrisao() 
 	{
 		Dado dado = getDado();
-		return dado.deslocamentoSaidaPrisao(); // Tenta dados iguais
+		return dado.deslocamentoSaidaPrisao(); // tenta dados iguais
 	}
 	
 	public int getDeslocamentoTotalDados() 
@@ -191,7 +186,8 @@ public class Api {
 		return terreno.getDono();
 	}
 	
-	public void setDono(int posAtual) {
+	public void setDono(int posAtual) 
+	{
 	    Terreno terreno = getTerrenoAtual(posAtual);
 	    terreno.setDono(jogadorAtual.getId()); 
 	}
@@ -235,15 +231,20 @@ public class Api {
 		return "";
 	}
 	
-	public String getNomeVencedor() {
+	// estes métodos de pegar informações do vencedor servem para a situação quando todos os outros jogadores falem
+	// neste caso, como só sobrou um jogador, deve-se pegar o primeiro peao da lista de peoes
+	public String getNomeVencedor() 
+	{
 	    return tabuleiro.getPeaoPorPos(0).getNome();
 	}
 
-	public String getCorVencedor() {
+	public String getCorVencedor() 
+	{
 	    return tabuleiro.getPeaoPorPos(0).getCor();
 	}
 
-	public double getDinheiroVencedor() {
+	public double getDinheiroVencedor() 
+	{
 	    return tabuleiro.getPeaoPorPos(0).getDinheiro();
 	}
 	
@@ -387,7 +388,7 @@ public class Api {
 		ArrayList<Terreno> terrenos = new ArrayList<>();
         int posPrisao = 10;
 
-        // -- LADO 1 (EMBAIXO) --
+        // parte de baixo
         terrenos.add(new PontoDePartida());                                
         terrenos.add(new Propriedade("Leblon", 100)); 
         terrenos.add(new Sorte(posPrisao));                                
@@ -400,7 +401,7 @@ public class Api {
         terrenos.add(new Propriedade("Av. 9 de Julho", 220)); 
         terrenos.add(new Prisao());                                         
 
-        // -- LADO 2 (ESQUERDA) --
+        // esquerda
         terrenos.add(new Propriedade("Av. Europa", 200));
         terrenos.add(new Sorte(posPrisao));                          
         terrenos.add(new Propriedade("Rua Augusta", 180)); 
@@ -412,7 +413,7 @@ public class Api {
         terrenos.add(new Propriedade("Morumbi", 400)); 
         terrenos.add(new ParadaLivre());
 
-        // -- LADO 3 (CIMA) --
+        // cima
         terrenos.add(new Propriedade("Flamengo", 120)); 
         terrenos.add(new Sorte(posPrisao));                                 
         terrenos.add(new Propriedade("Botafogo", 100)); 
@@ -424,7 +425,7 @@ public class Api {
         terrenos.add(new Propriedade("Jardim Europa", 140));
         terrenos.add(new IrPraPrisao(posPrisao));
 
-        // -- LADO 4 (DIREITA) --
+        // direita
         terrenos.add(new Propriedade("Copacabana", 260)); 
         terrenos.add(new Empresa("Companhia de Aviação", 50, 200));                            
         terrenos.add(new Propriedade("Av. Vieira Souto", 320)); 
@@ -435,7 +436,7 @@ public class Api {
         terrenos.add(new Propriedade("Jardim Paulista", 280));
         terrenos.add(new Propriedade("Brooklin", 260)); 
 
-        // Garante que temos 40 terrenos
+        // garante que temos 40 terrenos
         System.out.println("Total de terrenos criados: " + terrenos.size());
         
         tabuleiro = new Tabuleiro(terrenos);
@@ -445,6 +446,7 @@ public class Api {
     {
 		ArrayList<Carta> todasCartas = new ArrayList<>();
         
+		// cartas sorte
         todasCartas.add(new Carta(1, "A prefeitura mandou abrir uma nova avenida, para o que desapropiou vários prédios. Em consequência seu terreno valorizou.", true, false, 25, true));
         todasCartas.add(new Carta(2, "Houve um assalto à sua loja, mas você estava segurado.", true, false, 150, true));
         todasCartas.add(new Carta(3, "Um amigo tinha lhe pedido um empréstimo e se esqueceu de devolver.", true, false, 80, true));
@@ -461,7 +463,7 @@ public class Api {
         todasCartas.add(new Carta(14, "Você foi promovido a diretor da sua empresa..", true, false, 100, true));
         todasCartas.add(new Carta(15, "Você jogou na Loteria Esportiva com um grupo de amigos. Ganharam!.", true, false, 20, true));
         
-        // --- CARTAS REVÉS ---
+        // cartas revés
         todasCartas.add(new Carta(16, "Um amigo ppediu-lhe um empréstimo. Você não pode recusar.", false, false, -15, true));
         todasCartas.add(new Carta(17, "Você vai casar e está comprando um apartamento novo.", false, false, -25, true));
         todasCartas.add(new Carta(18, "O médico lhe recomendou repouso num bom hotel de montanha.", false, false, -45, true));
