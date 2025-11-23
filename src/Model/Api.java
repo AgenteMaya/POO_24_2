@@ -217,25 +217,6 @@ public class Api implements ObservadoIF
 		return tabuleiro.getTamListTerreno();
 	}
 	
-	public int getPosJogadorAtual() 
-	{
-		System.out.println(jogadorAtual.getCor());
-		System.out.println(jogadorAtual.pegaPosicaoPeao());
-		return jogadorAtual.pegaPosicaoPeao();
-	}
-	
-	public int getIdDono(int posAtual) 
-	{
-		Terreno terreno = getTerrenoAtual(posAtual);
-		return terreno.getDono();
-	}
-	
-	public void setDono(int posAtual) 
-	{
-	    Terreno terreno = getTerrenoAtual(posAtual);
-	    terreno.setDono(jogadorAtual.getId()); 
-	}
-	
 	public ArrayList<Peao> getListaPeoes()
 	{
 		return tabuleiro.getListaPeoes();

@@ -148,6 +148,7 @@ public class InformacoesPanel extends JPanel implements ObservadorIF
                 g2.drawString("Carta Saída Livre: " + textoCarta, 10, y);
                 y += lineHeight;
 
+                g2.setColor(Color.BLACK);
                 g2.drawString("Propriedades:", 10, y);
                 y += lineHeight;
                 
