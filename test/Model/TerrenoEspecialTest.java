@@ -16,7 +16,8 @@
 //		Peao peao = new Peao(1);
 //		int posInicial = peao.pegaPosicaoPeao();
 //		
-//		peao.atribuiSaidaLivrePrisao(new Carta("Saída livre da prisão.", true, true, 0, true));
+//		Carta saida = new Carta(9, "Saída livre da prisão.", true, true, 0, true);
+//		peao.atribuiSaidaLivrePrisao(saida);
 //		
 //		assertEquals(true, peao.temCartaSaidaLivre());
 //		assertEquals(0, baralhoTeste.tamanhoListaDescarte());

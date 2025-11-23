@@ -58,5 +58,13 @@ class Baralho {
     int tamanhoListaDescarte() {
         return lCartasDescarte.size();
     }
+
+    void setlDescarte(ArrayList<Carta> lCartasDescarte) {
+    	this.lCartasDescarte = lCartasDescarte;
+    }
+
+    void setlCompra(ArrayList<Carta> lCartasCompra) {
+    	this.lCartasCompra = lCartasCompra;
+    }
 	
 }

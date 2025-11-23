@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import Observer.ObservadoIF;
 import Observer.ObservadorIF;
+
+import java.io.*;
+import java.io.File;
 
 public class Api implements ObservadoIF
 {
@@ -20,8 +24,14 @@ public class Api implements ObservadoIF
 	private Dado dado;
 	private Peao jogadorAtual;
 	private Carta cartaAtual;
+	private Serializer serializer;
+	private Desserializer desserializer;
 	
 	private Api() {}
+	
+	public static void reset() {
+	    instance = null;
+	}
 	
 	public static Api getInstance() 
 	{
@@ -158,6 +168,24 @@ public class Api implements ObservadoIF
 	public void setJogadorAtual() 
 	{
 		jogadorAtual = tabuleiro.getJogadorDaVez();
+		System.out.println("Jogador atual definido para: " + jogadorAtual.getId());
+	}
+
+	public void setJogadorAtualTabuleiro(int idJogadorAtual) 
+	{
+		tabuleiro.setJogadorDaVezIndex(idJogadorAtual);
+		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
+	}
+
+	public void setJogadorAtualTabuleiroManual(int idJogadorAtual) 
+	{
+		tabuleiro.setJogadorDaVezIndexManual(idJogadorAtual);
+		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
+	}
+
+	public Peao getJogadorAtual() 
+	{
+		return jogadorAtual;
 	}
 	
 	public void setPosicaoPeao(int posNova) 
@@ -189,6 +217,94 @@ public class Api implements ObservadoIF
 		return tabuleiro.getTamListTerreno();
 	}
 	
+	public int getPosJogadorAtual() 
+	{
+		System.out.println(jogadorAtual.getCor());
+		System.out.println(jogadorAtual.pegaPosicaoPeao());
+		return jogadorAtual.pegaPosicaoPeao();
+	}
+	
+	public int getIdDono(int posAtual) 
+	{
+		Terreno terreno = getTerrenoAtual(posAtual);
+		return terreno.getDono();
+	}
+	
+	public void setDono(int posAtual) 
+	{
+	    Terreno terreno = getTerrenoAtual(posAtual);
+	    terreno.setDono(jogadorAtual.getId()); 
+	}
+	
+	public ArrayList<Peao> getListaPeoes()
+	{
+		return tabuleiro.getListaPeoes();
+	}
+	
+	public void adicionaPeao(Peao peao)
+	{
+		tabuleiro.addPeao(peao);
+	}
+
+	public ArrayList<Terreno> getListaTerrenos()
+	{
+		return tabuleiro.getListaTerrenos();
+	}
+
+	public ArrayList<Carta> getlCartasCompras()
+	{
+		return baralho.lCartasCompra;
+	}
+
+	public ArrayList<Carta> getlCartasDescarte()
+	{
+		return baralho.lCartasDescarte;
+	}
+
+	public void setlCartasCompras(ArrayList<Carta> lCartasCompras)
+	{
+		baralho.setlCompra(lCartasCompras);
+	}
+
+	public void setlCartasDescarte(ArrayList<Carta> lCartasDescarte)
+	{
+		baralho.setlDescarte(lCartasDescarte);
+	}
+
+	public int salvarJogo(File arquivo)
+	{
+		if(serializer == null)
+		{
+			serializer = new Serializer();
+		}
+		try{
+			serializer.salvarJogo(arquivo);
+			return 0;
+		}       
+        catch(Exception e)
+        {
+            System.out.println("Erro ao abrir ou escrever arquivo de salvamento");
+			return 1;
+        }
+	}
+	
+	public int carregarJogo(File arquivo)
+	{
+		if(desserializer == null)
+		{
+			desserializer = new Desserializer();
+		}
+		try{
+			desserializer.carregarJogo(arquivo);
+			return 0;
+		}       
+        catch(Exception e)
+        {
+            System.out.println("Erro ao ler arquivo de carregamento");
+			return 1;
+        }
+	}
+
 	public double getDinheiroPeao(int index)
 	{
 		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)

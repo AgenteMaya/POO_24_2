@@ -43,6 +43,11 @@ class Tabuleiro
 	{
 		return lPeoes;
 	}
+
+	ArrayList<Terreno> getListaTerrenos()
+	{
+		return lTerrenos;
+	}
 	
 	int getTamListTerreno()
 	{
@@ -118,6 +123,20 @@ class Tabuleiro
 			return null;
 		}
 		return lPeoes.get(jogadorDaVezIndex);
+	}
+
+	void setJogadorDaVezIndex(int index)
+	{
+		if (index >= 0 && index < lPeoes.size()) {
+			this.jogadorDaVezIndex = index;
+		}
+	}
+
+	void setJogadorDaVezIndexManual(int index)
+	{
+		System.out.println("Definindo jogador da vez para o índice: " + index);
+		this.jogadorDaVezIndex = index;
+		System.out.println("Jogador da vez agora é: " + this.jogadorDaVezIndex);
 	}
 	
 	void proximoTurno()

@@ -1,6 +1,11 @@
 package Controller;
 
 import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.io.*;
 
 import View.JanelaPrincipal;
 import Model.Api;
@@ -52,13 +57,33 @@ public class GameController
         Api.getInstance().Inicializa();
     }
     
-    public void solicitarRetomadaJogo() 
+    public void solicitarRetomadaJogo(File arquivo) 
     {
         System.out.println("AÇÃO: Retornando a jogo salvo...");
         
-        // lógica de carregar um save!! --> inserir os peoes nas posicoes e tals
+        Api.getInstance().Inicializa();
         
-        view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
+        int retorno = Api.getInstance().carregarJogo(arquivo);      
+        System.out.println(retorno);
+        
+        if (retorno == 0)
+        {
+            view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
+
+            view.indicarJogadorDaVez(Api.getInstance().getNomeJogAtual(), Api.getInstance().getCorJogAtual());
+            view.setAguardandoProximoTurno(false);
+            view.setHabilitaSalvar(true);
+        }
+        else
+        {            
+            JOptionPane.showMessageDialog(
+                null,  // ou a sua janela principal, se você tiver a referência
+                "Não foi possível carregar o jogo.\nVerifique o arquivo selecionado.",
+                "Erro ao carregar",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+
     }
     
     public void confirmarNumeroJogadores(int num_jogadores) 
@@ -129,11 +154,13 @@ public class GameController
         view.limparDados();
         view.setAguardandoProximoTurno(false);
         view.atualizarComboItens();
+        view.setHabilitaSalvar(true);
     }
     
     // chamado após o jogador lançar os dados e se mover --> analisa onde o peão caiu e decide o que fazer
-    public boolean processarJogada() 
-    {
+    public boolean processarJogada() {
+        //view.setHabilitaSalvar(false);
+
         Api api = Api.getInstance();
         int posAtual = api.getPosJogadorAtual();
 
@@ -450,6 +477,8 @@ public class GameController
         view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
 
         view.setAguardandoProximoTurno(false);
+        view.setHabilitaSalvar(true);
+
     }
     
     
@@ -537,6 +566,8 @@ public class GameController
     
     public void lancarDadosReal() 
     {
+        view.setHabilitaSalvar(false);
+
         Api api = Api.getInstance();
         api.setJogadorAtual();
         
@@ -635,6 +666,7 @@ public class GameController
             return;
         }
     }
+
     
     public int getQtdPeoes()
     {
@@ -644,5 +676,10 @@ public class GameController
     public String getNomePeao(int index)
     {
     	return Api.getInstance().getNomePeao(index);
+    }
+
+    public int solicitarSalvamento(File arquivo)
+    {
+        return  Api.getInstance().salvarJogo(arquivo);
     }
 }
