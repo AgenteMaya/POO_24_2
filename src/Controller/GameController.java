@@ -118,7 +118,7 @@ public class GameController
         	
         	int id = numJogadoresTotal - jogadoresRestantes;
         	System.out.println("Id do jogador: " + id);
-        	api.adicionaJogador(id, nome, cor, 210); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        	api.adicionaJogador(id, nome, cor, 4000); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             
             coresDisponiveis.remove(cor);
             
@@ -157,7 +157,8 @@ public class GameController
     }
     
     // chamado após o jogador lançar os dados e se mover --> analisa onde o peão caiu e decide o que fazer
-    public boolean processarJogada() {
+    public boolean processarJogada() 
+    {
         //view.setHabilitaSalvar(false);
         System.out.println("id do peao da vez da rodada: " + Api.getInstance().getIdJogadorAtual());
         Api api = Api.getInstance();
@@ -555,8 +556,9 @@ public class GameController
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
             
             api.vaiProProximoTurno();
-            api.setJogadorAtual();
-            view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+            //api.setJogadorAtual();
+            //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+            view.setAguardandoProximoTurno(true);
         	return;            
         } 
         else 
@@ -601,8 +603,9 @@ public class GameController
                 deslocamentoAtual = 0;
                 
                 api.vaiProProximoTurno();
-                api.setJogadorAtual();
-                view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+                //api.setJogadorAtual();
+                //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+                view.setAguardandoProximoTurno(true);
             }
             return;
         }
@@ -646,8 +649,9 @@ public class GameController
                     view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
                     
                     api.vaiProProximoTurno();
-                    api.setJogadorAtual();
-                    view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+                    //api.setJogadorAtual();
+                    //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+                    view.setAguardandoProximoTurno(true);
                     return;
                 } 
                 else 

@@ -40,7 +40,7 @@ class Peao {
     {
 		if (naPrisao)
 		{
-			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar", id);
+			System.out.printf("O jogador %d está na prisão e, portanto, não pode se deslocar\n", id);
 			return;
 		}
 		posicao = pos;
@@ -59,7 +59,7 @@ class Peao {
 
 	double getDinheiro()
 	{
-		System.out.print(dinheiro);
+		System.out.println(dinheiro);
 		return dinheiro;
 	}
 	
