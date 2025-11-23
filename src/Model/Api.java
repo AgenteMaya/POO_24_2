@@ -1,8 +1,12 @@
 package Model;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+
+import java.io.*;
 
 public class Api {
 	
@@ -13,6 +17,8 @@ public class Api {
 	private Dado dado;
 	private Peao jogadorAtual;
 	private Carta cartaAtual;
+	private Serializer serializer;
+	private Desserializer desserializer;
 	
 	private Api() {}
 	
@@ -146,7 +152,24 @@ public class Api {
 	public void setJogadorAtual() 
 	{
 		jogadorAtual = tabuleiro.getJogadorDaVez();
-	
+		System.out.println("Jogador atual definido para: " + jogadorAtual.getId());
+	}
+
+	public void setJogadorAtualTabuleiro(int idJogadorAtual) 
+	{
+		tabuleiro.setJogadorDaVezIndex(idJogadorAtual);
+		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
+	}
+
+	public void setJogadorAtualTabuleiroManual(int idJogadorAtual) 
+	{
+		tabuleiro.setJogadorDaVezIndexManual(idJogadorAtual);
+		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
+	}
+
+	public Peao getJogadorAtual() 
+	{
+		return jogadorAtual;
 	}
 	
 	public void setPosicaoPeao(int posNova) 
@@ -196,6 +219,75 @@ public class Api {
 	    terreno.setDono(jogadorAtual.getId()); 
 	}
 	
+	public ArrayList<Peao> getListaPeoes()
+	{
+		return tabuleiro.getListaPeoes();
+	}
+	
+	public void adicionaPeao(Peao peao)
+	{
+		tabuleiro.addPeao(peao);
+	}
+
+	public ArrayList<Terreno> getListaTerrenos()
+	{
+		return tabuleiro.getListaTerrenos();
+	}
+
+	public ArrayList<Carta> getlCartasCompras()
+	{
+		return baralho.lCartasCompra;
+	}
+
+	public ArrayList<Carta> getlCartasDescarte()
+	{
+		return baralho.lCartasDescarte;
+	}
+
+	public void setlCartasCompras(ArrayList<Carta> lCartasCompras)
+	{
+		baralho.setlCompra(lCartasCompras);
+	}
+
+	public void setlCartasDescarte(ArrayList<Carta> lCartasDescarte)
+	{
+		baralho.setlDescarte(lCartasDescarte);
+	}
+
+	public int salvarJogo(File arquivo)
+	{
+		if(serializer == null)
+		{
+			serializer = new Serializer();
+		}
+		try{
+			serializer.salvarJogo(arquivo);
+			return 0;
+		}       
+        catch(Exception e)
+        {
+            System.out.println("Erro ao abrir ou escrever arquivo de salvamento");
+			return 1;
+        }
+	}
+	
+	public int carregarJogo(File arquivo)
+	{
+		if(desserializer == null)
+		{
+			desserializer = new Desserializer();
+		}
+		try{
+			desserializer.carregarJogo(arquivo);
+			return 0;
+		}       
+        catch(Exception e)
+        {
+            System.out.println("Erro ao ler arquivo de carregamento");
+			return 1;
+        }
+	}
+
 	public double getDinheiroPeao(int index)
 	{
 		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
