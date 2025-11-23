@@ -85,7 +85,7 @@ public class JanelaPrincipal extends JFrame
 	public void mostrarMenuInicial() 
 	{
 		setSize(240, 170);
-
+		this.setLocationRelativeTo(null);
 		getContentPane().removeAll();
 
 		painelMenu = new JPanel();
@@ -139,7 +139,8 @@ public class JanelaPrincipal extends JFrame
 	{
 		getContentPane().removeAll();
 		setSize(500, 500);
-
+		this.setLocationRelativeTo(null);
+		
 		JPanel painelJogadores = new JPanel();
 		painelJogadores.setLayout(null);
 
