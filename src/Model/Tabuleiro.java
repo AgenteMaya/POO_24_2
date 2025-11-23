@@ -17,6 +17,11 @@ class Tabuleiro
 		this.jogadorDaVezIndex = 0;
 	}
 	
+	ArrayList<Terreno> getListaTerrenos()
+	{
+		return lTerrenos;
+	}
+	
 	Terreno getTerreno(int pos)
 	{
 		return lTerrenos.get(pos);

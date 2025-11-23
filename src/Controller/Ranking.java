@@ -1,6 +1,6 @@
 package Controller;
 
-public class Ranking 
+public class Ranking // classe somente para auxiliar a montagem do ranking final
 {
     public String nome;
     public String cor;

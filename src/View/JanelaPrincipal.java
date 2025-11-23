@@ -14,7 +14,7 @@ import Controller.GameController;
 import Controller.Ranking;
 
 @SuppressWarnings("serial")
-public class JanelaPrincipal extends JFrame 
+public class JanelaPrincipal extends JFrame
 {
 	public int LARG_DEFAULT = 1280;
 	public int ALT_DEFAULT = 730;
@@ -24,7 +24,24 @@ public class JanelaPrincipal extends JFrame
 	JPanel painelMenu;
 	TabuleiroPanel painelTabuleiro;
 	JPanel painelDados;
-	JPanel painelInfo;
+	//JPanel painelInfo;
+	InformacoesPanel painelInfo; // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	
+	private String[] LISTA_PROPRIEDADES = {
+		    "Leblon", "Av. Presidente Vargas", "Av. Nossa S. de Copacabana", "Av. Brig. Faria Lima",
+		    "Av. Rebouças", "Av. 9 de Julho", "Av. Europa", "Rua Augusta", "Av. Pacaembú",
+		    "Interlagos", "Morumbi", "Flamengo", "Botafogo", "Av. Brasil", "Av. Paulista",
+		    "Jardim Europa", "Copacabana", "Av. Vieira Souto", "Av. Atlântica", "Ipanema",
+		    "Jardim Paulista", "Brooklin"
+	};
+
+	private String[] LISTA_COMPANHIAS = {
+	    "Companhia Ferroviária", "Companhia de Viação", "Companhia de Táxi",
+	    "Companhia de Navegação", "Companhia de Aviação", "Companhia de Táxi Aéreo"
+	};
+
+	private JComboBox<String> cbCategoria;
+	private JComboBox<String> cbItemSelecionado;
 
 	private JTextField campoNome;
 
@@ -517,37 +534,127 @@ public class JanelaPrincipal extends JFrame
 	}
 	
 	
-	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+//	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+//	{
+//	    painelInfo = new JPanel() 
+//	    {
+//	        @Override
+//	        protected void paintComponent(Graphics g) 
+//	        {
+//	            super.paintComponent(g);
+//	            Graphics2D g2 = (Graphics2D) g.create();
+//
+//	            g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
+//	            g2.setColor(contraste(Color.LIGHT_GRAY));
+//	            String titulo = "Painel de Informações";
+//	            g2.drawString(titulo, 16, 28);
+//	            
+//	            // Aqui você pode desenhar mais infos do jogo futuramente (saldos, propriedades, etc)
+//
+//	            g2.dispose();
+//	        }
+//	    };
+//	    painelInfo.setOpaque(true);
+//	    painelInfo.setBackground(Color.LIGHT_GRAY); 
+//
+//	    JPanel container = new JPanel(new BorderLayout());
+//	    container.setPreferredSize(new Dimension(260, ALT_DEFAULT));
+//	    
+//	    container.add(painelInfo, BorderLayout.CENTER);
+//	    
+//	    container.add(criarPainelBotoesControle(), BorderLayout.SOUTH);
+//
+//	    return container;
+//	}
+	
+	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	{
-	    painelInfo = new JPanel() 
+	    JPanel containerEsquerdo = new JPanel(new BorderLayout());
+	    containerEsquerdo.setPreferredSize(new Dimension(260, ALT_DEFAULT));
+	    containerEsquerdo.setBackground(Color.LIGHT_GRAY);
+
+	    // comboboxes
+	    JPanel painelCombos = new JPanel(new GridLayout(4, 1, 5, 2));
+	    painelCombos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+	    painelCombos.setOpaque(false);
+
+	    JLabel lblCat = new JLabel("Selecione a Categoria:");
+	    cbCategoria = new JComboBox<>(new String[]{"Peão", "Propriedade", "Companhia"});
+	    JLabel lblItem = new JLabel("Selecione o Item:");
+	    cbItemSelecionado = new JComboBox<>();
+
+	    // ao mudar a categoria, atualiza a lista da segunda combo
+	    cbCategoria.addActionListener(e -> atualizarComboItens());
+	    
+	    // ao mudar o item, avisa o painel para redesenhar as informações
+	    cbItemSelecionado.addActionListener(e -> 
 	    {
-	        @Override
-	        protected void paintComponent(Graphics g) 
+	        String cat = (String) cbCategoria.getSelectedItem();
+	        String item = (String) cbItemSelecionado.getSelectedItem();
+	        
+	        if (painelInfo != null) 
 	        {
-	            super.paintComponent(g);
-	            Graphics2D g2 = (Graphics2D) g.create();
-
-	            g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
-	            g2.setColor(contraste(Color.LIGHT_GRAY));
-	            String titulo = "Painel de Informações";
-	            g2.drawString(titulo, 16, 28);
-	            
-	            // Aqui você pode desenhar mais infos do jogo futuramente (saldos, propriedades, etc)
-
-	            g2.dispose();
+	            painelInfo.setFiltros(cat, item);
 	        }
-	    };
-	    painelInfo.setOpaque(true);
-	    painelInfo.setBackground(Color.LIGHT_GRAY); 
+	    });
 
-	    JPanel container = new JPanel(new BorderLayout());
-	    container.setPreferredSize(new Dimension(260, ALT_DEFAULT));
+	    painelCombos.add(lblCat);
+	    painelCombos.add(cbCategoria);
+	    painelCombos.add(lblItem);
+	    painelCombos.add(cbItemSelecionado);
 	    
-	    container.add(painelInfo, BorderLayout.CENTER);
-	    
-	    container.add(criarPainelBotoesControle(), BorderLayout.SOUTH);
+	    atualizarComboItens(); 
+	    containerEsquerdo.add(painelCombos, BorderLayout.NORTH);
 
-	    return container;
+	    painelInfo = new InformacoesPanel(); 
+	    painelInfo.setController(controller);
+	    containerEsquerdo.add(painelInfo, BorderLayout.CENTER);
+
+	    // botões
+	    containerEsquerdo.add(criarPainelBotoesControle(), BorderLayout.SOUTH);
+
+	    return containerEsquerdo;
+	}
+	
+	public InformacoesPanel getPainelInformacoes() 
+	{
+	    return this.painelInfo;
+	}
+	
+	public void atualizarComboItens()  // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	{
+	    String categoria = (String) cbCategoria.getSelectedItem();
+	    cbItemSelecionado.removeAllItems();
+
+	    if ("Propriedade".equals(categoria)) 
+	    {
+	        for (String s : LISTA_PROPRIEDADES) cbItemSelecionado.addItem(s);
+	    } 
+	    else if ("Companhia".equals(categoria)) 
+	    {
+	        for (String s : LISTA_COMPANHIAS) cbItemSelecionado.addItem(s);
+	    } 
+	    else if ("Peão".equals(categoria)) // como fazer?????????????????????????????????????????????????????????????????????????????
+	    {
+	    	try 
+	    	{
+		    	for (int i = 0; i < controller.getQtdPeoes(); i++) 
+	            {
+	                cbItemSelecionado.addItem(controller.getNomePeao(i));
+	            }
+	    	} 
+	    	catch (Exception e) 
+	    	{
+                cbItemSelecionado.addItem("Carregando...");
+            }
+	    }
+	    
+	    String item = (String) cbItemSelecionado.getSelectedItem();
+        
+        if (painelInfo != null) 
+        {
+            painelInfo.setFiltros(categoria, item);
+        }
 	}
 	
 	private static void desenharCentralizado(Graphics2D g2, Image img, int x, int y, int w, int h) 

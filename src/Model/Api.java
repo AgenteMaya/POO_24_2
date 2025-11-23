@@ -1,12 +1,19 @@
 package Model;
 
 import java.util.ArrayList;
-
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ListIterator;
 
-public class Api {
+import Observer.ObservadoIF;
+import Observer.ObservadorIF;
+
+public class Api implements ObservadoIF
+{
 	
 	private static Api instance;
+	
+	private List<ObservadorIF> observadores = new ArrayList<>();
 	
 	private Tabuleiro tabuleiro;
 	private Baralho baralho;
@@ -48,6 +55,7 @@ public class Api {
         jogador.setNome(nome);
         jogador.setCor(cor);
         jogador.setDinheiro(dinheiro);
+		atualiza();
 	}
 	
 	public void sorteiaOrdem() 
@@ -55,12 +63,8 @@ public class Api {
 		tabuleiro.sortearOrdemJogadores();
 	}
 	
-	public int getQtdPeoes()
+	public LinkedHashMap<String, Integer> carregarPosicoesPeoes() 
 	{
-		return tabuleiro.getTamListPeoes();
-	}
-	
-	public LinkedHashMap<String, Integer> carregarPosicoesPeoes() {
         LinkedHashMap<String, Integer> listaPosicoesPeoes = new LinkedHashMap<String, Integer>();
 
         for(int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
@@ -80,6 +84,7 @@ public class Api {
 	public void jogadorGanhaSaiDaPrisao() 
 	{
 		jogadorAtual.atribuiSaidaLivrePrisao(cartaAtual);
+		atualiza();
 	}
 	
 	//olhar com mais detalhe esses dois métodos mais tarde!!
@@ -91,14 +96,17 @@ public class Api {
             baralho.descartarCarta(cartaSaida);
             jogadorAtual.removeCartaSaidaLivrePrisao();
             //notificar a view que foi utilizada a carta de Saida Livre
+            atualiza();
             return  1;
         }
+        atualiza();
         return 0;
 	}
 	
 	public void mandaJogadorPraPrisao() 
 	{
 		jogadorAtual.vaiPraPrisao(10);
+		atualiza();
 	}
  
 	public void processaTransferencias() 
@@ -112,21 +120,28 @@ public class Api {
         {
             Banco.getBanco().realizaTransferenciaPeoes(jogadorAtual.getId(), valor, tabuleiro);
         }
+        
+        atualiza();
 	}
 	
 	public void realizaTransferenciaBanco(int valor) 
 	{
 		Banco.getBanco().realizaTransferenciaBanco(jogadorAtual.getId(), valor, tabuleiro);
+		atualiza();
 	}
 	
 	public boolean realizaCompraDePropriedade(int pos) 
 	{
-		return Banco.getBanco().compraPropriedade(pos, jogadorAtual.getId(), tabuleiro);
+		boolean resultado = Banco.getBanco().compraPropriedade(pos, jogadorAtual.getId(), tabuleiro);
+		if (resultado) atualiza();
+		return resultado;
 	}
 	
 	public boolean realizaConstrucao(boolean ehCasa, int pos) 
 	{
-		return Banco.getBanco().constroiCasa(jogadorAtual.getId(), pos, tabuleiro, ehCasa);
+		boolean resultado = Banco.getBanco().constroiCasa(jogadorAtual.getId(), pos, tabuleiro, ehCasa);
+		if (resultado) atualiza();
+		return resultado;
 	}
 	
 	public void vaiProProximoTurno() 
@@ -137,17 +152,18 @@ public class Api {
 	public void libertaJodadorDaPrisao(int desl) 
 	{
 		jogadorAtual.saiDaPrisao(desl); // conseguiu!
+		atualiza();
 	}
 	
 	public void setJogadorAtual() 
 	{
 		jogadorAtual = tabuleiro.getJogadorDaVez();
-	
 	}
 	
 	public void setPosicaoPeao(int posNova) 
 	{
 		 jogadorAtual.setaPosicaoPeao(posNova);
+		 atualiza();
 	}
 	
 	public int[] getResultadoDados() 
@@ -173,6 +189,59 @@ public class Api {
 		return tabuleiro.getTamListTerreno();
 	}
 	
+	public double getDinheiroPeao(int index)
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+    		if (i == index)
+    		{
+    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    			return peaoTemp.getDinheiro();
+    		}
+    	}
+		return -1;
+	}
+	
+	public String getCorPeao(int index) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+    		if (i == index)
+    		{
+    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    			return peaoTemp.getCor();
+    		}
+    	}
+		return "";
+	}
+	
+	public String getNomePeao(int index) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+    		if (i == index)
+    		{
+    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    			return peaoTemp.getNome();
+    		}
+    	}
+		return "";
+	}
+	
+    public int getPosicaoPeao(int index) 
+	{
+        if (index >= 0 && index < tabuleiro.getTamListPeoes())
+            return tabuleiro.getPeaoPorPos(index).pegaPosicaoPeao();
+        return -1;
+    }
+
+    public boolean isPeaoPreso(int index) 
+    {
+        if (index >= 0 && index < tabuleiro.getTamListPeoes())
+            return tabuleiro.getPeaoPorPos(index).estaNaPrisao();
+        return false;
+    }
+	
 	public int getPosJogadorAtual() 
 	{
 		System.out.println(jogadorAtual.getCor());
@@ -190,45 +259,7 @@ public class Api {
 	{
 	    Terreno terreno = getTerrenoAtual(posAtual);
 	    terreno.setDono(jogadorAtual.getId()); 
-	}
-	
-	public double getDinheiroPeao(int index)
-	{
-		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
-    	{
-    		if (i == index)
-    		{
-    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
-    			return peaoTemp.getDinheiro();
-    		}
-    	}
-		return -1;
-	}
-	
-	public String getNomePeao(int index) 
-	{
-		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
-    	{
-    		if (i == index)
-    		{
-    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
-    			return peaoTemp.getNome();
-    		}
-    	}
-		return "";
-	}
-	
-	public String getCorPeao(int index) 
-	{
-		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
-    	{
-    		if (i == index)
-    		{
-    			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
-    			return peaoTemp.getCor();
-    		}
-    	}
-		return "";
+	    atualiza();
 	}
 	
 	// estes métodos de pegar informações do vencedor servem para a situação quando todos os outros jogadores falem
@@ -271,6 +302,7 @@ public class Api {
 	public void removeJogadorAtual()
 	{
 	    tabuleiro.removePeao(this.jogadorAtual);
+	    atualiza();
 	}
 	
 	public int getIdCarta() 
@@ -351,13 +383,17 @@ public class Api {
 	public boolean pagarAluguelPropriedade(int idTerreno) 
 	{
 		Banco banco = Banco.getBanco();
-		return banco.pagarAluguelPropriedade(tabuleiro, jogadorAtual.getId(), idTerreno);
+		boolean resultado = banco.pagarAluguelPropriedade(tabuleiro, jogadorAtual.getId(), idTerreno);
+		if (resultado) atualiza();
+		return resultado;
 	}
 	
 	public boolean pagarAluguelEmpresa(int idTerreno, int deslocamento) 
 	{
 		Banco banco = Banco.getBanco();
-		return banco.pagarAluguelEmpresa(tabuleiro, jogadorAtual.getId(), idTerreno, deslocamento);
+		boolean resultado = banco.pagarAluguelEmpresa(tabuleiro, jogadorAtual.getId(), idTerreno, deslocamento);
+		if (resultado) atualiza();
+		return resultado;
 	}
 	
 	private Terreno getTerrenoAtual(int pos) 
@@ -397,7 +433,7 @@ public class Api {
         terrenos.add(new Empresa("Companhia Ferroviária", 50, 200));                        
         terrenos.add(new Propriedade("Av. Brig. Faria Lima", 240));
         terrenos.add(new Empresa("Companhia de Viação", 50, 200));   
-        terrenos.add(new Propriedade("Avenida Rebouças", 220));
+        terrenos.add(new Propriedade("Av. Rebouças", 220));
         terrenos.add(new Propriedade("Av. 9 de Julho", 220)); 
         terrenos.add(new Prisao());                                         
 
@@ -440,6 +476,7 @@ public class Api {
         System.out.println("Total de terrenos criados: " + terrenos.size());
         
         tabuleiro = new Tabuleiro(terrenos);
+        atualiza();
 	}
 	
 	private void criaBaralho()
@@ -481,7 +518,259 @@ public class Api {
         todasCartas.add(new Carta(30, "A geada prejudicou a sua safra de café.", false, false, -50, true));
         
         baralho = new Baralho(todasCartas);
+        atualiza();
     }
 	
+	
+	@Override
+	public void add(ObservadorIF o) 
+	{
+		if (o != null) 
+		{
+            observadores.add(o);
+        }
+	}
 
+	@Override
+	public void remove(ObservadorIF o) 
+	{
+		observadores.remove(o);
+	}
+	
+	private void atualiza() 
+	{
+		ListIterator<ObservadorIF> li = observadores.listIterator();
+		
+        while (li.hasNext()) 
+        {
+            ObservadorIF obs = li.next();
+            if (obs != null) 
+            { 
+                obs.notify(this);
+            }
+        }
+	}
+	
+	@Override
+	public int getQtdPeoes()
+	{
+		return tabuleiro.getTamListPeoes();
+	}
+	
+	@Override
+	public double getDinheiroPeao(String nome)
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    		if (peaoTemp.getNome().equals(nome))
+    		{
+    			return peaoTemp.getDinheiro();
+    		}
+    	}
+		return -1;
+	}
+	
+	@Override
+	public String getCorPeao(String nome) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    		if (peaoTemp.getNome().equals(nome))
+    		{
+    			return peaoTemp.getCor();
+    		}
+    	}
+		return "";
+	}
+	
+	@Override
+	public String getNomePeao(String nome) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++)
+    	{
+			Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+    		if (peaoTemp.getNome().equals(nome))
+    		{
+    			return peaoTemp.getNome();
+    		}
+    	}
+		return "";
+	}
+	
+	@Override
+    public int getPosicaoPeao(String nome) 
+	{
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+		{
+	        Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+	        if (peaoTemp.getNome().equals(nome)) 
+	        {
+	            return peaoTemp.pegaPosicaoPeao();
+	        }
+	    }
+		return -1;
+    }
+
+    @Override
+    public boolean isPeaoPreso(String nome) 
+    {
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+		{
+	        Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+	        if (peaoTemp.getNome().equals(nome)) 
+	        {
+	            return peaoTemp.estaNaPrisao();
+	        }
+	    }
+		return false;
+    }
+    
+    @Override
+    public boolean temCartaSaidaLivre(String nome) 
+    {
+		for (int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+		{
+	        Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+	        if (peaoTemp.getNome().equals(nome)) 
+	        {
+	            return peaoTemp.temCartaSaidaLivre();
+	        }
+	    }
+		return false;
+    }
+    
+    private Peao buscarPeaoPorNome(String nome) 
+    {
+        for (int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+        {
+            Peao peaoTemp = tabuleiro.getPeaoPorPos(i);
+            if (peaoTemp.getNome().equalsIgnoreCase(nome)) 
+            { 
+                return peaoTemp;
+            }
+        }
+        return null;
+    }
+    
+    @Override
+    public ArrayList<String> getPropriedadesPeao(String nome) 
+    {
+    	ArrayList<String> listaNomesPropriedades = new ArrayList<>();
+
+        Peao peao = buscarPeaoPorNome(nome);
+
+        if (peao == null) 
+        {
+            return listaNomesPropriedades;
+        }
+
+        int idDono = peao.getId();
+
+        for (int k = 0; k < tabuleiro.getTamListTerreno(); k++) 
+        {
+            Terreno terreno = tabuleiro.getTerreno(k);
+
+            if (terreno.getDono() == idDono) 
+            {
+                listaNomesPropriedades.add(terreno.getNomeTerreno());
+            }
+        }
+
+        return listaNomesPropriedades;
+    }
+    
+    @Override
+    public int getQtdCasas(String nome)
+    {
+    	Terreno terreno = buscarTerrenoPorNome(nome);
+        if (terreno != null && terreno instanceof Propriedade) 
+        {
+        	Propriedade aux = (Propriedade)terreno;
+            return aux.getQtdCasas();
+        }
+        return 0;
+    }
+    
+    @Override
+    public boolean getTemHotel(String nome)
+    {
+    	Terreno terreno = buscarTerrenoPorNome(nome);
+        if (terreno != null && terreno instanceof Propriedade) 
+        {
+        	Propriedade aux = (Propriedade)terreno;
+            return aux.temHotel();
+        }
+        return false;
+    }
+    
+    @Override
+    public String getDonoPropriedade(String nome)
+    {
+    	Terreno terreno = buscarTerrenoPorNome(nome);
+        if (terreno != null && terreno instanceof Propriedade) 
+        {
+            int idDono = terreno.getDono();
+            if (idDono == -1) return "Sem dono";
+
+            for(int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+            {
+                if(tabuleiro.getPeaoPorPos(i).getId() == idDono)
+                    return tabuleiro.getPeaoPorPos(i).getNome();
+            }
+        }
+        return "—";
+    }
+    
+    @Override
+    public double getValorAluguel(String nome)
+    {
+    	Terreno terreno = buscarTerrenoPorNome(nome);
+        if (terreno != null && terreno instanceof Propriedade) 
+        {
+        	Propriedade aux = (Propriedade)terreno;
+            return aux.getAluguel();
+        }
+        return 0;
+    }
+    
+    @Override
+    public String getDonoCompanhia(String nome)
+    {
+    	Terreno terreno = buscarTerrenoPorNome(nome);
+        if (terreno != null && terreno instanceof Empresa) 
+        {
+            int idDono = terreno.getDono();
+            if (idDono == -1) return "Sem dono";
+
+            for(int i = 0; i < tabuleiro.getTamListPeoes(); i++) 
+            {
+                if(tabuleiro.getPeaoPorPos(i).getId() == idDono)
+                    return tabuleiro.getPeaoPorPos(i).getNome();
+            }
+        }
+        return "—";
+    }
+    
+    @Override
+    public int getTaxaCompanhia(String nome) // não muda!!!
+    {
+    	Terreno terreno = buscarTerrenoPorNome(nome);
+        if (terreno != null && terreno instanceof Empresa) 
+        {
+        	Empresa aux = (Empresa)terreno;
+            return aux.getValorTaxa();
+        }
+        return 0;
+    }
+    
+    private Terreno buscarTerrenoPorNome(String nome) 
+    {
+        for (Terreno t : tabuleiro.getListaTerrenos()) 
+        { 
+            if (t.getNomeTerreno().equalsIgnoreCase(nome)) return t;
+        }
+        return null;
+    }
 }
