@@ -1,6 +1,11 @@
 package Controller;
 
 import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.io.*;
 
 import View.JanelaPrincipal;
 import Model.Api;
@@ -43,14 +48,31 @@ public class GameController
         Api.getInstance().Inicializa();
     }
     
-    public void solicitarRetomadaJogo() 
+    public void solicitarRetomadaJogo(File arquivo) 
     {
         System.out.println("AÇÃO: Retornando a jogo salvo...");
         
         Api.getInstance().Inicializa();
-        Api.getInstance().carregarJogo("./");
         
-        view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
+        int retorno = Api.getInstance().carregarJogo(arquivo);      
+        System.out.println(retorno);
+        
+        if (retorno == 0)
+        {
+            view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
+        }
+        else
+        {
+            System.out.println("Entrei no else");
+            
+            JOptionPane.showMessageDialog(
+                null,  // ou a sua janela principal, se você tiver a referência
+                "Não foi possível carregar o jogo.\nVerifique o arquivo selecionado.",
+                "Erro ao carregar",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+
     }
     
     public void confirmarNumeroJogadores(int num_jogadores) 
@@ -607,5 +629,10 @@ public class GameController
             terminarTurno();
             return;
         }
+    }
+
+    public void solicitarSalvamento(File arquivo)
+    {
+        Api.getInstance().salvarJogo(arquivo);
     }
 }

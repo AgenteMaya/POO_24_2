@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+
+import java.io.*;
 
 public class Api {
 	
@@ -253,11 +256,11 @@ public class Api {
 			serializer.salvarJogo(arquivo);
 			return 0;
 		}       
-		catch(Exception e)
-		{
-		    System.out.println("Erro ao ler arquivo de salvamento");
-				return 1;
-		}
+        catch(Exception e)
+        {
+            System.out.println("Erro ao ler arquivo de salvamento");
+			return 1;
+        }
 	}
 	
 	public int carregarJogo(File arquivo)
@@ -270,11 +273,11 @@ public class Api {
 			desserializer.carregarJogo(arquivo);
 			return 0;
 		}       
-		catch(Exception e)
-		{
-		    System.out.println("Erro ao ler arquivo de carregamento");
-				return 1;
-		}
+        catch(Exception e)
+        {
+            System.out.println("Erro ao ler arquivo de carregamento");
+			return 1;
+        }
 	}
 
 	public double getDinheiroPeao(int index)

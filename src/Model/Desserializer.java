@@ -14,12 +14,11 @@ public class Desserializer {
     {	
     }
 
-    public void carregarJogo(String caminho)
+    public void carregarJogo(File arquivo) throws IOException
     {
         FileReader arq = null;
         BufferedReader buffer = null;
-        try{
-            arq = new FileReader(caminho);
+            arq = new FileReader(arquivo);
             buffer = new BufferedReader(arq);
             String linha = buffer.readLine();
             int qtdPeoes = Integer.parseInt(linha);
@@ -32,22 +31,16 @@ public class Desserializer {
             carregaPeoes(buffer, qtdPeoes);
             carregaJogadorAtual(buffer);
             carregaTerrenos(buffer);
-        }
-        catch(IOException e)
-        {
-            System.out.println("Erro ao ler arquivo de salvamento");
-        }
-        finally
-        {
+     
             try{
                 if(buffer != null)
                     buffer.close();
             }
             catch(IOException e)
             {
-                System.out.println("Erro ao fechar o arquivo de salvamento");
+                System.out.println("Erro ao fechar o arquivo de carregamento");
             }
-        }
+        
     }
 
     private void carregaPeoes(BufferedReader buffer, int qtdPeoes)

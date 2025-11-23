@@ -4,11 +4,14 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Controller.GameController;
 import Controller.Ranking;
@@ -87,9 +90,21 @@ public class JanelaPrincipal extends JFrame
 		botaoRetomar.adicionaListener(new ActionListener() 
 		{
 			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				controller.solicitarRetomadaJogo();
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+            	fileChooser.setDialogTitle("Seleção de Arquivo de Carregamento");
+
+         		FileNameExtensionFilter filtroSave =  new FileNameExtensionFilter("Arquivos de carregamento (*.txt)", "txt");
+         		fileChooser.setFileFilter(filtroSave);
+
+				int resultado = fileChooser.showOpenDialog(painelMenu);
+
+				if (resultado == JFileChooser.APPROVE_OPTION) 
+				{	
+					File arquivoSelecionado = fileChooser.getSelectedFile();
+					System.out.println("Arquivo selecionado: " + arquivoSelecionado.getAbsolutePath());
+					controller.solicitarRetomadaJogo(arquivoSelecionado);
+        		}
 			}
 		});
 

@@ -11,19 +11,21 @@ public class Serializer {
 	{	
 	}
 
-	public void salvarJogo(String caminho)
+	public void salvarJogo(File arquivo)
 	{
 		FileWriter arq = null;
 		BufferedWriter buffer = null;
 		//ordem: qtdPeoes, dinheiroBanco, lista de descarte, lista de compra, info dos peoes, index do peao da vez, info dos terrenos
 		try{
-			arq = new FileWriter(caminho, false);
+			arq = new FileWriter(arquivo, false);
 			buffer = new BufferedWriter(arq);
 			buffer.write(api.getQtdPeoes() + "");
 			buffer.newLine();
 			buffer.write(Banco.getBanco().qtdDinheiro + "");
 			buffer.newLine();
+			System.out.println("Tamanho da pilha de descarte:" + api.getlCartasDescarte().size());
 			salvaBaralho(buffer, api.getlCartasDescarte());
+			System.out.println("Tamanho da pilha de compras:" + api.getlCartasCompras().size());
 			salvaBaralho(buffer, api.getlCartasCompras());			
 			salvaPeoes(buffer);
 			buffer.write(api.getJogadorAtual().getId() + ""); //salva o id do jogador atual
