@@ -276,7 +276,7 @@ public class GameController
         } 
         else if (api.ehCartaIdaPrisao()) 
         {
-            api.jogadorVaiPraPrisao();
+            if(api.jogadorVaiPraPrisao() == 1) view.mostrarMensagem("Iria para a prisão, mas usou a carta de Saída Livre para sair da prisão!");
             api.descartaCartaAtual();
             
             view.atualizarPosicaoPeao(); 
@@ -303,7 +303,8 @@ public class GameController
     private void processarVaParaPrisao() 
     {
         view.mostrarMensagem(Api.getInstance().getNomeJogAtual() + " vai direto para a prisão!");  
-        Api.getInstance().jogadorVaiPraPrisao();       
+        if(Api.getInstance().jogadorVaiPraPrisao() == 1) view.mostrarMensagem("Iria para a prisão, mas usou a carta de Saída Livre para sair da prisão!");     
+        
         view.atualizarPosicaoPeao();
         view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
     }
@@ -550,8 +551,8 @@ public class GameController
         	
         	int foiPraPrisao = api.jogadorVaiPraPrisao(); 
             if (foiPraPrisao == 1) view.mostrarMensagem("Tirou a terceira dupla. Iria para a Prisão, mas possui a Carta de Saída Livre!");
+            else view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");             
             
-            view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");
             view.atualizarPosicaoPeao();
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
             
@@ -643,11 +644,11 @@ public class GameController
                 {
                     int foiPraPrisao = api.jogadorVaiPraPrisao(); // 10 = posPrisao 
                     if (foiPraPrisao == 1) view.mostrarMensagem("Tirou a terceira dupla. Iria para a Prisão, mas possui a Carta de Saída Livre!");
-                    
-                    view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");
+                    else view.mostrarMensagem("Tirou a terceira dupla. Vai para a Prisão!");                   
+
                     view.atualizarPosicaoPeao();
                     view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
-                    
+            
                     api.vaiProProximoTurno();
                     //api.setJogadorAtual();
                     //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
