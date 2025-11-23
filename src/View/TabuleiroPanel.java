@@ -113,6 +113,8 @@ public class TabuleiroPanel extends JPanel
                     currentState = ViewState.NORMAL;
                     imgCartaAtual = null; 
                     repaint();
+                    
+                    controller.usuarioConfirmouCarta();
                 }
                 break;
                 

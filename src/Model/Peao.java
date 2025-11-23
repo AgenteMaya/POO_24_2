@@ -47,7 +47,8 @@ class Peao {
 		System.out.printf("Jogador %d está na posição %d do tabuleiro\n", id, posicao);
 	}
 	
-	int pegaPosicaoPeao() {
+	int pegaPosicaoPeao() 
+	{
 		return posicao;
 	}		
 	

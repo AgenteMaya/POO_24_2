@@ -10,6 +10,9 @@ import java.io.*;
 import View.JanelaPrincipal;
 import Model.Api;
 
+import Observer.ObservadoIF;
+import Observer.ObservadorIF;
+
 public class GameController 
 {
     private JanelaPrincipal view;
@@ -24,6 +27,12 @@ public class GameController
         
         this.coresDisponiveis = new ArrayList<>();
         inicializaCores();
+    }
+    
+    public ObservadoIF registra(ObservadorIF o)
+    {
+    	Api.getInstance().add(o);
+    	return Api.getInstance();
     }
     
     
@@ -110,7 +119,7 @@ public class GameController
         	
         	int id = numJogadoresTotal - jogadoresRestantes;
         	System.out.println("Id do jogador: " + id);
-        	api.adicionaJogador(id, nome, cor, 4000);
+        	api.adicionaJogador(id, nome, cor, 210); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             
             coresDisponiveis.remove(cor);
             
@@ -130,10 +139,12 @@ public class GameController
         System.out.println("Começar partida");
         
         Api api = Api.getInstance();
+        
         api.sorteiaOrdem();
         api.iniciaTurno();
 
         view.mostrarTabuleiro(api.carregarPosicoesPeoes()); 
+        api.add(view.getPainelInformacoes());
         
         //talvez não precise passar a lista de peões como parâmetro
         view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
@@ -142,6 +153,7 @@ public class GameController
         view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
         view.limparDados();
         view.setAguardandoProximoTurno(false);
+        view.atualizarComboItens();
         view.setHabilitaSalvar(true);
     }
     
@@ -152,34 +164,43 @@ public class GameController
         Api api = Api.getInstance();
         int posAtual = api.getPosJogadorAtual();
 
-        if (api.ehPropriedade(posAtual)) {
+        if (api.ehPropriedade(posAtual)) 
+        {
             return processarPropriedade(posAtual); 
         } 
-        else if (api.ehEmpresa(posAtual)) {
+        else if (api.ehEmpresa(posAtual)) 
+        {
             return processarEmpresa(posAtual); 
         }
-        else if (api.ehSorte(posAtual)) {
-            processarSorte();
-            System.out.println("SORTE: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
+        else if (api.ehSorte(posAtual)) 
+        {
+            return processarSorte();
+            //System.out.println("SORTE: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
-        else if (api.ehIrPraPrisao(posAtual)) {
+        else if (api.ehIrPraPrisao(posAtual)) 
+        {
             processarVaParaPrisao();
         }
-        else if (api.ehImposto(posAtual)) {
+        else if (api.ehImposto(posAtual)) 
+        {
             processarImposto();
             System.out.println("IMPOSTO: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
-        else if (api.ehLucro(posAtual)) {
+        else if (api.ehLucro(posAtual)) 
+        {
             processarLucros();
             System.out.println("LUCROS: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
-        else if (api.ehPrisao(posAtual)) {
+        else if (api.ehPrisao(posAtual)) 
+        {
             view.mostrarMensagem("Apenas visitando a prisão.");
         }
-        else if (api.ehParadaLivre(posAtual)) {
+        else if (api.ehParadaLivre(posAtual)) 
+        {
             view.mostrarMensagem("Parada Livre. Nada acontece.");
         }
-        else if (api.ehPontoDePartida(posAtual)) {
+        else if (api.ehPontoDePartida(posAtual)) 
+        {
             view.mostrarMensagem("Parou no Ponto de Partida.");
             processarPontoDePartida();
             System.out.println("PONTO DE PARTIDA: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
@@ -241,8 +262,8 @@ public class GameController
         }
         return false;
     }
-
-    private void processarSorte() 
+    
+    private boolean processarSorte() 
     {
     	Api api = Api.getInstance();
         
@@ -252,14 +273,10 @@ public class GameController
         {
         	api.jogadorGanhaSaiDaPrisao();
             view.mostrarMensagem(api.getNomeJogAtual() + " guardou uma carta de Saída Livre da Prisão!");
-            
         } 
         else if (api.ehCartaIdaPrisao()) 
         {
-            //view.mostrarMensagem("Sorte/Revés: Vá para a prisão!");   // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
             api.jogadorVaiPraPrisao();
-            
             view.atualizarPosicaoPeao(); 
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         } 
@@ -268,6 +285,15 @@ public class GameController
             api.processaTransferencias();
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         }
+        
+        System.out.println("SORTE: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
+        
+        return true; 
+    }
+
+    public void usuarioConfirmouCarta() 
+    {
+        finalizarTurno();
     }
 
 
@@ -381,7 +407,7 @@ public class GameController
     {
         Api api = Api.getInstance();
         
-        ArrayList<Ranking> ranking = new ArrayList<>();
+        ArrayList<Ranking> ranking = new ArrayList<>(); // ranking não deveria ser do model??
         
         for (int i = 0; i < api.getQtdPeoes(); i++) 
         {
@@ -407,11 +433,12 @@ public class GameController
 
         boolean jogadorFoiRemovido = false;
 
-        if (api.getDinheiroJogadorAtual() < 0) 
+        if (api.getDinheiroJogadorAtual() <= 0) 
         {
             view.mostrarMensagem(api.getNomeJogAtual() + " faliu e foi retirado do jogo!");
             api.removeJogadorAtual();
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes()); 
+            view.atualizarComboItens();
             
             jogadorFoiRemovido = true;
         }
@@ -638,6 +665,17 @@ public class GameController
             terminarTurno();
             return;
         }
+    }
+
+    
+    public int getQtdPeoes()
+    {
+    	return Api.getInstance().getQtdPeoes();
+    }
+    
+    public String getNomePeao(int index)
+    {
+    	return Api.getInstance().getNomePeao(index);
     }
 
     public int solicitarSalvamento(File arquivo)
