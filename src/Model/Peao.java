@@ -72,6 +72,7 @@ class Peao {
      */
 	double getDinheiro()
 	{
+		System.out.print(dinheiro);
 		return dinheiro;
 	}
 	
@@ -92,13 +93,13 @@ class Peao {
 	// função que verifica se o peão vai para a prisão e, se for, realiza seu deslocamento
 	Carta vaiPraPrisao(int posPrisao)
 	{
-		posicao = posPrisao;
 		if (cartaSaidaPrisao != null) 
 		{
 			return cartaSaidaPrisao;
 		}
 		
 		naPrisao = true;
+		posicao = posPrisao;
 		return cartaSaidaPrisao;
 	}
 	
@@ -112,6 +113,7 @@ class Peao {
 	void atribuiSaidaLivrePrisao(Carta carta)
 	{
 		cartaSaidaPrisao = carta;
+		possuiSaidaLivrePrisao = true;
 	}
 	
 	void removeCartaSaidaLivrePrisao()

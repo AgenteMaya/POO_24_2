@@ -18,6 +18,10 @@ public class Api {
 	
 	private Api() {}
 	
+	public static void reset() {
+	    instance = null;
+	}
+	
 	public static Api getInstance() 
 	{
 		if(instance==null) 
