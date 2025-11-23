@@ -17,11 +17,6 @@ class Tabuleiro
 		this.jogadorDaVezIndex = 0;
 	}
 	
-	ArrayList<Terreno> getListaTerrenos()
-	{
-		return lTerrenos;
-	}
-	
 	Terreno getTerreno(int pos)
 	{
 		return lTerrenos.get(pos);
@@ -48,7 +43,7 @@ class Tabuleiro
 	{
 		return lTerrenos;
 	}
-	
+
 	int getTamListTerreno()
 	{
 		return lTerrenos.size();
@@ -120,6 +115,7 @@ class Tabuleiro
 	Peao getJogadorDaVez()
 	{
 		if (lPeoes.isEmpty()) {
+			System.out.println("lPeoes vazia");
 			return null;
 		}
 		return lPeoes.get(jogadorDaVezIndex);
@@ -130,13 +126,6 @@ class Tabuleiro
 		if (index >= 0 && index < lPeoes.size()) {
 			this.jogadorDaVezIndex = index;
 		}
-	}
-
-	void setJogadorDaVezIndexManual(int index)
-	{
-		System.out.println("Definindo jogador da vez para o índice: " + index);
-		this.jogadorDaVezIndex = index;
-		System.out.println("Jogador da vez agora é: " + this.jogadorDaVezIndex);
 	}
 	
 	void proximoTurno()

@@ -64,8 +64,7 @@ public class GameController
         Api.getInstance().Inicializa();
         
         int retorno = Api.getInstance().carregarJogo(arquivo);      
-        System.out.println(retorno);
-        
+    
         if (retorno == 0)
         {
             view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
@@ -160,7 +159,7 @@ public class GameController
     // chamado após o jogador lançar os dados e se mover --> analisa onde o peão caiu e decide o que fazer
     public boolean processarJogada() {
         //view.setHabilitaSalvar(false);
-
+        System.out.println("id do peao da vez da rodada: " + Api.getInstance().getIdJogadorAtual());
         Api api = Api.getInstance();
         int posAtual = api.getPosJogadorAtual();
 
@@ -277,12 +276,15 @@ public class GameController
         else if (api.ehCartaIdaPrisao()) 
         {
             api.jogadorVaiPraPrisao();
+            api.descartaCartaAtual();
+            
             view.atualizarPosicaoPeao(); 
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         } 
         else 
         {
             api.processaTransferencias();
+            api.descartaCartaAtual();
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
         }
         

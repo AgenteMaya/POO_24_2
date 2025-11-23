@@ -96,6 +96,11 @@ public class Api implements ObservadoIF
 		jogadorAtual.atribuiSaidaLivrePrisao(cartaAtual);
 		atualiza();
 	}
+
+	public void descartaCartaAtual()
+	{
+		baralho.descartarCarta(cartaAtual);
+	}
 	
 	//olhar com mais detalhe esses dois métodos mais tarde!!
 	public int jogadorVaiPraPrisao() 
@@ -168,19 +173,11 @@ public class Api implements ObservadoIF
 	public void setJogadorAtual() 
 	{
 		jogadorAtual = tabuleiro.getJogadorDaVez();
-		System.out.println("Jogador atual definido para: " + jogadorAtual.getId());
 	}
 
 	public void setJogadorAtualTabuleiro(int idJogadorAtual) 
 	{
 		tabuleiro.setJogadorDaVezIndex(idJogadorAtual);
-		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
-	}
-
-	public void setJogadorAtualTabuleiroManual(int idJogadorAtual) 
-	{
-		tabuleiro.setJogadorDaVezIndexManual(idJogadorAtual);
-		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
 	}
 
 	public Peao getJogadorAtual() 
@@ -219,8 +216,6 @@ public class Api implements ObservadoIF
 	
 	public int getPosJogadorAtual() 
 	{
-		System.out.println(jogadorAtual.getCor());
-		System.out.println(jogadorAtual.pegaPosicaoPeao());
 		return jogadorAtual.pegaPosicaoPeao();
 	}
 	
@@ -357,26 +352,6 @@ public class Api implements ObservadoIF
             return tabuleiro.getPeaoPorPos(index).estaNaPrisao();
         return false;
     }
-	
-	public int getPosJogadorAtual() 
-	{
-		System.out.println(jogadorAtual.getCor());
-		System.out.println(jogadorAtual.pegaPosicaoPeao());
-		return jogadorAtual.pegaPosicaoPeao();
-	}
-	
-	public int getIdDono(int posAtual) 
-	{
-		Terreno terreno = getTerrenoAtual(posAtual);
-		return terreno.getDono();
-	}
-	
-	public void setDono(int posAtual) 
-	{
-	    Terreno terreno = getTerrenoAtual(posAtual);
-	    terreno.setDono(jogadorAtual.getId()); 
-	    atualiza();
-	}
 	
 	// estes métodos de pegar informações do vencedor servem para a situação quando todos os outros jogadores falem
 	// neste caso, como só sobrou um jogador, deve-se pegar o primeiro peao da lista de peoes

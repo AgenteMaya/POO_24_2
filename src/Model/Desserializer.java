@@ -26,7 +26,6 @@ public class Desserializer {
             linha = buffer.readLine();
             double dinheiroBanco = Double.parseDouble(linha);
             Banco.getBanco().qtdDinheiro = dinheiroBanco;
-            //carregar Jogador Atual;
             carregaBaralho(buffer);
             carregaPeoes(buffer, qtdPeoes);
             carregaJogadorAtual(buffer);
@@ -110,10 +109,6 @@ public class Desserializer {
             hashCartas.put(c.getId(), c);
         }
 
-        for (Carta c : api.getlCartasDescarte()) {
-            hashCartas.put(c.getId(), c);
-        }
-
         ArrayList<Carta> lCartasDescarte = carregaListaCartas(buffer, hashCartas);
         api.setlCartasDescarte(lCartasDescarte);
 
@@ -127,8 +122,7 @@ public class Desserializer {
         {
             String linha = buffer.readLine();
             int idJogadorAtual = Integer.parseInt(linha);
-            System.out.println("ID do jogador atual carregado: " + idJogadorAtual);
-            api.setJogadorAtualTabuleiroManual(idJogadorAtual);
+            api.setJogadorAtualTabuleiro(idJogadorAtual);
             api.setJogadorAtual();
         }
         catch(IOException e)
