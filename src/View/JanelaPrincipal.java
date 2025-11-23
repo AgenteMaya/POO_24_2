@@ -9,13 +9,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import Controller.GameController;
 import Controller.Ranking;
 
 @SuppressWarnings("serial")
-public class JanelaPrincipal extends JFrame {
+public class JanelaPrincipal extends JFrame 
+{
 	public int LARG_DEFAULT = 1280;
 	public int ALT_DEFAULT = 730;
 
@@ -43,21 +43,25 @@ public class JanelaPrincipal extends JFrame {
 	
 	private java.util.List<String> historicoLancamentos = new java.util.ArrayList<>();
 
-	public JanelaPrincipal() {
+	public JanelaPrincipal() 
+	{
 		mostrarMenuInicial();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
-	public void setController(GameController controller) {
+	public void setController(GameController controller) 
+	{
 		this.controller = controller;
 	}
 
-	public void iniciar() {
+	public void iniciar() 
+	{
 		setTitle("Banco Imobiliário");
 		setVisible(true);
 	}
 
-	public void mostrarMenuInicial() {
+	public void mostrarMenuInicial() 
+	{
 		setSize(240, 170);
 
 		getContentPane().removeAll();
@@ -68,9 +72,11 @@ public class JanelaPrincipal extends JFrame {
 		Botao botaoIniciar = new Botao("Iniciar");
 		botaoIniciar.setBounds(10, 10, 200, 50);
 
-		botaoIniciar.adicionaListener(new ActionListener() {
+		botaoIniciar.adicionaListener(new ActionListener() 
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				controller.solicitarInicioJogo();
 			}
 		});
@@ -78,9 +84,11 @@ public class JanelaPrincipal extends JFrame {
 		Botao botaoRetomar = new Botao("Retomar");
 		botaoRetomar.setBounds(10, 70, 200, 50);
 
-		botaoRetomar.adicionaListener(new ActionListener() {
+		botaoRetomar.adicionaListener(new ActionListener() 
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				controller.solicitarRetomadaJogo();
 			}
 		});
@@ -93,7 +101,8 @@ public class JanelaPrincipal extends JFrame {
 		repaint();
 	}
 
-	public void mostrarTelaNumJogadores() {
+	public void mostrarTelaNumJogadores() 
+	{
 		getContentPane().removeAll();
 		setSize(500, 500);
 
@@ -111,9 +120,11 @@ public class JanelaPrincipal extends JFrame {
 		Botao btnConfirmar = new Botao("Confirmar");
 		btnConfirmar.setBounds(120, 50, 100, 30);
 
-		btnConfirmar.adicionaListener(new ActionListener() {
+		btnConfirmar.adicionaListener(new ActionListener() 
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				int num = (Integer) comboBox.getSelectedItem();
 				controller.confirmarNumeroJogadores(num);
 			}
@@ -129,112 +140,8 @@ public class JanelaPrincipal extends JFrame {
 		repaint();
 	}
 	
-//	public void mostrarTelaFimDeJogo(String nome_vencedor, String cor, double saldo_vencedor) {
-//	    getContentPane().removeAll();
-//	    setSize(600, 500);
-//	    setLocationRelativeTo(null);
-//
-//	    // Define a cor base
-//	    Color corBase;
-//	    switch (cor.toLowerCase()) {
-//	        case "vermelho" -> corBase = new Color(220, 60, 60);
-//	        case "azul" -> corBase = new Color(70, 120, 220);
-//	        case "laranja" -> corBase = new Color(240, 140, 60);
-//	        case "amarelo" -> corBase = new Color(230, 200, 70);
-//	        case "magenta" -> corBase = new Color(200, 70, 200);
-//	        case "cinza" -> corBase = new Color(150, 150, 160);
-//	        default -> corBase = new Color(120, 120, 120);
-//	    }
-//	    
-//	    // AQUI É A MUDANÇA: Usamos um JPanel customizado para desenhar (Java2D)
-//	    JPanel painelFim = new JPanel() {
-//	        @Override
-//	        protected void paintComponent(Graphics g) {
-//	            super.paintComponent(g);
-//	            Graphics2D g2 = (Graphics2D) g.create();
-//	            
-//	            // Melhora a renderização de texto
-//	            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-//
-//	            int w = getWidth();
-//	            int h = getHeight();
-//
-//	            // 1. Desenhar o Fundo (Java2D)
-//	            g2.setColor(corBase);
-//	            g2.fillRect(0, 0, w, h);
-//
-//	            // 2. Desenhar os Textos (Java2D - drawString em vez de JLabel)
-//	            Color corTexto = contraste(corBase);
-//	            g2.setColor(corTexto);
-//
-//	            // Título
-//	            g2.setFont(new Font("Arial", Font.BOLD, 36));
-//	            drawCentralizado(g2, "FIM DE JOGO!", w, h / 3);
-//
-//	            // Vencedor
-//	            g2.setFont(new Font("Arial", Font.BOLD, 24));
-//	            drawCentralizado(g2, "Vencedor: " + nome_vencedor, w, h / 2);
-//
-//	            // Saldo
-//	            g2.setFont(new Font("Arial", Font.PLAIN, 20));
-//	            String textoSaldo = String.format("Saldo Final: R$ %.2f", saldo_vencedor);
-//	            drawCentralizado(g2, textoSaldo, w, (h / 2) + 40);
-//
-//	            g2.dispose();
-//	        }
-//
-//	        // Função auxiliar para centralizar texto horizontalmente
-//	        private void drawCentralizado(Graphics2D g2, String text, int larguraPainel, int y) {
-//	            FontMetrics fm = g2.getFontMetrics();
-//	            int x = (larguraPainel - fm.stringWidth(text)) / 2;
-//	            g2.drawString(text, x, y);
-//	        }
-//	    };
-//
-//	    // Usamos layout null ou GridBag apenas para posicionar os BOTÕES
-//	    // Como vamos desenhar o texto no fundo, os botões precisam ficar em uma posição fixa (ex: embaixo)
-//	    painelFim.setLayout(new GridBagLayout());
-//	    
-//	    // Configuração para empurrar os botões para baixo
-//	    GridBagConstraints gbc = new GridBagConstraints();
-//	    gbc.gridx = 0;
-//	    gbc.gridy = 0;
-//	    gbc.insets = new Insets(10, 10, 10, 10);
-//	    
-//	    // Adicionamos um componente invisível para empurrar os botões para o fundo
-//	    // (Já que o texto ocupa a metade de cima visualmente)
-//	    gbc.weighty = 1.0; // ocupa espaço vertical
-//	    painelFim.add(Box.createGlue(), gbc); // Espaço vazio
-//
-//	    gbc.weighty = 0.0; // botões não esticam
-//	    gbc.gridy++;
-//	    
-//	    JButton btnNovoJogo = new JButton("Novo Jogo");
-//	    btnNovoJogo.setPreferredSize(new Dimension(200, 40));
-//	    btnNovoJogo.setFont(new Font("Arial", Font.BOLD, 14));
-//	    btnNovoJogo.addActionListener(e -> controller.solicitarInicioJogo());
-//	    painelFim.add(btnNovoJogo, gbc);
-//
-//	    gbc.gridy++;
-//	    JButton btnMenu = new JButton("Voltar ao Menu");
-//	    btnMenu.setPreferredSize(new Dimension(200, 40));
-//	    btnMenu.setFont(new Font("Arial", Font.PLAIN, 14));
-//	    btnMenu.addActionListener(e -> mostrarMenuInicial());
-//	    painelFim.add(btnMenu, gbc);
-//
-//	    gbc.gridy++;
-//	    JButton btnSair = new JButton("Sair do Jogo");
-//	    btnSair.setPreferredSize(new Dimension(200, 40));
-//	    btnSair.setFont(new Font("Arial", Font.PLAIN, 14));
-//	    btnSair.addActionListener(e -> System.exit(0));
-//	    painelFim.add(btnSair, gbc);
-//
-//	    getContentPane().add(painelFim);
-//	    revalidate();
-//	    repaint();
-//	}
-	
-	public void mostrarTelaFimDeJogo(ArrayList<Ranking> ranking) {
+	public void mostrarTelaFimDeJogo(ArrayList<Ranking> ranking) 
+	{
 	    getContentPane().removeAll();
 	    setSize(600, 500); 
 	    setLocationRelativeTo(null);
@@ -242,7 +149,8 @@ public class JanelaPrincipal extends JFrame {
 	    Ranking vencedor = ranking.get(0);
 
 	    Color corBase;
-	    switch (vencedor.cor.toLowerCase()) {
+	    switch (vencedor.cor.toLowerCase()) 
+	    {
 	        case "vermelho" -> corBase = new Color(220, 60, 60);
 	        case "azul" -> corBase = new Color(70, 120, 220);
 	        case "laranja" -> corBase = new Color(240, 140, 60);
@@ -252,9 +160,11 @@ public class JanelaPrincipal extends JFrame {
 	        default -> corBase = new Color(120, 120, 120);
 	    }
 
-	    JPanel painelFim = new JPanel() {
+	    JPanel painelFim = new JPanel() 
+	    {
 	        @Override
-	        protected void paintComponent(Graphics g) {
+	        protected void paintComponent(Graphics g) 
+	        {
 	            super.paintComponent(g);
 	            Graphics2D g2 = (Graphics2D) g.create();
 	            
@@ -282,15 +192,19 @@ public class JanelaPrincipal extends JFrame {
 	            
 	            g2.drawLine(100, startY - 20, w - 100, startY - 20);
 
-	            for (int i = 0; i < ranking.size(); i++) {
+	            for (int i = 0; i < ranking.size(); i++) 
+	            {
 	            	Ranking jog = ranking.get(i);
 	                
 	                String posicao = (i + 1) + "º";
 	                String linhaTexto = String.format("%s  |  %s  |  R$ %.2f", posicao, jog.nome, jog.saldo);
 	                
-	                if (i == 0) {
+	                if (i == 0) 
+	                {
 	                    g2.setFont(new Font("Arial", Font.BOLD, 18));
-	                } else {
+	                } 
+	                else 
+	                {
 	                    g2.setFont(new Font("Arial", Font.PLAIN, 16));
 	                }
 	                
@@ -300,7 +214,8 @@ public class JanelaPrincipal extends JFrame {
 	            g2.dispose();
 	        }
 
-	        private void drawCentralizado(Graphics2D g2, String text, int larguraPainel, int y) {
+	        private void drawCentralizado(Graphics2D g2, String text, int larguraPainel, int y) 
+	        {
 	            FontMetrics fm = g2.getFontMetrics();
 	            int x = (larguraPainel - fm.stringWidth(text)) / 2;
 	            g2.drawString(text, x, y);
@@ -344,15 +259,19 @@ public class JanelaPrincipal extends JFrame {
 	    repaint();
 	}
 
-	public void mostrarTelaConfigJogadores(int total_jogadores, int num_jogadores, ArrayList<String> cores) {
+	public void mostrarTelaConfigJogadores(int total_jogadores, int num_jogadores, ArrayList<String> cores) 
+	{
 		JPanel painelConfiguracao = new JPanel();
 		painelConfiguracao.setLayout(null);
 		getContentPane().removeAll();
 		setSize(500, 500);
 
-		if (num_jogadores == 0) {
+		if (num_jogadores == 0) 
+		{
 			controller.iniciarPartida();
-		} else {
+		} 
+		else 
+		{
 			Texto textoCampoNome = new Texto();
 			textoCampoNome.setTexto("Nome jogador nº" + (total_jogadores - num_jogadores + 1) + " (até 8 caracteres):");
 			textoCampoNome.setBounds(10, 10, 220, 30);
@@ -371,9 +290,11 @@ public class JanelaPrincipal extends JFrame {
 			Botao btnProximo = new Botao("Próximo");
 			btnProximo.setBounds(120, 180, 100, 30);
 
-			btnProximo.adicionaListener(new ActionListener() {
+			btnProximo.adicionaListener(new ActionListener() 
+			{
 				@Override
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) 
+				{
 					String cor = (String) comboBox.getSelectedItem();
 					controller.configurarProximoJogador(num_jogadores - 1, campoNome.getText(), cor.toLowerCase());
 				}
@@ -391,17 +312,20 @@ public class JanelaPrincipal extends JFrame {
 		repaint();
 	}
 	
-	public void limparDados() {
+	public void limparDados() 
+	{
 	    faceAtualD1 = 0;
 	    faceAtualD2 = 0;
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	private JPanel criarPainelLateralDados() {
-		// --- painel pintado em Java2D (CENTER) ---
-		painelDados = new JPanel() {
+	private JPanel criarPainelLateralDados() 
+	{
+		painelDados = new JPanel() 
+		{
 			@Override
-			protected void paintComponent(Graphics g) {
+			protected void paintComponent(Graphics g) 
+			{
 				super.paintComponent(g);
 				Graphics2D g2 = (Graphics2D) g.create();
 
@@ -421,7 +345,7 @@ public class JanelaPrincipal extends JFrame {
 				g2.setFont(getFont().deriveFont(Font.BOLD, 13f));
 				g2.drawString("Vez de: " + nomeJogadorDaVez, 16, 52);
 
-				// área “cartucho” para as imagens
+				// área para as imagens
 				int boxX = 16, boxY = 72, boxW = W - 32, boxH = 140;
 				g2.setColor(new Color(255, 255, 255, 220));
 				g2.fillRoundRect(boxX, boxY, boxW, boxH, 12, 12);
@@ -433,16 +357,17 @@ public class JanelaPrincipal extends JFrame {
 				int x2 = x1 + slotW + pad;
 				int y = boxY + pad;
 
-				if (faceAtualD1 >= 1 && faceAtualD1 <= 6) {
+				if (faceAtualD1 >= 1 && faceAtualD1 <= 6) 
+				{
 					Image img1 = imagensDados.get(faceAtualD1);
-					drawCenteredScaled(g2, img1, x1, y, slotW, slotH);
+					desenharCentralizado(g2, img1, x1, y, slotW, slotH);
 				}
-				if (faceAtualD2 >= 1 && faceAtualD2 <= 6) {
+				if (faceAtualD2 >= 1 && faceAtualD2 <= 6) 
+				{
 					Image img2 = imagensDados.get(faceAtualD2);
-					drawCenteredScaled(g2, img2, x2, y, slotW, slotH);
+					desenharCentralizado(g2, img2, x2, y, slotW, slotH);
 				}
 
-				// “botão” desenhado
 		        int btnW = boxW, btnH = 44;
 		        int btnX = boxX, btnY = boxY + boxH + 16;
 		        g2.setColor(new Color(255, 255, 255, 230));
@@ -461,9 +386,9 @@ public class JanelaPrincipal extends JFrame {
 		        btnRollRect = new Rectangle(btnX, btnY, btnW, btnH);
 				
 				int histX = 16;
-				int histY = (boxY + boxH + 16) + (44 + 12); // abaixo do botão
+				int histY = (boxY + boxH + 16) + (44 + 12); 
 				int histW = W - 32;
-				int histH = Math.max(80, H - histY - 16);   // usa o que sobrar de altura
+				int histH = Math.max(80, H - histY - 16);
 
 				// fundo do histórico
 				g2.setColor(new Color(255,255,255,220));
@@ -483,9 +408,10 @@ public class JanelaPrincipal extends JFrame {
 				int lineHeight = g2.getFontMetrics().getHeight();
 				yText += lineHeight;
 
-				for (int i = 0; i < historicoLancamentos.size(); i++) {
+				for (int i = 0; i < historicoLancamentos.size(); i++) 
+				{
 				    String ln = historicoLancamentos.get(i);
-				    if (yText + lineHeight > histY + histH - 8) break; // não estoura a caixa
+				    if (yText + lineHeight > histY + histH - 8) break; 
 				    g2.drawString("• " + ln, histX + 10, yText);
 				    yText += lineHeight;
 				}
@@ -493,35 +419,40 @@ public class JanelaPrincipal extends JFrame {
 				g2.dispose();
 			}
 		};
-		// importante: não fixe o preferredSize do CENTER
 		painelDados.setOpaque(true);
 
-		painelDados.addMouseListener(new java.awt.event.MouseAdapter() {
+		painelDados.addMouseListener(new java.awt.event.MouseAdapter() 
+		{
 		    @Override
-		    public void mouseClicked(java.awt.event.MouseEvent e) {
-		        if (btnRollRect != null && btnRollRect.contains(e.getPoint())) {
-		            if (aguardandoProximoTurno) {
+		    public void mouseClicked(java.awt.event.MouseEvent e) 
+		    {
+		        if (btnRollRect != null && btnRollRect.contains(e.getPoint())) 
+		        {
+		            if (aguardandoProximoTurno) 
+		            {
 		            	limparDados();
-		                controller.iniciarProximoTurno();   // <<< novo método no controller
-		            } else {
+		                controller.iniciarProximoTurno();
+		            } 
+		            else 
+		            {
 		                controller.lancarDadosReal();
 		            }
 		        }
 		    }
 		});
 
-		// --- rodapé de DEBUG (SOUTH) com altura fixa ---
 		JPanel painelDebug = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
 		painelDebug.setOpaque(true);
 		painelDebug.setBackground(new Color(245, 245, 245));
-		painelDebug.setPreferredSize(new Dimension(260, 64)); // altura fixa p/ garantir visibilidade
+		painelDebug.setPreferredSize(new Dimension(260, 64)); 
 
 		Integer[] nums = { 1, 2, 3, 4, 5, 6 };
 		cbD1 = new JComboBox<>(nums);
 		cbD2 = new JComboBox<>(nums);
 
 		JButton btnDebug = new JButton("Debug");
-		btnDebug.addActionListener(ev -> {
+		btnDebug.addActionListener(ev -> 
+		{
 			int d1 = (Integer) cbD1.getSelectedItem();
 			int d2 = (Integer) cbD2.getSelectedItem();
 			controller.lancarDadosDebug(d1, d2);
@@ -534,14 +465,15 @@ public class JanelaPrincipal extends JFrame {
 		painelDebug.add(btnDebug);
 
 		JPanel container = new JPanel(new BorderLayout());
-		container.setPreferredSize(new Dimension(260, ALT_DEFAULT)); // largura fixa do lado direito
+		container.setPreferredSize(new Dimension(260, ALT_DEFAULT)); 
 		container.add(painelDados, BorderLayout.CENTER);
 		container.add(painelDebug, BorderLayout.SOUTH);
 
 		return container;
 	}
 	
-	private JPanel criarPainelBotoesControle() {
+	private JPanel criarPainelBotoesControle() 
+	{
 	    JPanel painelBotoes = new JPanel();
 	    painelBotoes.setLayout(new GridLayout(4, 1, 5, 5));
 	    
@@ -550,16 +482,19 @@ public class JanelaPrincipal extends JFrame {
 
 	    JButton btnSalvar = new JButton("Salvar Jogo");
 	    btnSalvar.setFont(new Font("Arial", Font.PLAIN, 12));
-	    btnSalvar.addActionListener(e -> {
+	    btnSalvar.addActionListener(e -> 
+	    {
 	        // salvarJogo()
 	        JOptionPane.showMessageDialog(this, "Jogo Salvo!");
 	    });
 
 	    JButton btnEncerrar = new JButton("Encerrar Jogo");
 	    btnEncerrar.setFont(new Font("Arial", Font.PLAIN, 12));
-	    btnEncerrar.addActionListener(e -> {
+	    btnEncerrar.addActionListener(e -> 
+	    {
 	        int resp = JOptionPane.showConfirmDialog(this, "Deseja realmente encerrar a partida atual?", "Encerrar", JOptionPane.YES_NO_OPTION);
-	        if (resp == JOptionPane.YES_OPTION) {
+	        if (resp == JOptionPane.YES_OPTION) 
+	        {
 	        	controller.terminoSolicitado(); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	        }
 	    });
@@ -570,7 +505,7 @@ public class JanelaPrincipal extends JFrame {
 
 	    JButton btnFechar = new JButton("Fechar Jogo");
 	    btnFechar.setFont(new Font("Arial", Font.BOLD, 12));
-	    btnFechar.setForeground(new Color(150, 0, 0)); // Um vermelho escuro para destacar perigo
+	    btnFechar.setForeground(new Color(150, 0, 0)); 
 	    btnFechar.addActionListener(e -> System.exit(0));
 
 	    painelBotoes.add(btnSalvar);
@@ -582,11 +517,13 @@ public class JanelaPrincipal extends JFrame {
 	}
 	
 	
-	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	{
-	    painelInfo = new JPanel() {
+	    painelInfo = new JPanel() 
+	    {
 	        @Override
-	        protected void paintComponent(Graphics g) {
+	        protected void paintComponent(Graphics g) 
+	        {
 	            super.paintComponent(g);
 	            Graphics2D g2 = (Graphics2D) g.create();
 
@@ -613,12 +550,16 @@ public class JanelaPrincipal extends JFrame {
 	    return container;
 	}
 	
-	private static void drawCenteredScaled(Graphics2D g2, Image img, int x, int y, int w, int h) {
+	private static void desenharCentralizado(Graphics2D g2, Image img, int x, int y, int w, int h) 
+	{
 		if (img == null)
 			return;
+		
 		int iw = img.getWidth(null), ih = img.getHeight(null);
+		
 		if (iw <= 0 || ih <= 0)
 			return;
+		
 		double sx = w / (double) iw;
 		double sy = h / (double) ih;
 		double s = Math.min(sx, sy);
@@ -629,28 +570,32 @@ public class JanelaPrincipal extends JFrame {
 		g2.drawImage(img, dx, dy, dw, dh, null);
 	}
 
-	private static Color contraste(Color bg) {
+	private static Color contraste(Color bg) 
+	{
 		double l = 0.299 * bg.getRed() + 0.587 * bg.getGreen() + 0.114 * bg.getBlue();
 		return (l > 160) ? Color.BLACK : Color.WHITE;
 	}
 	
-	public void setAguardandoProximoTurno(boolean aguardando) {
+	public void setAguardandoProximoTurno(boolean aguardando) 
+	{
 	    this.aguardandoProximoTurno = aguardando;
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	public void indicarJogadorDaVez(String nomePeao, String corPeao) {
+	public void indicarJogadorDaVez(String nomePeao, String corPeao) 
+	{
 		nomeJogadorDaVez = nomePeao;
 
-		// mapeamento de cor -> Color
-		switch (corPeao) {
-		case "vermelho" -> corPainelAtual = new Color(220, 60, 60);
-		case "azul" -> corPainelAtual = new Color(70, 120, 220);
-		case "laranja" -> corPainelAtual = new Color(240, 140, 60);
-		case "amarelo" -> corPainelAtual = new Color(230, 200, 70);
-		case "magenta" -> corPainelAtual = new Color(200, 70, 200);
-		case "cinza" -> corPainelAtual = new Color(150, 150, 160);
-		default -> corPainelAtual = new Color(120, 120, 120);
+		// mapeamento de cor 
+		switch (corPeao) 
+		{
+			case "vermelho" -> corPainelAtual = new Color(220, 60, 60);
+			case "azul" -> corPainelAtual = new Color(70, 120, 220);
+			case "laranja" -> corPainelAtual = new Color(240, 140, 60);
+			case "amarelo" -> corPainelAtual = new Color(230, 200, 70);
+			case "magenta" -> corPainelAtual = new Color(200, 70, 200);
+			case "cinza" -> corPainelAtual = new Color(150, 150, 160);
+			default -> corPainelAtual = new Color(120, 120, 120);
 		}
 		if (painelDados != null)
 			painelDados.repaint();
@@ -658,17 +603,20 @@ public class JanelaPrincipal extends JFrame {
 		resetHistoricoLancamentos();
 	}
 	
-	public void resetHistoricoLancamentos() {
+	public void resetHistoricoLancamentos() 
+	{
 	    historicoLancamentos.clear();
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	public void registraLancamento(int d1, int d2, String nota) {
+	public void registraLancamento(int d1, int d2, String nota) 
+	{
 	    String s = d1 + " + " + d2 + " = " + (d1 + d2);
 	    if (nota != null && !nota.isBlank()) s += "  — " + nota;
 	    historicoLancamentos.add(s);
-	    // limita a, por ex., 10 linhas
-	    if (historicoLancamentos.size() > 10) {
+	    
+	    if (historicoLancamentos.size() > 10) 
+	    {
 	        historicoLancamentos = historicoLancamentos.subList(
 	            historicoLancamentos.size() - 10, historicoLancamentos.size()
 	        );
@@ -676,14 +624,16 @@ public class JanelaPrincipal extends JFrame {
 	    if (painelDados != null) painelDados.repaint();
 	}
 
-	public void mostrarDados(int d1, int d2) {
+	public void mostrarDados(int d1, int d2) 
+	{
 		faceAtualD1 = (d1 >= 1 && d1 <= 6) ? d1 : 0;
 		faceAtualD2 = (d2 >= 1 && d2 <= 6) ? d2 : 0;
 		if (painelDados != null)
 			painelDados.repaint();
 	}
 
-	public void mostrarTabuleiro(LinkedHashMap<String, Integer> listaPosicoesPeoes) {
+	public void mostrarTabuleiro(LinkedHashMap<String, Integer> listaPosicoesPeoes) 
+	{
 		getContentPane().removeAll();
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
 		setLocationRelativeTo(null);
@@ -711,18 +661,23 @@ public class JanelaPrincipal extends JFrame {
 		repaint();
 	}
 
-	private Image carregaImagem(String nomeArquivo) {
+	private Image carregaImagem(String nomeArquivo) 
+	{
 		Image image = null;
 		URL imageUrl = getClass().getResource(nomeArquivo);
 
-		if (imageUrl == null) {
+		if (imageUrl == null) 
+		{
 			System.out.println("Erro: Não foi possível encontrar o recurso: " + nomeArquivo);
 			System.exit(1);
 		}
 
-		try {
+		try 
+		{
 			image = ImageIO.read(imageUrl);
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			System.out.println("Erro ao carregar a imagem: " + e.getMessage());
 			System.exit(1);
 		}
@@ -730,7 +685,8 @@ public class JanelaPrincipal extends JFrame {
 		return image;
 	}
 
-	private void carregarImagemPeoes() {
+	private void carregarImagemPeoes() 
+	{
 		imagensPeoes = new HashMap<>();
 
 		imagensPeoes.put("vermelho", carregaImagem("/pinos/pin0.png"));
@@ -742,7 +698,8 @@ public class JanelaPrincipal extends JFrame {
 
 	}
 
-	private void carregarImagemDados() {
+	private void carregarImagemDados() 
+	{
 		imagensDados = new HashMap<>();
 
 		for (int f = 1; f <= 6; f++) {
@@ -750,7 +707,8 @@ public class JanelaPrincipal extends JFrame {
 		}
 	}
 
-	private void carregarImagemCartas() {
+	private void carregarImagemCartas() 
+	{
 		imagensCartas = new HashMap<>();
 
 		// arquivos das imagens
@@ -786,52 +744,68 @@ public class JanelaPrincipal extends JFrame {
 		imagensCartas.put(30, carregaImagem("/sorteReves/chance30.png"));
 	}
 
-	public void mostrarMensagem(String msg) {
+	public void mostrarMensagem(String msg) 
+	{
 		if (painelTabuleiro != null) {
 			painelTabuleiro.mostrarMensagem(msg);
 		}
 	}
 
-	public void mostrarCarta(int idCarta) {
-		if (painelTabuleiro != null) {
+	public void mostrarCarta(int idCarta) 
+	{
+		if (painelTabuleiro != null) 
+		{
 			Image imgCarta = imagensCartas.get(idCarta);
-			if (imgCarta != null) {
+			if (imgCarta != null) 
+			{
 				painelTabuleiro.mostrarCarta(imgCarta);
-			} else {
+			} 
+			else 
+			{
 				System.err.println("Imagem da carta não encontrada no cache: " + idCarta);
 				painelTabuleiro.mostrarMensagem("Erro: Imagem da carta " + idCarta + " nao encontrada.");
 			}
 		}
 	}
 
-	public void mostrarOpcaoCompra(String nome, int valor) {
-		if (painelTabuleiro != null) {
+	public void mostrarOpcaoCompra(String nome, int valor) 
+	{
+		if (painelTabuleiro != null) 
+		{
 			painelTabuleiro.mostrarOpcaoCompra(nome, valor);
 		}
 	}
 
-	public void mostrarOpcaoConstruir(String nome) {
-		if (painelTabuleiro != null) {
+	public void mostrarOpcaoConstruir(String nome) 
+	{
+		if (painelTabuleiro != null) 
+		{
 			painelTabuleiro.mostrarOpcaoConstruir(nome);
 		}
 	}
 	
-	public void atualizarPaineisInfo(LinkedHashMap<String, Integer> peoes) {
-		if (painelTabuleiro != null) {
+	public void atualizarPaineisInfo(LinkedHashMap<String, Integer> peoes) 
+	{
+		if (painelTabuleiro != null) 
+		{
 			painelTabuleiro.setListaPeoes(peoes);
 			painelTabuleiro.repaint();
 		}
 	}
 
 
-	public void atualizarPosicaoPeao() {
-		if (painelTabuleiro != null) {
+	public void atualizarPosicaoPeao() 
+	{
+		if (painelTabuleiro != null) 
+		{
 			painelTabuleiro.repaint();
 		}
 	}
 
-	public void atualizarConstrucoes(int pos) {
-		if (painelTabuleiro != null) {
+	public void atualizarConstrucoes(int pos) 
+	{
+		if (painelTabuleiro != null) 
+		{
 			painelTabuleiro.repaint();
 		}
 	}

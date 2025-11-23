@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class TabuleiroPanel extends JPanel
 
     private HashMap<String, Image> imagensPeoes;
     
-    private LinkedHashMap<String, Integer> posicoesPeoes; // relaciona a cor (String) com a posição de um respectivo peão
+    private LinkedHashMap<String, Integer> posicoesPeoes; // relaciona a cor com a posição de um respectivo peão
     
     private GameController controller;
     
@@ -65,43 +64,52 @@ public class TabuleiroPanel extends JPanel
         });
     }
     
-    public void setController(GameController controller) {
+    public void setController(GameController controller) 
+    {
         this.controller = controller;
     }
     
-    public void setListaPeoes(LinkedHashMap<String, Integer> peoes) {
+    public void setListaPeoes(LinkedHashMap<String, Integer> peoes) 
+    {
         this.posicoesPeoes = peoes;
     }
 
-    public void mostrarMensagem(String msg) {
+    public void mostrarMensagem(String msg) 
+    {
         this.mensagemTemporaria = msg;
         this.currentState = ViewState.NORMAL;
         repaint();
     }
     
-    public void mostrarCarta(Image imgCarta) {
+    public void mostrarCarta(Image imgCarta) 
+    {
         this.imgCartaAtual = imgCarta;
         this.currentState = ViewState.EXIBINDO_CARTA;
         repaint();
     }
     
-    public void mostrarOpcaoCompra(String nome, int valor) {
+    public void mostrarOpcaoCompra(String nome, int valor) 
+    {
         this.terrenoOfertadoNome = nome;
         this.terrenoOfertadoValor = valor;
         this.currentState = ViewState.AGUARDANDO_DECISAO_COMPRA;
         repaint();
     }
     
-    public void mostrarOpcaoConstruir(String nome) {
+    public void mostrarOpcaoConstruir(String nome) 
+    {
         this.propriedadeOfertadaNome = nome;
         this.currentState = ViewState.AGUARDANDO_DECISAO_CONSTRUCAO;
         repaint();
     }
 
-    private void handleMouseClick(Point p) {
-        switch (currentState) {
+    private void handleMouseClick(Point p) 
+    {
+        switch (currentState) 
+        {
             case EXIBINDO_CARTA:
-                if (btnDialogoFechar != null && btnDialogoFechar.contains(p)) {
+                if (btnDialogoFechar != null && btnDialogoFechar.contains(p)) 
+                {
                     currentState = ViewState.NORMAL;
                     imgCartaAtual = null; 
                     repaint();
@@ -109,30 +117,39 @@ public class TabuleiroPanel extends JPanel
                 break;
                 
             case AGUARDANDO_DECISAO_COMPRA:
-                if (btnDialogoComprar != null && btnDialogoComprar.contains(p)) {
+                if (btnDialogoComprar != null && btnDialogoComprar.contains(p)) 
+                {
                     currentState = ViewState.NORMAL;
                     controller.usuarioDecidiuComprar(); 
-                } else if (btnDialogoNaoComprar != null && btnDialogoNaoComprar.contains(p)) {
+                } 
+                else if (btnDialogoNaoComprar != null && btnDialogoNaoComprar.contains(p)) 
+                {
                     currentState = ViewState.NORMAL;
                     controller.usuarioDecidiuNaoComprar(); 
                 }
                 break;
                 
             case AGUARDANDO_DECISAO_CONSTRUCAO:
-                if (btnDialogoConstruirCasa != null && btnDialogoConstruirCasa.contains(p)) {
+                if (btnDialogoConstruirCasa != null && btnDialogoConstruirCasa.contains(p)) 
+                {
                     currentState = ViewState.NORMAL;
                     controller.usuarioDecidiuConstruir(true); 
-                } else if (btnDialogoConstruirHotel != null && btnDialogoConstruirHotel.contains(p)) {
+                } 
+                else if (btnDialogoConstruirHotel != null && btnDialogoConstruirHotel.contains(p)) 
+                {
                     currentState = ViewState.NORMAL;
                     controller.usuarioDecidiuConstruir(false); 
-                } else if (btnDialogoCancelar != null && btnDialogoCancelar.contains(p)) {
+                } 
+                else if (btnDialogoCancelar != null && btnDialogoCancelar.contains(p)) 
+                {
                     currentState = ViewState.NORMAL;
                     repaint();
                 }
                 break;
                 
             case NORMAL:
-                if (mensagemTemporaria != null) {
+                if (mensagemTemporaria != null) 
+                {
                     mensagemTemporaria = null;
                     repaint();
                 }
@@ -237,7 +254,8 @@ public class TabuleiroPanel extends JPanel
     
     
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) 
+    {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
 
@@ -251,7 +269,8 @@ public class TabuleiroPanel extends JPanel
         g2d.drawImage(imgTabuleiro, boardX, boardY, boardDrawSize, boardDrawSize, this);
 
         int idxJog = 0; 
-        for (Map.Entry<String, Integer> entry : posicoesPeoes.entrySet()) {
+        for (Map.Entry<String, Integer> entry : posicoesPeoes.entrySet()) 
+        {
         	String corPeao = entry.getKey();
             Integer posicao = entry.getValue();
             
@@ -266,7 +285,8 @@ public class TabuleiroPanel extends JPanel
             idxJog++;
         }
         
-        switch (currentState) {
+        switch (currentState) 
+        {
 	        case EXIBINDO_CARTA:
 	            desenharDialogoFundo(g2d);
 	            desenharDialogoCarta(g2d, imgCartaAtual);
@@ -287,13 +307,16 @@ public class TabuleiroPanel extends JPanel
         g2d.dispose();
     }
     
-    private void desenharDialogoFundo(Graphics2D g2d) {
+    private void desenharDialogoFundo(Graphics2D g2d) 
+    {
         g2d.setColor(new Color(0, 0, 0, 150));
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }
 
-    private void desenharMensagemTemporaria(Graphics2D g2d) { // alterar para a mensagem desaparecer automaticamente
-        if (mensagemTemporaria != null) {
+    private void desenharMensagemTemporaria(Graphics2D g2d) // alterar para a mensagem desaparecer automaticamente // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    { 
+        if (mensagemTemporaria != null) 
+        {
             g2d.setColor(new Color(0, 0, 0, 180));
             g2d.setFont(new Font("Arial", Font.BOLD, 24));
             int strWidth = g2d.getFontMetrics().stringWidth(mensagemTemporaria);
@@ -307,7 +330,8 @@ public class TabuleiroPanel extends JPanel
         }
     }
 
-    private void desenharDialogoCarta(Graphics2D g2d, Image imgCarta) {
+    private void desenharDialogoCarta(Graphics2D g2d, Image imgCarta) 
+    {
         if (imgCarta == null) return;
         
         int x = (getWidth() - imgCarta.getWidth(null)) / 2;
@@ -324,7 +348,8 @@ public class TabuleiroPanel extends JPanel
         btnDialogoFechar = desenharBotaoVirtual(g2d, texto, btnX, btnY, btnW, btnH);
     }
     
-    private void desenharDialogoCompra(Graphics2D g2d) {
+    private void desenharDialogoCompra(Graphics2D g2d) 
+    {
         int dialogW = 400;
         int dialogH = 200;
         int dialogX = (getWidth() - dialogW) / 2;
@@ -352,7 +377,8 @@ public class TabuleiroPanel extends JPanel
         btnDialogoNaoComprar = desenharBotaoVirtual(g2d, "Não Comprar", dialogX + 20 + btnW + 20, btnY, btnW, btnH);
     }
     
-    private void desenharDialogoConstruir(Graphics2D g2d) {
+    private void desenharDialogoConstruir(Graphics2D g2d) 
+    {
         int dialogW = 400;
         int dialogH = 200;
         int dialogX = (getWidth() - dialogW) / 2;
@@ -376,7 +402,8 @@ public class TabuleiroPanel extends JPanel
         btnDialogoCancelar = desenharBotaoVirtual(g2d, "Cancelar", dialogX + 30 + (2*btnW), btnY, btnW, btnH);
     }
     
-    private Rectangle desenharBotaoVirtual(Graphics2D g2d, String texto, int x, int y, int w, int h) {
+    private Rectangle desenharBotaoVirtual(Graphics2D g2d, String texto, int x, int y, int w, int h) 
+    {
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.fillRect(x, y, w, h);
         g2d.setColor(Color.BLACK);
