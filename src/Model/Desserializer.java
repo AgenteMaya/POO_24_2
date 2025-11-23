@@ -127,7 +127,8 @@ public class Desserializer {
         {
             String linha = buffer.readLine();
             int idJogadorAtual = Integer.parseInt(linha);
-            api.setJogadorAtualTabuleiro(idJogadorAtual);
+            System.out.println("ID do jogador atual carregado: " + idJogadorAtual);
+            api.setJogadorAtualTabuleiroManual(idJogadorAtual);
             api.setJogadorAtual();
         }
         catch(IOException e)

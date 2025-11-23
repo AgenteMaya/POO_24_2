@@ -126,6 +126,13 @@ class Tabuleiro
 			this.jogadorDaVezIndex = index;
 		}
 	}
+
+	void setJogadorDaVezIndexManual(int index)
+	{
+		System.out.println("Definindo jogador da vez para o índice: " + index);
+		this.jogadorDaVezIndex = index;
+		System.out.println("Jogador da vez agora é: " + this.jogadorDaVezIndex);
+	}
 	
 	void proximoTurno()
 	{

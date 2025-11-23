@@ -152,11 +152,19 @@ public class Api {
 	public void setJogadorAtual() 
 	{
 		jogadorAtual = tabuleiro.getJogadorDaVez();
+		System.out.println("Jogador atual definido para: " + jogadorAtual.getId());
 	}
 
 	public void setJogadorAtualTabuleiro(int idJogadorAtual) 
 	{
 		tabuleiro.setJogadorDaVezIndex(idJogadorAtual);
+		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
+	}
+
+	public void setJogadorAtualTabuleiroManual(int idJogadorAtual) 
+	{
+		tabuleiro.setJogadorDaVezIndexManual(idJogadorAtual);
+		System.out.println("Índice do jogador atual no tabuleiro definido para: " + tabuleiro.getJogadorDaVez().getId());
 	}
 
 	public Peao getJogadorAtual() 
@@ -258,7 +266,7 @@ public class Api {
 		}       
         catch(Exception e)
         {
-            System.out.println("Erro ao ler arquivo de salvamento");
+            System.out.println("Erro ao abrir ou escrever arquivo de salvamento");
 			return 1;
         }
 	}

@@ -43,6 +43,8 @@ public class JanelaPrincipal extends JFrame
 	private HashMap<Integer, Image> imagensDados;
 	
 	private boolean aguardandoProximoTurno = false;
+
+	private JButton btnSalvar;
 	
 	private java.util.List<String> historicoLancamentos = new java.util.ArrayList<>();
 
@@ -495,12 +497,37 @@ public class JanelaPrincipal extends JFrame
 	    painelBotoes.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	    painelBotoes.setBackground(new Color(240, 240, 240)); 
 
-	    JButton btnSalvar = new JButton("Salvar Jogo");
+	    btnSalvar = new JButton("Salvar Jogo");
 	    btnSalvar.setFont(new Font("Arial", Font.PLAIN, 12));
 	    btnSalvar.addActionListener(e -> 
 	    {
-	        // salvarJogo()
-	        JOptionPane.showMessageDialog(this, "Jogo Salvo!");
+	        JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setDialogTitle("Seleção de Arquivo de Salvamento");
+
+			FileNameExtensionFilter filtroSave =  new FileNameExtensionFilter("Arquivos de carregamento (*.txt)", "txt");
+			fileChooser.setFileFilter(filtroSave);
+
+			int resultado = fileChooser.showSaveDialog(painelMenu);
+
+			if (resultado == JFileChooser.APPROVE_OPTION) 
+			{	
+				File arquivoSelecionado = fileChooser.getSelectedFile();
+				System.out.println("Arquivo selecionado: " + arquivoSelecionado.getAbsolutePath());
+				if (!arquivoSelecionado.getAbsolutePath().endsWith(".txt")) 
+				{
+				    arquivoSelecionado = new File(arquivoSelecionado.getAbsolutePath() + ".txt");
+				}
+				int ret = controller.solicitarSalvamento(arquivoSelecionado);
+				System.out.println("Retorno do salvamento: " + ret);
+				if(ret == 0)
+				{
+	        		JOptionPane.showMessageDialog(this, "Jogo Salvo!");
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(this, "Erro ao salvar o jogo.");
+				}
+			}
 	    });
 
 	    JButton btnEncerrar = new JButton("Encerrar Jogo");
@@ -823,5 +850,10 @@ public class JanelaPrincipal extends JFrame
 		{
 			painelTabuleiro.repaint();
 		}
+	}
+
+	public void setHabilitaSalvar(boolean b)
+	{
+		btnSalvar.setEnabled(b);
 	}
 }

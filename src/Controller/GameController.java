@@ -60,11 +60,13 @@ public class GameController
         if (retorno == 0)
         {
             view.mostrarTabuleiro(Api.getInstance().carregarPosicoesPeoes());
+
+            view.indicarJogadorDaVez(Api.getInstance().getNomeJogAtual(), Api.getInstance().getCorJogAtual());
+            view.setAguardandoProximoTurno(false);
+            view.setHabilitaSalvar(true);
         }
         else
-        {
-            System.out.println("Entrei no else");
-            
+        {            
             JOptionPane.showMessageDialog(
                 null,  // ou a sua janela principal, se você tiver a referência
                 "Não foi possível carregar o jogo.\nVerifique o arquivo selecionado.",
@@ -140,10 +142,13 @@ public class GameController
         view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
         view.limparDados();
         view.setAguardandoProximoTurno(false);
+        view.setHabilitaSalvar(true);
     }
     
     // chamado após o jogador lançar os dados e se mover --> analisa onde o peão caiu e decide o que fazer
     public boolean processarJogada() {
+        //view.setHabilitaSalvar(false);
+
         Api api = Api.getInstance();
         int posAtual = api.getPosJogadorAtual();
 
@@ -445,6 +450,8 @@ public class GameController
         view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
 
         view.setAguardandoProximoTurno(false);
+        view.setHabilitaSalvar(true);
+
     }
     
     
@@ -532,6 +539,8 @@ public class GameController
     
     public void lancarDadosReal() 
     {
+        view.setHabilitaSalvar(false);
+
         Api api = Api.getInstance();
         api.setJogadorAtual();
         
@@ -631,8 +640,8 @@ public class GameController
         }
     }
 
-    public void solicitarSalvamento(File arquivo)
+    public int solicitarSalvamento(File arquivo)
     {
-        Api.getInstance().salvarJogo(arquivo);
+        return  Api.getInstance().salvarJogo(arquivo);
     }
 }
