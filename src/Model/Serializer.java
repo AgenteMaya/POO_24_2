@@ -28,8 +28,7 @@ public class Serializer {
 			System.out.println("Tamanho da pilha de compras:" + api.getlCartasCompras().size());
 			salvaBaralho(buffer, api.getlCartasCompras());			
 			salvaPeoes(buffer);
-			buffer.write(api.getJogadorAtual().getId() + ""); //salva o id do jogador atual
-			buffer.newLine();
+			salvaJogadorAtual(buffer);
 			salvaTerrenos(buffer);
 		}
 		catch(IOException e)
@@ -65,6 +64,27 @@ public class Serializer {
 			System.out.println("Erro ao salvar peões");
 		}		
 	}
+
+	private void salvaJogadorAtual(BufferedWriter buffer)
+	{
+		try
+		{
+			int indiceAtual = -1;
+			for (int i = 0; i < api.getListaPeoes().size(); i++) {
+				if (api.getListaPeoes().get(i).getId() == api.getIdJogadorAtual()) {
+					indiceAtual = i;
+					break;
+				}
+			}
+			buffer.write(indiceAtual + ""); //salva o id do jogador atual
+			buffer.newLine();
+		}
+		catch(IOException e)
+		{
+			System.out.println("Erro ao salvar peões");
+		}
+	}
+
 
 	private void salvaBaralho(BufferedWriter buffer, ArrayList<Carta> lCartas)
 	{
