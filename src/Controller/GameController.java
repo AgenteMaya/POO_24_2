@@ -273,6 +273,7 @@ public class GameController
         {
         	api.jogadorGanhaSaiDaPrisao();
             view.mostrarMensagem(api.getNomeJogAtual() + " guardou uma carta de Saída Livre da Prisão!");
+            view.setHabilitaSalvar(false);
         } 
         else if (api.ehCartaIdaPrisao()) 
         {
@@ -281,6 +282,7 @@ public class GameController
             
             view.atualizarPosicaoPeao(); 
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
+            view.setHabilitaSalvar(false);
         } 
         else 
         {
@@ -307,6 +309,7 @@ public class GameController
         
         view.atualizarPosicaoPeao();
         view.atualizarPaineisInfo(Api.getInstance().carregarPosicoesPeoes());
+        view.setHabilitaSalvar(false);
     }
     
     private void processarImposto() 
@@ -516,7 +519,7 @@ public class GameController
                 deslocamentoAtual = deslocamento;
                 
                 view.mostrarMensagem("Tirou dupla. Saiu da prisão.");
-                
+                view.setHabilitaSalvar(false);
                 terminarTurno();
             } 
             else 
@@ -594,6 +597,7 @@ public class GameController
                 deslocamentoAtual = deslocamento;
                          
                 view.mostrarMensagem("Tirou dupla. Saiu da prisão.");
+                view.setHabilitaSalvar(false);
                 
                 terminarTurno();
             } 
