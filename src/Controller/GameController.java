@@ -72,11 +72,12 @@ public class GameController
             view.indicarJogadorDaVez(Api.getInstance().getNomeJogAtual(), Api.getInstance().getCorJogAtual());
             view.setAguardandoProximoTurno(false);
             view.setHabilitaSalvar(true);
+            view.atualizarComboItens();
         }
         else
         {            
             JOptionPane.showMessageDialog(
-                null,  // ou a sua janela principal, se você tiver a referência
+                null, 
                 "Não foi possível carregar o jogo.\nVerifique o arquivo selecionado.",
                 "Erro ao carregar",
                 JOptionPane.ERROR_MESSAGE
@@ -101,7 +102,8 @@ public class GameController
                 System.out.println("Número de jogadores inválido.");
                 view.mostrarMensagem("Número de jogadores inválido.");
             }
-        } catch (NumberFormatException ex) 
+        } 
+        catch (NumberFormatException ex) 
         {
             System.out.println("Entrada inválida.");
             view.mostrarMensagem("Entrada inválida.");
