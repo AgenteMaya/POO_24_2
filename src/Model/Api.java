@@ -845,7 +845,7 @@ public class Api implements ObservadoIF
     }
     
     @Override
-    public int getTaxaCompanhia(String nome) // não muda!!!
+    public int getTaxaCompanhia(String nome) 
     {
     	Terreno terreno = buscarTerrenoPorNome(nome);
         if (terreno != null && terreno instanceof Empresa) 

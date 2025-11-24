@@ -1,0 +1,15 @@
+4
+201160.0
+21,7,9,23,13
+5,22,20,28,8,3,29,11,25,14,17,24,30,19,26,15,10,16,27,18,4,6,2,1,12
+1,3840.0,16,vermelho,ver,false,false
+3,3760.0,0,laranja,lar,false,false
+2,3700.0,4,azul,azu,false,false
+4,3740.0,26,amarelo,amar,false,false
+3
+0,4,1,0,false
+0,6,3,2,true
+1,7,1
+0,8,2,1,false
+0,13,2,2,false
+0,26,4,0,false
