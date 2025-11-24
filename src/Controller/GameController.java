@@ -565,6 +565,8 @@ public class GameController
             //api.setJogadorAtual();
             //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
             view.setAguardandoProximoTurno(true);
+            view.setHabilitaSalvar(false);
+
         	return;            
         } 
         else 
@@ -658,6 +660,7 @@ public class GameController
                     api.vaiProProximoTurno();
                     //api.setJogadorAtual();
                     //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
+                    view.setHabilitaSalvar(false);
                     view.setAguardandoProximoTurno(true);
                     return;
                 } 
