@@ -1,0 +1,23 @@
+Integrantes do grupo:
+
+Maria Eduarda da Fonseca - 2212985
+Maria Luiza Dutra - 2310509
+Mayara Damazio - 2210833
+
+O método main está na classe Main que está dentro do pacote Main.
+
+Link do vídeo: https://drive.google.com/file/d/13v_uV9ekjekQftoHz4drh3DI9Iot7IvI/view?usp=sharing
+
+Formato de salvamento:
+
+nº de jogadores
+quantidade de dinheiro no banco
+id das cartas na lista de descarte
+id das cartas na lista de compras
+index do jogador atual
+informações dos peões: 
+id - dinheiro - posição - cor - nome - booleano que diz se o peão está na prisão ou não - boolenao que diz se o peão tem a carta de saída livre ou não
+Informação dos terrenos que têm dono:
+se for propriedade: 0 (representa que é uma propriedade) - index - id do dono - quantidade de casas - booleano que  diz se tem hotem ou não
+
+se for empresa: 1 (representa que é uma empresa) - index - id do dono
