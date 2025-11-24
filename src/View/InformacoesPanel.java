@@ -9,12 +9,11 @@ import Observer.ObservadoIF;
 import java.awt.*;
 import java.util.ArrayList;
 
-import Model.Api;
-
 @SuppressWarnings("serial")
 public class InformacoesPanel extends JPanel implements ObservadorIF 
 {
     private GameController controller;
+    private ObservadoIF modelo;
     
     private String categoriaAtual = "Peão"; 
     private String itemAtual = "—";
@@ -45,7 +44,7 @@ public class InformacoesPanel extends JPanel implements ObservadorIF
         this.controller = controller;
 
         if(controller != null) {
-            controller.registra(this);
+        	this.modelo = controller.registra(this);
         }
     }
 
@@ -88,7 +87,10 @@ public class InformacoesPanel extends JPanel implements ObservadorIF
         this.categoriaAtual = categoria;
         this.itemAtual = item;
         
-        atualizarDadosLocais(Api.getInstance());
+        if (this.modelo != null) 
+        {
+            atualizarDadosLocais(this.modelo);
+        }
         
         this.repaint(); 
     }
