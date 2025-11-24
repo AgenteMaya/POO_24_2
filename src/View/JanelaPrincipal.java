@@ -27,8 +27,7 @@ public class JanelaPrincipal extends JFrame
 	JPanel painelMenu;
 	TabuleiroPanel painelTabuleiro;
 	JPanel painelDados;
-	//JPanel painelInfo;
-	InformacoesPanel painelInfo; // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	InformacoesPanel painelInfo; 
 	
 	private String[] LISTA_PROPRIEDADES = {
 		    "Leblon", "Av. Presidente Vargas", "Av. Nossa S. de Copacabana", "Av. Brig. Faria Lima",
@@ -555,7 +554,7 @@ public class JanelaPrincipal extends JFrame
 	        int resp = JOptionPane.showConfirmDialog(this, "Deseja realmente encerrar a partida atual?", "Encerrar", JOptionPane.YES_NO_OPTION);
 	        if (resp == JOptionPane.YES_OPTION) 
 	        {
-	        	controller.terminoSolicitado(); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	        	controller.terminoSolicitado(); 
 	        }
 	    });
 
@@ -577,40 +576,7 @@ public class JanelaPrincipal extends JFrame
 	}
 	
 	
-//	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-//	{
-//	    painelInfo = new JPanel() 
-//	    {
-//	        @Override
-//	        protected void paintComponent(Graphics g) 
-//	        {
-//	            super.paintComponent(g);
-//	            Graphics2D g2 = (Graphics2D) g.create();
-//
-//	            g2.setFont(getFont().deriveFont(Font.BOLD, 16f));
-//	            g2.setColor(contraste(Color.LIGHT_GRAY));
-//	            String titulo = "Painel de Informações";
-//	            g2.drawString(titulo, 16, 28);
-//	            
-//	            // Aqui você pode desenhar mais infos do jogo futuramente (saldos, propriedades, etc)
-//
-//	            g2.dispose();
-//	        }
-//	    };
-//	    painelInfo.setOpaque(true);
-//	    painelInfo.setBackground(Color.LIGHT_GRAY); 
-//
-//	    JPanel container = new JPanel(new BorderLayout());
-//	    container.setPreferredSize(new Dimension(260, ALT_DEFAULT));
-//	    
-//	    container.add(painelInfo, BorderLayout.CENTER);
-//	    
-//	    container.add(criarPainelBotoesControle(), BorderLayout.SOUTH);
-//
-//	    return container;
-//	}
-	
-	private JPanel criarPainelLateralInformacoes() // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	private JPanel criarPainelLateralInformacoes() 
 	{
 	    JPanel containerEsquerdo = new JPanel(new BorderLayout());
 	    containerEsquerdo.setPreferredSize(new Dimension(260, ALT_DEFAULT));
@@ -664,7 +630,7 @@ public class JanelaPrincipal extends JFrame
 	    return this.painelInfo;
 	}
 	
-	public void atualizarComboItens()  // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	public void atualizarComboItens()  
 	{
 	    String categoria = (String) cbCategoria.getSelectedItem();
 	    cbItemSelecionado.removeAllItems();
@@ -677,7 +643,7 @@ public class JanelaPrincipal extends JFrame
 	    {
 	        for (String s : LISTA_COMPANHIAS) cbItemSelecionado.addItem(s);
 	    } 
-	    else if ("Peão".equals(categoria)) // como fazer?????????????????????????????????????????????????????????????????????????????
+	    else if ("Peão".equals(categoria)) 
 	    {
 	    	try 
 	    	{

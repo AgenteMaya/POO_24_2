@@ -120,7 +120,7 @@ public class GameController
         	
         	int id = numJogadoresTotal - jogadoresRestantes;
         	System.out.println("Id do jogador: " + id);
-        	api.adicionaJogador(id, nome, cor, 4000); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        	api.adicionaJogador(id, nome, cor, 4000);
             
             coresDisponiveis.remove(cor);
             
@@ -177,7 +177,6 @@ public class GameController
         else if (api.ehSorte(posAtual)) 
         {
             return processarSorte();
-            //System.out.println("SORTE: Saldo jogador " + api.getNomeJogAtual() + " = " + api.getDinheiroJogadorAtual());
         }
         else if (api.ehIrPraPrisao(posAtual)) 
         {
@@ -530,10 +529,6 @@ public class GameController
                 
                 deslocamentoAtual = 0;
                 
-//                api.vaiProProximoTurno();
-//                api.setJogadorAtual();
-//                view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
-                
                 api.vaiProProximoTurno();
                 deslocamentoAtual = 0;
 
@@ -562,8 +557,6 @@ public class GameController
             view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
             
             api.vaiProProximoTurno();
-            //api.setJogadorAtual();
-            //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
             view.setAguardandoProximoTurno(true);
             view.setHabilitaSalvar(false);
 
@@ -612,8 +605,6 @@ public class GameController
                 deslocamentoAtual = 0;
                 
                 api.vaiProProximoTurno();
-                //api.setJogadorAtual();
-                //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
                 view.setAguardandoProximoTurno(true);
             }
             return;
@@ -658,8 +649,6 @@ public class GameController
                     view.atualizarPaineisInfo(api.carregarPosicoesPeoes());
             
                     api.vaiProProximoTurno();
-                    //api.setJogadorAtual();
-                    //view.indicarJogadorDaVez(api.getNomeJogAtual(), api.getCorJogAtual());
                     view.setHabilitaSalvar(false);
                     view.setAguardandoProximoTurno(true);
                     return;

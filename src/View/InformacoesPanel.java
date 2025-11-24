@@ -9,7 +9,7 @@ import Observer.ObservadoIF;
 import java.awt.*;
 import java.util.ArrayList;
 
-import Model.Api; // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+import Model.Api;
 
 @SuppressWarnings("serial")
 public class InformacoesPanel extends JPanel implements ObservadorIF 
@@ -88,7 +88,7 @@ public class InformacoesPanel extends JPanel implements ObservadorIF
         this.categoriaAtual = categoria;
         this.itemAtual = item;
         
-        atualizarDadosLocais(Api.getInstance()); // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        atualizarDadosLocais(Api.getInstance());
         
         this.repaint(); 
     }
